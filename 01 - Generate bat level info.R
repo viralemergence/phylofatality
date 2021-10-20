@@ -17,6 +17,17 @@ cfr %<>% group_by(Virus) %>%
 
 cfr %<>% mutate(Virus = str_to_lower(Virus))
 
+## Detour: which names don't stick?####
+table(cfr$Virus %in% vir$Virus)
+cfr$Virus[!(cfr$Virus %in% vir$Virus)]
+rec <- c("colorado tick fever virus" = "colorado tick fever coltivirus",
+         "ebolavirus" = "zaire ebolavirus",
+         "sealpox virus" = "seal parapoxvirus",
+         "severe acute respiratory syndrome-related coronavirus-2" = "severe acute respiratory syndrome-related coronavirus")
+cfr %<>% mutate(Virus = recode(Virus, !!!rec))
+cfr$Virus[str_detect(cfr$Virus,'middle')] <- "middle east respiratory syndrome-related coronavirus"
+#######################################
+
 vir %<>%
   filter(Virus %in% cfr$Virus) %>%
   select(Host, Virus) %>% 
