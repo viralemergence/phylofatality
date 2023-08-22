@@ -20,11 +20,16 @@ vir %<>% filter(HostClass == 'mammalia')
 setwd("/Users/danielbecker/Desktop/GitHub/phylofatality")
 cfr1=read_csv("loose_data.csv.txt")
 cfr2=read_csv("stringent_data.csv.txt")
+
+## categorize
+cfr1$cat="loose"
+cfr2$cat="stringent"
 cfr=bind_rows(cfr1, cfr2)
+rm(cfr1,cfr2)
 
 ## rename based on CFR average
-cfr %<>% select(SppName_ICTV_MSL2018b, CFR_avg) %>%
-  rename(Virus = SppName_ICTV_MSL2018b, CFR = CFR_avg)
+cfr %<>% select(SppName_ICTV_MSL2018b, CFR_avg, human.trans) %>%
+  rename(Virus = SppName_ICTV_MSL2018b, CFR = CFR_avg, onward=human.trans)
 
 ## group
 cfr %<>% group_by(Virus) %>% 
