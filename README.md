@@ -1,2 +1,2 @@
 # phylofatality
-Do some groups of bats have more deadly viruses than others? (This is mostly a demo for an NSF proposal)
+Does viral virulence in humans break down along mammalian orders or are other phylogenetic scales important?
