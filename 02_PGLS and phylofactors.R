@@ -1,6 +1,7 @@
 ## phylofatality
+## 02_PGLS and phylofactor
 ## danbeck@ou.edu
-## last update 10/20/21
+## last update 8/25/23
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -22,7 +23,7 @@ setwd("~/Desktop/phylofatality")
 data=read.csv("CFRbySpecies.csv")
 
 ## load Upham phylogeny
-setwd("~/Desktop/hantaro/phylo")
+setwd("~/Desktop/phylofatality/phylo")
 tree=read.nexus('MamPhy_fullPosterior_BDvr_Completed_5911sp_topoCons_NDexp_MCC_v2_target.tre')
 
 ## load in taxonomy
