@@ -1,7 +1,8 @@
-## phylofatality 01_generate species-level CFR
+## phylofatality 
+## 01_generate species-level CFR
 ## danbeck@ou.edu 
-## 08/23/2023
-##
+## last update 8/23/23
+
 ## clean environment & plots
 rm(list=ls()) 
 graphics.off()
@@ -13,12 +14,12 @@ library(vroom)
 library(magrittr)
 
 ## load virion
-setwd("/Users/danielbecker/Desktop/GitHub/virion/Virion")
+setwd("~/Desktop/virion/Virion")
 vir=vroom("virion.csv.gz")
 vir %<>% filter(HostClass == 'mammalia')
 
 ## load cfr
-setwd("/Users/danielbecker/Desktop/GitHub/phylofatality")
+setwd("~/Desktop/phylofatality/data")
 cfr1=read_csv("loose_data.csv.txt")
 cfr2=read_csv("stringent_data.csv.txt")
 
@@ -92,5 +93,5 @@ vdata %<>% left_join(cfr) %>%
 # vwide1=spread(vraw,VirusFamily,meanCFR)
 
 ## export
-setwd("/Users/danielbecker/Desktop/GitHub/phylofatality")
+setwd("~/Desktop/phylofatality")
 write_csv(vdata, "CFRBySpecies.csv")
