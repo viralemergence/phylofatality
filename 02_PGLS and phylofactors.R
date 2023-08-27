@@ -10,20 +10,26 @@ graphics.off()
 ## packages
 library(ape)
 library(caper)
-library(plyr)
+#library(plyr)
 library(ggtree)
 library(ggplot2)
 library(data.table)
 library(treeio)
 library(Hmisc)
 library(phylofactor)
+library(parallel)
+library(emmeans)
+#library(ade4)
+#library(phytools)
 
-## load data
-setwd("~/Desktop/phylofatality")
+## load in virulence data
+#setwd("~/Desktop/phylofatality")
+setwd("~/Desktop/GitHub/phylofatality")
 data=read.csv("CFRbySpecies.csv")
 
 ## load Upham phylogeny
-setwd("~/Desktop/phylofatality/phylo")
+#setwd("~/Desktop/phylofatality/phylo")
+setwd("~/Desktop/GitHub/phylofatality/phylo")
 tree=read.nexus('MamPhy_fullPosterior_BDvr_Completed_5911sp_topoCons_NDexp_MCC_v2_target.tre')
 
 ## load in taxonomy
@@ -34,61 +40,9 @@ taxa$tip=taxa$Species_Name
 tree$tip.label=sapply(strsplit(tree$tip.label,'_'),function(x) paste(x[1],x[2],sep=' '))
 taxa$species=sapply(strsplit(taxa$tip,'_'),function(x) paste(x[1],x[2],sep=' '))
 
-## species in data
-data$species=capitalize(data$Host)
-
-## match
-miss=setdiff(data$species,taxa$species)
-
-## flag
-data$flag=ifelse(data$species%in%miss,1,0)
-
-## fix data names from CLOVER
-setwd("~/Desktop/clover/clover/clover_0.1_mammalviruses/phylogenies")
-tdata=read.csv("mammal_phylo_translations.csv")
-tdata=tdata[!duplicated(tdata$Host),]
-
-## merge
-tdata$X=NULL
-tdata$species=capitalize(tdata$Host)
-data=merge(data,tdata[c("species","Host_Upham")],by="species",all.x=T)
-
-## fix
-data$species2=ifelse(data$flag==1,data$Host_Upham,data$species)
-
-## clean
-data$species=data$species2
-data$species2=NULL
-data$Host_Upham=NULL
-data$flag=NULL
-
-## reflag
-data$flag=ifelse(is.na(data$species),1,0)
-data$species=ifelse(data$flag==1,capitalize(data$Host),data$species)
-
-# ## manual fix
-# data$species=revalue(data$species,
-#                      c("Allochrocebus preussi"="Cercopithecus preussi",
-#                        "Apodemus chejuensis"="Apodemus agrarius",
-#                        "Bos taurus x bison bison"="Bos taurus",
-#                        "Cavia cutleri"="Cavia tschudii",
-#                        "Cercopithecus doggetti"="Cercopithecus mitis",
-#                        "Cercopithecus kandti"="Cercopithecus mitis",
-#                        "Cercopithecus roloway"="Cercopithecus diana",
-#                        ))
-
-## rematch
-setdiff(data$species,taxa$species)
-
-## remove missing
-data=data[!data$species%in%setdiff(data$species,taxa$species),]
-
 ## merge data and taxa
 data=merge(data,taxa[c("species","tiplabel","gen","fam","ord","clade")],by="species",all.x=T)
-rm(tdata,taxa)
-
-## remove duplicates
-data=data[!duplicated(data$species),]
+rm(taxa)
 
 ## trim tree
 tree=keep.tip(tree,data$species)
@@ -97,39 +51,91 @@ tree=keep.tip(tree,data$species)
 data$label=data$species
 data$Species=data$species
 
+## define non-onward viruses
+data$ntrans=data$virusesWithOT-data$htrans
+
 ## merge
 cdata=comparative.data(phy=tree,data=data,names.col=species,vcv=T,na.omit=F,warn.dropped=T)
 
 ## taxonomy
 cdata$data$taxonomy=paste(cdata$data$fam,cdata$data$gen,cdata$data$Species,sep='; ')
 
+## separate dataset for onward transmission (remove NA)
+cdata2=cdata[!is.na(cdata$data$on.frac),]
+
 ## pagel's lambda on mammals
 mod_me=pgls(meanCFR~1,data=cdata,lambda="ML")
 mod_mx=pgls(maxCFR~1,data=cdata,lambda="ML")
+mod_ot=pgls(on.frac~1,data=cdata2,lambda="ML")
+
+## we can also implement these tests using phylosig
+psl_me=phylosig(cdata$phy,cdata$data$meanCFR,method="lambda",test=T)
+psl_mx=phylosig(cdata$phy,cdata$data$maxCFR,method="lambda",test=T)
+psl_ot=phylosig(cdata2$phy,cdata2$data$on.frac,method="lambda",test=T)
+
+## compare that values are equivalent
+round(mod_me$param["lambda"],3)==round(psl_me$lambda,3)
+round(mod_mx$param["lambda"],3)==round(psl_mx$lambda,3)
+round(mod_ot$param["lambda"],3)==round(psl_ot$lambda,3)
+
+## we can also use phylosig to estimate Bloomberg's K
+psk_me=phylosig(cdata$phy,cdata$data$meanCFR,method="K",test=T)
+psk_mx=phylosig(cdata$phy,cdata$data$maxCFR,method="K",test=T)
+psk_ot=phylosig(cdata2$phy,cdata2$data$on.frac,method="K",test=T)
+
+## Moran's I will use inverse distances
+d=1/cophenetic(cdata$phy)
+diag(d)=0
+
+## reduced dataset
+d2=1/cophenetic(cdata2$phy)
+diag(d2)=0
+
+## Moran's I
+Moran.I(cdata$data$meanCFR,d)
+Moran.I(cdata$data$maxCFR,d)
+Moran.I(cdata2$data$on.frac,d2)
+
+## correlograms
+form=meanCFR+maxCFR~ord/fam/gen
+form2=on.frac~ord/fam/gen
+
+## run
+plot(correlogram.formula(form,data=cdata$data))
+plot(correlogram.formula(form2,data=cdata2$data))
+
+## similar in ade4
+gearymoran(d,data.frame(cdata$data$meanCFR,
+                        cdata$data$maxCFR),alter="two-sided")
+gearymoran(d2,cdata2$data$on.frac,alter="two-sided")
 
 ## subset to bats
 bdata=cdata[cdata$data$ord=="CHIROPTERA",]
+bdata2=cdata2[cdata2$data$ord=="CHIROPTERA",]
 
 ## pagel's lambda
 bmod_me=pgls(meanCFR~1,data=bdata,lambda="ML")
 bmod_mx=pgls(maxCFR~1,data=bdata,lambda="ML")
+bmod_ot=pgls(on.frac~1,data=bdata2,lambda="ML")
 
 ## summarize estimates
-mlist=list(mod_me,mod_mx,bmod_me,bmod_mx)
-pdata=data.frame(dataset=c("all mammals","all mammals","only bats","only bats"),
-                 variable=c(rep(c("mean","max"),2)),
-                 lambda=sapply(mlist,function(x) x$param["lambda"]))
-pdata$variable=factor(pdata$variable,levels=c("mean","max"))
+mlist=list(mod_me,mod_mx,mod_ot,bmod_me,bmod_mx,bmod_ot)
+pdata=data.frame(dataset=c(rep("all mammals",3),rep("bats only",3)),
+                 variable=c(rep(c("meanCFR","maxCFR","on.frac"),2)),
+                 lambda=sapply(mlist,function(x) x$param["lambda"]),
+                 lambda_lower=sapply(mlist,function(x) x$param.CI$lambda$ci.val[1]),
+                 lambda_upper=sapply(mlist,function(x) x$param.CI$lambda$ci.val[2]))
+pdata$variable=factor(pdata$variable,levels=c("meanCFR","maxCFR","on.frac"))
 
 ## plot
 ggplot(pdata,aes(variable,lambda))+
   theme_bw()+
-  geom_segment(aes(x=variable,xend=variable,y=0,yend=lambda))+
+  geom_segment(aes(x=variable,xend=variable,y=lambda_lower,yend=lambda_upper))+
   geom_point(size=2)+
   ylim(0,1)+
   facet_wrap(~dataset)+
   labs(y=expression(paste("Pagel's ",lambda)),
-       x="case fatality rate of host viruses in humans")+
+       x="viral virulence measures in human hosts")+
   theme(panel.grid.major=element_blank(),panel.grid.minor=element_blank())+
   theme(axis.title.x=element_text(margin=margin(t=10,r=0,b=0,l=0)))+
   theme(axis.title.y=element_text(margin=margin(t=0,r=10,b=0,l=0)))
@@ -147,6 +153,7 @@ HolmProcedure <- function(pf,FWER=0.05){
   ## get split variable
   cs=names(coef(pf$models[[1]]))[-1]
   split=ifelse(length(cs)>1,cs[3],cs[1])
+  split=ifelse(is.na(split),cs[1],split)
   
   ## obtain p values
   if (pf$models[[1]]$family$family%in%c('gaussian',"Gamma","quasipoisson")){
@@ -233,24 +240,39 @@ pfsum=function(pf){
     results[i,'node']=ifelse(is.null(node) & length(tips)==1,'species',
                              ifelse(is.null(node) & length(tips)!=1,NA,node))
     
+    ## get glm 
+    mod=pf$models[[i]]
+    mod=glm(formula(mod),data=mod$data,family=summary(mod)$family$family)
+    em=data.frame(emmeans(mod,"phylo",type="response"))
+    
+    ## add category
+    em$cat=revalue(em$phylo,
+                   c("R"="factor",
+                     "S"="other"))
+    
     ## get means
-    ms=(tapply(dat[,resp],dat[,paste0(resp,'_pf',i)],mean))
+    #ms=(tapply(dat[,resp],dat[,paste0(resp,'_pf',i)],mean))
     
     ## add in
-    results[i,'clade']=ms['factor']
-    results[i,'other']=ms['other']
-    
+    #results[i,'clade']=ms['factor']
+    #results[i,'other']=ms['other']
+    results[i,'clade']=em[em$cat=="factor",2]
+    results[i,'other']=em[em$cat=="other",2]
   }
   
   ## return
   return(list(set=dat,results=results))
 }
 
+## NOTE THAT gpf() WON'T WORK UNDER R 4.2 OR HIGHER DUE TO THE FOLLOWING CHANGE:
+## https://stackoverflow.com/questions/72848442/r-warning-lengthx-2-1-in-coercion-to-logical1/72848495#72848495
+
 ## CFR mean
 set.seed(1)
 cmean_pf=gpf(Data=cdata$data,tree=cdata$phy,
-           frmla.phylo=meanCFR~phylo,
-           family=gaussian,algorithm='phylo',nfactors=5,min.group.size=5)
+           frmla.phylo=meanCFR~phylo+virusesWithCFR,
+           family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
+HolmProcedure(cmean_pf)
 
 ## summarize
 cmean_pf_results=pfsum(cmean_pf)$results
@@ -258,17 +280,29 @@ cmean_pf_results=pfsum(cmean_pf)$results
 ## CFR max
 set.seed(1)
 cmax_pf=gpf(Data=cdata$data,tree=cdata$phy,
-             frmla.phylo=maxCFR~phylo,
-             family=gaussian,algorithm='phylo',nfactors=6,min.group.size=5)
+             frmla.phylo=maxCFR~phylo+virusesWithCFR,
+             family=gaussian,algorithm='phylo',nfactors=6,min.group.size=10)
+HolmProcedure(cmax_pf)
 
 ## summarize
 cmax_pf_results=pfsum(cmax_pf)$results
 
+## fraction of viruses with onward transmission
+set.seed(1)
+cot_pf=gpf(Data=cdata2$data,tree=cdata2$phy,
+            frmla.phylo=cbind(htrans,ntrans)~phylo,
+            family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
+HolmProcedure(cot_pf)
+
+## summarize
+cot_pf_results=pfsum(cot_pf)$results
+
 ## bat CFR mean
 set.seed(1)
 bmean_pf=gpf(Data=bdata$data,tree=bdata$phy,
-             frmla.phylo=meanCFR~phylo,
-             family=gaussian,algorithm='phylo',nfactors=5,min.group.size=5)
+             frmla.phylo=meanCFR~phylo+virusesWithCFR,
+             family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
+HolmProcedure(bmean_pf)
 
 ## summarize
 bmean_pf_results=pfsum(bmean_pf)$results
@@ -276,11 +310,22 @@ bmean_pf_results=pfsum(bmean_pf)$results
 ## bat CFR max
 set.seed(1)
 bmax_pf=gpf(Data=bdata$data,tree=bdata$phy,
-            frmla.phylo=maxCFR~phylo,
-            family=gaussian,algorithm='phylo',nfactors=6,min.group.size=5)
+            frmla.phylo=maxCFR~phylo+virusesWithCFR,
+            family=gaussian,algorithm='phylo',nfactors=3,min.group.size=10)
+HolmProcedure(bmax_pf)
 
 ## summarize
 bmax_pf_results=pfsum(bmax_pf)$results
+
+## fraction of viruses with onward transmission
+set.seed(1)
+bot_pf=gpf(Data=bdata$data,tree=bdata$phy,
+           frmla.phylo=cbind(htrans,ntrans)~phylo,
+           family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
+HolmProcedure(bot_pf)
+
+## summarize
+bot_pf_results=pfsum(bot_pf)$results
 
 ## save trees
 dtree=treeio::full_join(as.treedata(cdata$phy),cdata$data,by="label")
