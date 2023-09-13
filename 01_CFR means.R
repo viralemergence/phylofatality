@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu 
-## last update 8/23/23
+## last update 9/12/23
 
 ## clean environxment & plots
 rm(list=ls()) 
@@ -14,6 +14,7 @@ library(vroom)
 library(magrittr)
 library(ape)
 library(plyr)
+library(purrr)
 
 ## load virion
 #setwd("~/Desktop/virion/Virion")
@@ -90,9 +91,6 @@ vdata=vdata[!is.na(vdata$Host),]
 vdata %<>%
   select(Host, Virus, VirusGenus, VirusFamily) %>% 
   distinct() %>% drop_na()
-
-## save alternative
-vraw=vdata
 
 ## load in host taxonomy
 #setwd("~/Desktop/phylofatality/phylo")
@@ -173,18 +171,21 @@ mis=setdiff(vdata$species,taxa$species)
 ## remove missing species
 vdata=vdata[!vdata$species%in%miss,]
 
-## for each species, fraction of viruses that can infect humans
+## save data
+vraw=vdata
+
+## for each host species, fraction of all viruses that can infect humans
 tmp=merge(cfr,vdata,by="Virus")
 tmp$vir=1
 tmp=aggregate(cbind(vir,htrans)~species,tmp,sum,na.rm=T)
 tmp$on.frac=tmp$htrans/tmp$vir
 
-## mean/max across all viruses per host for now
+## mean/max across all viruses per host
 vdata %<>% left_join(cfr) %>%
   group_by(species) %>% 
   dplyr::summarize(meanCFR = mean(CFR),
-            maxCFR = max(CFR),
-            virusesWithCFR = n())
+                   maxCFR = max(CFR),
+                   virusesWithCFR = n())
 
 ## fix tmp names
 tmp$virusesWithOT=tmp$vir
@@ -193,17 +194,81 @@ tmp$vir=NULL
 ## merge fraction zoonotic
 vdata=merge(vdata,tmp,by="species",all.x=T)
 
-# ## group by host and virus family
-# vraw %<>% left_join(cfr) %>%
-#   group_by(Host,VirusFamily) %>% 
-#   summarize(meanCFR = mean(CFR),
-#             maxCFR = max(CFR),
-#             virusesWithCFR = n())
-# 
-# ## from long to wide
-# vwide1=spread(vraw,VirusFamily,meanCFR)
+## fix names
+names(vdata)[2:ncol(vdata)]=paste(names(vdata)[2:ncol(vdata)],"_all viruses",sep="")
+
+## tabulate unique number of hosts per viral family
+tmp=merge(cfr,vraw,by="Virus")
+vfam_hosts=sort(sapply(unique(tmp$VirusFamily),function(x){
+  
+  set=tmp[tmp$VirusFamily==x,]
+  return(length(unique(set$Host)))
+  
+}))
+vfam_hosts=data.frame(vfam_hosts)
+vfam_hosts$VirusFamily=rownames(vfam_hosts)
+rownames(vfam_hosts)=NULL
+names(vfam_hosts)=c("hosts","VirusFamily")
+
+## cutoff of n=20 or more host species for now
+vfam=vfam_hosts[vfam_hosts$hosts>20,]
+
+## function to derive vfam-specific responses
+vfam_out=function(x){
+  
+  ## subset tmp by given virus family
+  set=tmp[tmp$VirusFamily==x,]
+  sraw=set
+  
+  ## calculate fraction of viruses that can infect humans
+  set$vir=1
+  
+  ## ifelse for no htrans
+  if(all(is.na(set$htrans))){
+    
+    ## as NA
+    set=aggregate(cbind(vir)~species,set,sum,na.rm=T)
+    set$htrans=NA
+    set$on.frac=0
+    set$virusesWithOT=NA
+    
+  }else{
+    
+  set=aggregate(cbind(vir,htrans)~species,set,sum,na.rm=T)
+  set$on.frac=set$htrans/set$vir
+  }
+  
+  ## fix tmp names
+  set$vir=NULL
+  
+  ## mean/max across all viruses per host for this virus family
+  sraw %<>% left_join(cfr) %>%
+    group_by(species) %>% 
+    dplyr::summarize(meanCFR = mean(CFR),
+                     maxCFR = max(CFR),
+                     virusesWithCFR = n())
+  
+  ## merge fraction zoonotic
+  set=merge(sraw,set,by="species",all.x=T)
+  
+  ## rename
+  names(set)[2:ncol(set)]=paste(names(set)[2:ncol(set)],"_",x,sep="")
+  
+  ## return
+  return(set)
+  
+}
+
+## run function, save as list
+vlist=lapply(vfam_hosts$VirusFamily,vfam_out)
+
+## merge all
+vset=vlist %>% purrr::reduce(full_join,by="species")
+
+## merge
+vdata=merge(vdata,vset,by="species",all=T)
 
 ## export
 #setwd("~/Desktop/phylofatality")
 setwd("~/Desktop/GitHub/phylofatality")
-write_csv(vdata, "CFRBySpecies.csv")
+write_csv(vset, "CFRBySpecies.csv")
