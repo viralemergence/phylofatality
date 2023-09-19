@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu 
-## last update 9/12/23
+## last update 9/19/23
 
 ## clean environxment & plots
 rm(list=ls()) 
@@ -15,6 +15,7 @@ library(magrittr)
 library(ape)
 library(plyr)
 library(purrr)
+library(Hmisc)
 
 ## load virion
 #setwd("~/Desktop/virion/Virion")
@@ -35,7 +36,7 @@ cfr=bind_rows(cfr1, cfr2)
 rm(cfr1,cfr2)
 
 ## rename based on CFR average
-cfr %<>% select(SppName_ICTV_MSL2018b, CFR_avg, human.trans) %>%
+cfr %<>% dplyr::select(SppName_ICTV_MSL2018b, CFR_avg, human.trans) %>%
   dplyr::rename(Virus = SppName_ICTV_MSL2018b, CFR = CFR_avg, onward=human.trans)
 
 ## fix with virion naming
@@ -211,7 +212,7 @@ rownames(vfam_hosts)=NULL
 names(vfam_hosts)=c("hosts","VirusFamily")
 
 ## cutoff of n=20 or more host species for now
-vfam=vfam_hosts[vfam_hosts$hosts>20,]
+vfam=vfam_hosts[vfam_hosts$hosts>30,]
 
 ## function to derive vfam-specific responses
 vfam_out=function(x){
@@ -236,6 +237,7 @@ vfam_out=function(x){
     
   set=aggregate(cbind(vir,htrans)~species,set,sum,na.rm=T)
   set$on.frac=set$htrans/set$vir
+  set$virusesWithOT=set$vir
   }
   
   ## fix tmp names
@@ -271,4 +273,4 @@ vdata=merge(vdata,vset,by="species",all=T)
 ## export
 #setwd("~/Desktop/phylofatality")
 setwd("~/Desktop/GitHub/phylofatality")
-write_csv(vset, "CFRBySpecies.csv")
+write_csv(vdata,"CFRBySpecies.csv")
