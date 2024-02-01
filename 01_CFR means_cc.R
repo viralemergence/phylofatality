@@ -92,6 +92,10 @@ vdata=vdata[vdata$Virus%in%cfr$Virus,]
 vdata=vdata[!is.na(vdata$Host),]
 
 ## filter virion
+bats<- vdata %>% filter(HostOrder=="chiroptera") %>% 
+  dplyr::select(Host, Virus, VirusGenus, VirusFamily) %>% 
+  distinct() %>% drop_na()
+  
 vdata %<>%
   dplyr::select(Host, Virus, VirusGenus, VirusFamily) %>% 
   distinct() %>% drop_na()
@@ -108,6 +112,7 @@ taxa$species=sapply(strsplit(taxa$tip,'_'),function(x) paste(x[1],x[2],sep=' '))
 
 ## species in data
 vdata$species=capitalize(vdata$Host)
+bats$species=capitalize(bats$Host)
 
 ## match
 miss=setdiff(vdata$species,taxa$species)
@@ -171,15 +176,50 @@ vdata$species=revalue(vdata$species,
                        "Rhinolophus monoceros"="Rhinolophus pusillus",
                        "Zygodontomys cherriei"="Zygodontomys brevicauda"))
 
+bats$species=revalue(bats$species,
+                      c("Allochrocebus preussi"="Cercopithecus preussi",
+                        "Apodemus chejuensis"="Apodemus agrarius",
+                        "Bos taurus x bison bison"="Bos taurus",
+                        "Cavia cutleri"="Cavia tschudii",
+                        "Cercopithecus doggetti"="Cercopithecus mitis",
+                        "Cercopithecus kandti"="Cercopithecus mitis",
+                        "Cercopithecus roloway"="Cercopithecus diana",
+                        "Cricetomys ansorgei"="Cricetomys gambianus",
+                        "Cricetulus griseus"="Cricetulus barabensis",
+                        "Dobsonia magna"="Dobsonia moluccensis",
+                        "Eothenomys eleusis"="Eothenomys melanogaster",
+                        "Equus asinus x caballus"="Equus africanus",
+                        "Equus caballus x asinus"="Equus caballus",
+                        "Giraffa giraffa"="Giraffa camelopardalis",
+                        "Hypsugo pulveratus"="Pipistrellus pulveratus",
+                        "Laephotis capensis"="Neoromicia capensis",
+                        "Loxodonta cyclotis"="Loxodonta africana",
+                        "Macaca brunnescens"="Macaca ochreata",
+                        "Macaca speciosa"="Macaca arctoides",
+                        "Macronycteris gigas"="Hipposideros gigas",
+                        "Microtus obscurus"="Microtus arvalis",
+                        "Molossus ater"="Molossus rufus",
+                        "Oligoryzomys utiaritensis"="Oligoryzomys nigripes",
+                        "Oryzomys texensis"="Oryzomys palustris",
+                        "Piliocolobus tholloni"="Procolobus badius",
+                        "Rhabdomys dilectus"="Rhabdomys pumilio",
+                        "Rhinolophus monoceros"="Rhinolophus pusillus",
+                        "Zygodontomys cherriei"="Zygodontomys brevicauda"))
 ## rematch
-mis=setdiff(vdata$species,taxa$species)
+miss=setdiff(vdata$species,taxa$species)
 
 ## remove missing species
 vdata=vdata[!vdata$species%in%miss,]
 
+#any missing bats
+miss=setdiff(bats$species,taxa$species)
+bats=bats[!bats$species%in%miss,]
+
 ## save data
 vraw=vdata
-n_distinct(vdata$species)
+n_distinct(vdata$species) #983 unique
+n_distinct(bats$species) #208 unique
+rm(bats)
 
 ## for each host species, fraction of all viruses that can infect humans
 tmp=merge(cfr,vdata,by="Virus")
@@ -282,3 +322,5 @@ vdata=merge(vdata,vset,by="species",all=T)
 #setwd("~/Desktop/GitHub/phylofatality")
 setwd("~/Desktop/PCM Class/phylofatality")
 #write_csv(vdata,"CFRBySpecies.csv")
+
+n_distinct(CFRbySpecies$species)
