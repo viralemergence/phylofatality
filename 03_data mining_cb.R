@@ -1,7 +1,7 @@
 ## phylofatality
 ## 03_data mining (species extraction from risky clades)
 ## danbeck@ou.edu, caroline cummings, Cole Brookson
-## last update 1/3/2024
+## last update 2/3/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -14,7 +14,7 @@ library(tidyr)
 library(tidyverse)
 
 ## load in clade virulence data
-setwd("~/Desktop/PCM Class/phylofatality")
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
 data=read.csv("pf_allclades.csv")
 
 ## load in host taxonomy
@@ -49,8 +49,8 @@ data[which(data$var == "means"), "var"] <- "mean"
 
 #save data of risky clades
 rawdata_risk<-data
-setwd("~/Desktop/PCM Class/phylofatality")
-#write_csv(rawdata_risk,"pf_riskyclades.csv")
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+write.csv(rawdata_risk,"pf_riskyclades.csv")
 
 #pull out species in each clade
 data$species=data$taxa
@@ -118,12 +118,5 @@ species=species %>% select(species, virus, host, var, factor, tips, node,
 #sanity check
 species %>% n_distinct()
 #save species data
-setwd("~/Desktop/PCM Class/phylofatality")
-#write_csv(species,"pf_riskyspecies.csv")
-
-#filter to coronaviruses
-cor<- pf_riskyspecies %>% filter(virus=="cov", var=="mean", factor=="1", host=="mammal")
-
-# next steps:
-#plot results on tips of tree, visualize clades from phylofactor
-#map results
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+#write.csv(species,"pf_riskyspecies.csv")
