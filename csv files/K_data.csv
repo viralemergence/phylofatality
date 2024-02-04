@@ -1,0 +1,35 @@
+"","vfamily","dataset","variable","K","P"
+"1","all viruses","all mammals","meanCFR",0.0575225102859813,0.001
+"2","all viruses","all mammals","maxCFR",0.0636250943556004,0.001
+"3","all viruses","all mammals","on.frac",0.0669160124063406,0.001
+"4","all viruses","bats only","meanCFR",0.136536890247864,0.001
+"5","all viruses","bats only","maxCFR",0.119091207482753,0.011
+"6","all viruses","bats only","on.frac",0.120360288478914,0.026
+"7","coronaviridae","all mammals","meanCFR",0.497562984310374,0.001
+"8","coronaviridae","all mammals","maxCFR",0.509376768181006,0.001
+"9","coronaviridae","all mammals","on.frac",55.6988938827912,1
+"10","coronaviridae","bats only","meanCFR",1.77272957203084,0.001
+"11","coronaviridae","bats only","maxCFR",1.75670719832224,0.001
+"12","coronaviridae","bats only","on.frac",10.3037035817705,1
+"13","flaviviridae","all mammals","meanCFR",0.157820080148641,0.001
+"14","flaviviridae","all mammals","maxCFR",0.122464632925455,0.001
+"15","flaviviridae","all mammals","on.frac",0.120076550998547,0.001
+"16","flaviviridae","bats only","meanCFR",0.450969956964294,0.001
+"17","flaviviridae","bats only","maxCFR",0.154124717699264,0.496
+"18","flaviviridae","bats only","on.frac",0.146055174633074,0.616
+"19","rhabdoviridae","all mammals","meanCFR",0.107846860427284,0.001
+"20","rhabdoviridae","all mammals","maxCFR",0.279294856443236,0.001
+"21","rhabdoviridae","bats only","meanCFR",0.227649428358373,0.054
+"22","rhabdoviridae","bats only","maxCFR",0.286518678821175,0.123
+"23","togaviridae","all mammals","meanCFR",0.156818096769996,0.001
+"24","togaviridae","all mammals","maxCFR",0.122980011968081,0.001
+"25","togaviridae","all mammals","on.frac",0.509679953116027,0.001
+"26","togaviridae","bats only","meanCFR",0.281955452413511,0.009
+"27","togaviridae","bats only","maxCFR",0.134591905841841,0.434
+"28","togaviridae","bats only","on.frac",1.09386649093474,0.003
+"29","paramyxoviridae","all mammals","meanCFR",0.103048385369654,0.048
+"30","paramyxoviridae","all mammals","maxCFR",0.210529798175007,0.011
+"31","paramyxoviridae","all mammals","on.frac",0.152665418209402,0.002
+"32","paramyxoviridae","bats only","meanCFR",0.0963160250382858,0.295
+"33","paramyxoviridae","bats only","maxCFR",0.131900580625116,0.218
+"34","paramyxoviridae","bats only","on.frac",0.245705539750736,0.001
