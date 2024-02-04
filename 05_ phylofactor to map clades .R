@@ -1,7 +1,7 @@
 ## phylofatality
-##05_phylofactor to map clades
+##03_phylofactor to map clades
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 12/18/2023
+## last update 2/4/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -24,7 +24,7 @@ library(phytools)
 library(dplyr)
 
 ## load in virulence data
-setwd("~/Desktop/PCM Class/phylofatality")
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
 data=read.csv("CFRbySpecies.csv")
 
 ## load Upham phylogeny
@@ -584,15 +584,18 @@ results<- do.call("rbind", list(cmean_pf_results,cmean_pf_results_cov,cmean_pf_r
                                 cot_pf_results_tog,bmean_pf_results,bmean_pf_results_cov,bmean_pf_results_fla,
                                 bmean_pf_results_rha,bmax_pf_results,bmax_pf_results_cov, bmax_pf_results_fla,bmax_pf_results_rha,
                                 bot_pf_results))
-setwd("~/Desktop/PCM Class/phylofatality/")
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
 #write.csv(results,"pf_allclades.csv")
 
+##quick intermission --> go to 03b_data mining and run this script --> come back
+
 ## visualize risky clades
-## load in risky species data from 03_data mining
-#setwd("~/Desktop/PCM Class/phylofatality")
-#species=read.csv("pf_riskyspecies.csv")
-#clades=read.csv("pf_allclades.csv")
-#rclades=read.csv("pf_riskyclades.csv")
+
+## load in risky species data from 03b_data mining
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+species=read.csv("pf_riskyspecies.csv")
+clades=read.csv("pf_allclades.csv")
+rclades=read.csv("pf_riskyclades.csv")
 
 #you get the legend in your console
 #mammal meanCFR
@@ -620,7 +623,6 @@ pf.tree(bmax_pf_cov,factors=1,size=0.1,alphas=rep(0.75,5))
 pf.tree(bmax_pf_fla,factors=1,size=0.1,alphas=rep(0.75,5)) 
 #bat ot
 #none are risky
-
 
 ## save trees
 dtree=treeio::full_join(as.treedata(cdata$phy),cdata$data,by="label")
@@ -650,9 +652,9 @@ plus=1
 pplus=plus+1
 
 
-## cfr mean: mammal all viruses
-gg=ggtree(dtree,size=0.2,layout="circular",
-          aes(colour=meanCFR_all.viruses, group=node))+ #change virus
+## cfr mean: mammal_all viruses
+gg=ggtree(dtree,size=0.2, layout="circular",
+          aes(colour=meanCFR_all.viruses, group=node))+ 
   #scale_colour_manual(values=c("grey80","black"))+
   scale_color_gradient(low="grey90",high="black")+
   guides(colour=F)
@@ -677,14 +679,15 @@ for(i in 1:nrow(cmean_pf_results)){ ##cmean_pf changes
                     parse=T,
                     angle=20)
 }
-#gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-
-## save
-gg_cmean=gg
+#save, title
+gg_cmean<- gg+  ggtitle("Phylofactor Clades: MeanCFR-All Viruses")+ theme(plot.title = element_text(hjust = 0.5))
 plot(gg_cmean)
 
+setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
+ggsave("MeanCFR_allviruses.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
-## cfr max: mammals, all viruses
+
+### cfr max: mammals_all viruses
 gg=ggtree(dtree,size=0.2,layout="circular",
           aes(colour=maxCFR_all.viruses, group=node))+
   #scale_colour_manual(values=c("grey80","black"))+
@@ -708,13 +711,15 @@ for(i in 1:nrow(cmax_pf_results)){
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
+gg_cmax<- gg+  ggtitle("Phylofactor Clades: MaxCFR-All Viruses")+ 
+  theme(plot.title = element_text(hjust = 0.5))
 
 ## save
-gg_cmax=gg
 plot(gg_cmax)
+ggsave("MaxCFR_allviruses.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
 
-## ot, mammals, all viruses
+## ot, mammals_all viruses
 gg=ggtree(dtree,size=0.2,layout="circular",
           aes(colour=on.frac_all.viruses, group=node))+
   #scale_colour_manual(values=c("grey80","black"))+
@@ -738,10 +743,11 @@ for(i in 1:nrow(cot_pf_results)){
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-
+gg_cot=gg+  ggtitle("Phylofactor Clades: Onward Transmission-All Viruses")+ theme(plot.title = element_text(hjust = 0.5))
 ## save
-gg_cot=gg
 plot(gg_cot)
+ggsave("OT_allviruses.jpg", gg_cot, device = "jpeg", width = 10, height = 6, units = "in")
+
 
 ####coronaviridae
 ## cfr mean: mammals, coronaviridae
@@ -768,10 +774,12 @@ for(i in 1:nrow(cmean_pf_results_cov)){
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-
+gg_cmean <- gg +
+  ggtitle(expression("Phylofactor Clades: MeanCFR-" ~ italic("Coronaviridae"))) +
+  theme(plot.title = element_text(hjust = 0.5))
 ## save
-gg_cmean=gg
 plot(gg_cmean)
+ggsave("MeanCFR_coronaviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ## cfr max: mammals, coronaviridaee
@@ -798,10 +806,13 @@ for(i in 1:nrow(cmax_pf_results_cov)){
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-
+gg_cmax <- gg +
+  ggtitle(expression("Phylofactor Clades: MaxCFR-" ~ italic("Coronaviridae"))) +
+  theme(plot.title = element_text(hjust = 0.5))
 ## save
-gg_cmax=gg
 plot(gg_cmax)
+ggsave("MaxCFR_coronaviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
+
 
 ####flaviviridae
 ## cfr mean: mammals, flaviviridae
@@ -828,13 +839,15 @@ for(i in 1:nrow(cmean_pf_results_fla)){
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-
+gg_cmean <- gg +
+  ggtitle(expression("Phylofactor Clades: MeanCFR-" ~ italic("Flaviviridae"))) +
+  theme(plot.title = element_text(hjust = 0.5))
 ## save
-gg_cmean=gg
 plot(gg_cmean)
+ggsave("MeanCFR_flaviviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 
-## cfr max: mammals, all viruses
+## cfr max: mammals, flaviviridae
 gg=ggtree(dtree_fla,size=0.2,layout="circular",
           aes(colour=maxCFR_flaviviridae, group=node))+
   #scale_colour_manual(values=c("grey80","black"))+
@@ -858,10 +871,12 @@ for(i in 1:nrow(cmax_pf_results_fla)){
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-
+gg_cmax <- gg +
+  ggtitle(expression("Phylofactor Clades: MaxCFR-" ~ italic("Flaviviridae"))) +
+  theme(plot.title = element_text(hjust = 0.5))
 ## save
-gg_cmax=gg
 plot(gg_cmax)
+ggsave("MaxCFR_flaviviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
 ## ot, mammals, flaviviridae
 gg=ggtree(dtree_fla,size=0.2,layout="circular",
@@ -887,9 +902,10 @@ for(i in 1:nrow(cot_pf_results_fla)){
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-
+gg_ot <- gg +
+  ggtitle(expression("Phylofactor Clades: Onward Transmission-"~italic("Flaviviridae"))) +
+  theme(plot.title = element_text(hjust = 0.5))
 ## save
-gg_cot=gg
-plot(gg_cot)
-
+plot(gg_ot)
+ggsave("OT_flaviviridae.jpg", gg_ot, device = "jpeg", width = 10, height = 6, units = "in")
 
