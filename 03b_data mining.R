@@ -50,7 +50,7 @@ data[which(data$var == "means"), "var"] <- "mean"
 #save data of risky clades
 rawdata_risk<-data
 setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
-write.csv(rawdata_risk,"pf_riskyclades.csv")
+#write.csv(rawdata_risk,"pf_riskyclades.csv")
 
 #pull out species in each clade
 data$species=data$taxa
