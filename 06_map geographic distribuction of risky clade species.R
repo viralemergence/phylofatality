@@ -1,7 +1,7 @@
 ## phylofatality
 ## 06_map geographic distribuction of risky clade species
-## danbeck@ou.edu
-## last update 11/19/2023
+## danbeck@ou.edu, carolinecummings@ou.edu
+## last update 2/4/2023
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -17,19 +17,18 @@ library(sp)
 library(tidyverse)
 
 #load in species data from all risky clades
-setwd("~/Desktop/PCM Class/phylofatality")
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
 data=read.csv("pf_riskyspecies.csv")
 
 ## load in mammal shapefile pruned to bats (spatial data)
-setwd("~/Desktop/PCM Class/phylofatality")
+setwd("~/Desktop/PCM Class/phylofatality/clean")
 bats=readRDS("bat shp.rds")
 
 ## tip
 bats$tip=gsub(" ","_",bats$binomial)
 data$tip=data$species
 
-#filter data to include species in risky bat clades (note: there are repeated clades
-#across variables, so I only save each one time i.e. the unique ones).
+#filter data to include species in risky bat clades for mean cfr
 rawdata=data
 all_mam_mean= data %>% filter(virus=="all", host=="mammal", var=="mean", factor=="1" | factor=="3")
 cov_mam_mean= data %>% filter(virus=="cov", host=="mammal", var=="mean", factor=="1")
@@ -98,7 +97,7 @@ bats$tip=revalue(bats$tip,
                    "Murina_feae"="Murina_cineracea",
                    "Murina_lorelieae"="Murina_loreliae", 
                    #"Murina_harrisoni"="Murina_tiensa",
-                   "Murina_peninsularis"="Murina_cyclotis",
+                   #"Murina_peninsularis"="Murina_cyclotis",
                    #"Myotis_albescens"="Nycticeius_aenobarbus",
                    #"Myotis_formosus"="Myotis_flavus",
                    #"Myotis_riparius"="Myotis_handleyi",
@@ -125,7 +124,7 @@ bats$tip=revalue(bats$tip,
                    "Vampyriscus_brocki"="Vampyressa_brocki",
                    "Vampyriscus_nymphaea"="Vampyressa_nymphaea"))
 ## check missing
-miss=setdiff(data$tip,bats$tip) #49 missing, not bad! keep going!
+miss=setdiff(data$tip,bats$tip) #48 missing
 miss
 
 #haven't found:
@@ -246,6 +245,15 @@ bats=merge(bset,data,by="tip",all.x=T)
 #convert factor variable to be a factor
 bats$factor <- factor(bats$factor)
 
+#save 
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+#write.csv(bats, "bats_georanges.csv")
+
+#load in bat geo range data
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+bats=read.csv("bats_georanges.csv")
+
+
 #save data into separate virus variables
 fla<- bats%>% filter(virus=="fla")
 all<- bats %>%filter(virus=="all")
@@ -267,17 +275,68 @@ bmaps<-ggplot() +
                fill="grey90", colour="grey90", linewidth=0.2) +
   
   ## add shapefiles
-  ##for data=, "all" to see clades distributed across viruses overall, "cov" 
-  ##to see cov clades, and "fla" to see fla clades
-  geom_polygon(data=fla, aes(x=long, y=lat, group=paste(tip, group),
+  geom_polygon(data=all, aes(x=long, y=lat, group=paste(tip, group),
                fill=factor), alpha=0.25) +
-  scale_fill_manual(values=c("turquoise2", "magenta2","orange2", "purple2"))+
+  scale_fill_manual(values=c("purple2", "orange2","turquoise2", "magenta2"))+
   
   guides(fill = FALSE) +
   theme_void() +
-  coord_map("gilbert", xlim = c(-180, 180))
+  coord_map("gilbert", xlim = c(-180, 180))+
+  ggtitle("Geographic range of risky bat hosts MeanCFR all viruses")+
+  theme(plot.title = element_text(hjust = 0.5))
 
+#save
 print(bmaps)
-#note, I used green4 for cov, and purple and orange above for all, to make sure 
-#each clade was a unique color.
+setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
+#ggsave("map_allviruses.jpg", bmaps, device = "jpeg", width = 6, height = 6, units = "in")
+
+
+
+#coronaviridae
+bmaps<-ggplot() +
+  ## base layer
+  geom_polygon(data=wdata, aes(x=long, y=lat, group=group),
+               fill="grey90", colour="grey90", linewidth=0.2) +
+  
+  ## add shapefiles
+  ##for data=, "all" to see clades distributed across viruses overall, "cov" 
+  ##to see cov clades, and "fla" to see fla clades
+  geom_polygon(data=cov, aes(x=long, y=lat, group=paste(tip, group),
+                             fill=factor), alpha=0.25) +
+  scale_fill_manual(values=c("green4", "orange2","turquoise2", "magenta2"))+
+  
+  guides(fill = FALSE) +
+  theme_void() +
+  coord_map("gilbert", xlim = c(-180, 180))+
+  ggtitle(expression("Geographic range of risky bat hosts MeanCFR-"~italic("Coronaviridae"))) +
+  theme(plot.title = element_text(hjust = 0.5))
+  
+#save
+print(bmaps)
+setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
+#ggsave("map_cov.jpg", bmaps, device = "jpeg", width = 6, height = 6, units = "in")
+
+
+
+#flaviviridae
+bmaps<-ggplot() +
+  ## base layer
+  geom_polygon(data=wdata, aes(x=long, y=lat, group=group),
+               fill="grey90", colour="grey90", linewidth=0.2) +
+  
+  ## add shapefiles
+  geom_polygon(data=fla, aes(x=long, y=lat, group=paste(tip, group),
+                             fill=factor), alpha=0.25) +
+  scale_fill_manual(values=c("turquoise2", "magenta2","purple2", "orange2"))+
+  
+  guides(fill = FALSE) +
+  theme_void() +
+  coord_map("gilbert", xlim = c(-180, 180))+
+  ggtitle(expression("Geographic range of risky bat hosts MeanCFR-"~italic("Flaviviridae"))) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#save
+print(bmaps)
+setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
+#ggsave("map_flav.jpg", bmaps, device = "jpeg", width = 6, height = 6, units = "in")
 
