@@ -182,7 +182,10 @@ vraw=vdata
 n_distinct(vdata$species) #983 unique
 bats<- vdata %>% filter(HostOrder=="chiroptera") 
 n_distinct(bats$species) #220 unique bats
+n_distinct(vdata$Virus) #115
+n_distinct(vdata$VirusFamily) #22
 rm(bats)
+
 
 ## for each host species, fraction of all viruses that can infect humans
 tmp=merge(cfr,vdata,by="Virus")
