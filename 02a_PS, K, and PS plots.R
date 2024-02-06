@@ -277,7 +277,9 @@ pdata=data.frame(vfamily=rep("all viruses",6),
                  variable=c(rep(c("meanCFR","maxCFR","on.frac"),2)),
                  lambda=sapply(mlist,function(x) x$param["lambda"]),
                  lambda_lower=sapply(mlist,function(x) x$param.CI$lambda$ci.val[1]),
-                 lambda_upper=sapply(mlist,function(x) x$param.CI$lambda$ci.val[2]))
+                 lambda_lower_p=sapply(mlist,function(x) x$param.CI$lambda$bounds.p[1]),
+                 lambda_upper=sapply(mlist,function(x) x$param.CI$lambda$ci.val[2]),
+                 lambda_upper_p=sapply(mlist,function(x) x$param.CI$lambda$bounds.val[1]))
 pdata$variable=factor(pdata$variable,levels=c("meanCFR","maxCFR","on.frac"))
 
 #mammals, bats, coronaviridae
@@ -343,7 +345,7 @@ pdata_par$variable=factor(pdata_par$variable,levels=c("meanCFR","maxCFR","on.fra
 #save
 pagel<- rbind(pdata,pdata_cor, pdata_fla, pdata_rha, pdata_tog, pdata_par)
 setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
-write.csv(pagel,"PS_data.csv")
+#write.csv(pagel,"PS_data.csv")
 
 #summarize bloomberg's K
 klist=list(psk_me,psk_mx,psk_ot,bpsk_me,bpsk_mx,bpsk_ot)
