@@ -22,6 +22,7 @@ library(parallel)
 library(emmeans)
 #library(ade4)
 library(phytools)
+library(egg)
 
 ## load in virulence data
 #setwd("~/Desktop/GitHub/phylofatality")
@@ -419,6 +420,8 @@ pagel_ot<- ps %>% filter(variable=="on.frac")
 meanCFR <- ggplot(pagel_me, aes(vfamily, lambda, color = vfamily)) +
   theme_bw() +
   facet_wrap(~dataset)+
+  theme(legend.position = "none")+
+  scale_x_discrete(labels = NULL)+
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   guides(color = guide_legend(title = "virus family"))+
   geom_errorbar(
@@ -436,12 +439,14 @@ meanCFR <- ggplot(pagel_me, aes(vfamily, lambda, color = vfamily)) +
 
 plot(meanCFR)
 setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
-ggsave("MeanCFR.jpg", meanCFR, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("MeanCFR.jpg", meanCFR, device = "jpeg", width = 10, height = 6, units = "in")
 
 #by variable
 maxCFR <- ggplot(pagel_mx, aes(vfamily, lambda, color = vfamily)) +
   theme_bw() +
   facet_wrap(~dataset)+
+  theme(legend.position = "none")+
+  scale_x_discrete(labels = NULL)+
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   guides(color = guide_legend(title = "virus family"))+
   geom_errorbar(
@@ -451,19 +456,20 @@ maxCFR <- ggplot(pagel_mx, aes(vfamily, lambda, color = vfamily)) +
     size = 0.5)+
   geom_point(position = position_dodge(width = 0.2), size = 2) +
   ylim(0, 1) +
-  labs(y = expression(paste("Pagel's ", lambda)),
+  labs(y = NULL,
        x = "Max CFR measures in human hosts") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))
 
 plot(maxCFR)
-ggsave("MaxCFR.jpg", maxCFR, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("MaxCFR.jpg", maxCFR, device = "jpeg", width = 10, height = 6, units = "in")
 
 #by variable
 ot <- ggplot(pagel_ot, aes(vfamily, lambda, color = vfamily)) +
   theme_bw() +
   facet_wrap(~dataset)+
+  scale_x_discrete(labels = NULL)+
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   guides(color = guide_legend(title = "virus family"))+
   geom_errorbar(
@@ -473,13 +479,19 @@ ot <- ggplot(pagel_ot, aes(vfamily, lambda, color = vfamily)) +
     size = 0.5)+
   geom_point(position = position_dodge(width = 0.2), size = 2) +
   ylim(0, 1) +
-  labs(y = expression(paste("Pagel's ", lambda)),
+  labs(y = NULL,
        x = "Onward transmission fraction measures in human hosts") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))
 
 plot(ot)
-ggsave("OT.jpg", ot, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("OT.jpg", ot, device = "jpeg", width = 10, height = 6, units = "in")
 
+#try combining the plots
+facet_plot <- plot_grid(meanCFR, maxCFR, ot, ncol = 3)
+plot(facet_plot)
+
+setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
+#ggsave("facet_plot.jpg", facet_plot, device = "jpeg", width = 25, height = 8, units = "in")
 
