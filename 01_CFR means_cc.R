@@ -184,7 +184,13 @@ bats<- vdata %>% filter(HostOrder=="chiroptera")
 n_distinct(bats$species) #220 unique bats
 n_distinct(vdata$Virus) #115
 n_distinct(vdata$VirusFamily) #22
-rm(bats)
+
+#how many mammals in each virus family
+vdata%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #101
+vdata%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #656
+vdata%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #394
+vdata%>% filter(VirusFamily=="togaviridae") %>% n_distinct() #251
+vdata%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #67
 
 
 ## for each host species, fraction of all viruses that can infect humans
@@ -282,6 +288,51 @@ vset=vlist %>% purrr::reduce(full_join,by="species")
 
 ## merge
 vdata=merge(vdata,vset,by="species",all=T)
+
+#summary stats
+
+#mean
+mean(vdata$`meanCFR_all viruses`, na.rm=T) #0.2425706
+mean(vdata$`maxCFR_all viruses`, na.rm=T) #0.3939759
+mean(vdata$`on.frac_all viruses`, na.rm=T) #0.3529295
+
+#sd
+sd1 <- sd(vdata$`meanCFR_all viruses`, na.rm=T)
+sd2 <- sd(vdata$`maxCFR_all viruses`, na.rm=T)
+sd3 <- sd(vdata$`on.frac_all viruses`, na.rm=T)
+
+#sample size
+ss1<- length(vdata$`meanCFR_all viruses`)
+ss2<- length(vdata$`maxCFR_all viruses`)
+ss3<- length(vdata$`on.frac_all viruses`)
+
+# se
+se1 <- sd1/sqrt(ss1) #0.0103
+se2 <- sd2/sqrt(ss2) #0.013
+se3 <- sd3/sqrt(ss3) #0.013
+
+#summary stats bats
+bdata=vdata[vdata$species%in%bats$species,]
+
+#mean
+mean(bdata$`meanCFR_all viruses`, na.rm=T) #0.521641
+mean(bdata$`maxCFR_all viruses`, na.rm=T) #0.6981767
+mean(bdata$`on.frac_all viruses`, na.rm=T) #0.2947801
+
+#sd
+sd1 <- sd(bdata$`meanCFR_all viruses`, na.rm=T)
+sd2 <- sd(bdata$`maxCFR_all viruses`, na.rm=T)
+sd3 <- sd(bdata$`on.frac_all viruses`, na.rm=T)
+
+#sample size
+ss1<- length(bdata$`meanCFR_all viruses`)
+ss2<- length(bdata$`maxCFR_all viruses`)
+ss3<- length(bdata$`on.frac_all viruses`)
+
+# se
+se1 <- sd1/sqrt(ss1) #0.03
+se2 <- sd2/sqrt(ss2) #0.03
+se3 <- sd3/sqrt(ss3) #0.03
 
 ## export
 #setwd("~/Desktop/phylofatality")
