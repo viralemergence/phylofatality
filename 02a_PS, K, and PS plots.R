@@ -420,78 +420,84 @@ pagel_ot<- ps %>% filter(variable=="on.frac")
 meanCFR <- ggplot(pagel_me, aes(vfamily, lambda, color = vfamily)) +
   theme_bw() +
   facet_wrap(~dataset)+
+  ggtitle("Mean CFR measures in human hosts")+
+  theme(plot.title.position = "plot", plot.title = element_text(hjust = 0.6, size = 13))+
   theme(legend.position = "none")+
   scale_x_discrete(labels = NULL)+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(axis.text.x = element_blank()) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.ticks.x = element_blank()) +
   guides(color = guide_legend(title = "virus family"))+
   geom_errorbar(
     aes(ymin = lambda_lower, ymax = lambda_upper),
-    position = position_dodge(width = 0.2),  # Adjust width as needed
-    width = 0.2,  # Adjust width as needed
+    position = position_dodge(width = 0.2), 
+    width = 0.2, 
     size = 0.5)+
   geom_point(position = position_dodge(width = 0.2), size = 2) +
   ylim(0, 1) +
-  labs(y = expression(paste("Pagel's ", lambda)),
-       x = "Mean CFR measures in human hosts") +
+  #labs(y = expression(paste("Pagel's ", lambda)),
+       #x = "Mean CFR measures in human hosts") +
+  xlab(NULL)+
+  ylab(NULL)+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))
-
 plot(meanCFR)
-setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
-#ggsave("MeanCFR.jpg", meanCFR, device = "jpeg", width = 10, height = 6, units = "in")
 
 #by variable
 maxCFR <- ggplot(pagel_mx, aes(vfamily, lambda, color = vfamily)) +
   theme_bw() +
   facet_wrap(~dataset)+
-  theme(legend.position = "none")+
+  ggtitle("Maximum CFR measures in human hosts")+
+  theme(plot.title.position = "plot", plot.title = element_text(hjust = 0.4, size = 13))+
+  #theme(legend.position = "none")+
   scale_x_discrete(labels = NULL)+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.ticks.x = element_blank()) +
   guides(color = guide_legend(title = "virus family"))+
   geom_errorbar(
     aes(ymin = lambda_lower, ymax = lambda_upper),
-    position = position_dodge(width = 0.2),  # Adjust width as needed
-    width = 0.2,  # Adjust width as needed
+    position = position_dodge(width = 0.2),  
+    width = 0.2, 
     size = 0.5)+
   geom_point(position = position_dodge(width = 0.2), size = 2) +
   ylim(0, 1) +
-  labs(y = NULL,
-       x = "Max CFR measures in human hosts") +
+  labs(y =  expression(paste("Pagel's ", lambda)))+
+  xlab(NULL)+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))
-
 plot(maxCFR)
-#ggsave("MaxCFR.jpg", maxCFR, device = "jpeg", width = 10, height = 6, units = "in")
 
 #by variable
 ot <- ggplot(pagel_ot, aes(vfamily, lambda, color = vfamily)) +
   theme_bw() +
   facet_wrap(~dataset)+
+  ggtitle("Onward transmission fraction measures in human hosts")+
+  theme(plot.title.position = "plot", plot.title = element_text(hjust = 0.6, size = 13))+
+  theme(legend.position = "none")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.ticks.x = element_blank()) +
   scale_x_discrete(labels = NULL)+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   guides(color = guide_legend(title = "virus family"))+
   geom_errorbar(
     aes(ymin = lambda_lower, ymax = lambda_upper),
-    position = position_dodge(width = 0.2),  # Adjust width as needed
-    width = 0.2,  # Adjust width as needed
+    position = position_dodge(width = 0.2), 
+    width = 0.2, 
     size = 0.5)+
   geom_point(position = position_dodge(width = 0.2), size = 2) +
   ylim(0, 1) +
-  labs(y = NULL,
-       x = "Onward transmission fraction measures in human hosts") +
+  #labs(y =  expression(paste("Pagel's ", lambda)),
+       #x = "Onward transmission fraction measures in human hosts") +
+  xlab(NULL)+
+  ylab(NULL)+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
   theme(axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0))) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))
-
 plot(ot)
-#ggsave("OT.jpg", ot, device = "jpeg", width = 10, height = 6, units = "in")
 
-#try combining the plots
-facet_plot <- plot_grid(meanCFR, maxCFR, ot, ncol = 3)
-plot(facet_plot)
-
+#combine plots
 setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
-#ggsave("facet_plot.jpg", facet_plot, device = "jpeg", width = 25, height = 8, units = "in")
+stack_plot<- plot(meanCFR/maxCFR/ot)
+ggsave("stack_plot.jpg", stack_plot, device = "jpeg", width = 8, height =12, units = "in")
 
