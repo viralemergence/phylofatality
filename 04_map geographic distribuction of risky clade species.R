@@ -1,5 +1,5 @@
 ## phylofatality
-## 06_map geographic distribuction of risky clade species
+## 06_map geographic distribution of risky clade species
 ## danbeck@ou.edu, carolinecummings@ou.edu
 ## last update 2/4/2023
 
@@ -31,10 +31,17 @@ data$tip=data$species
 #filter data to include species in risky bat clades for mean cfr
 rawdata=data
 all_mam_mean= data %>% filter(virus=="all", host=="mammal", var=="mean", factor=="1" | factor=="3")
-cov_mam_mean= data %>% filter(virus=="cov", host=="mammal", var=="mean", factor=="1")
-fla_mam_mean= data %>% filter(virus=="fla", host=="mammal", var=="mean", factor=="2" | factor=="4")
+all_mam_ot= data %>% filter(virus=="all", host=="mammal", var=="ot", factor=="2")
 
-data<- bind_rows(all_mam_mean, cov_mam_mean, fla_mam_mean )
+cov_mam_mean= data %>% filter(virus=="cov", host=="mammal", var=="mean", factor=="1") #same clade for max
+
+fla_mam_mean= data %>% filter(virus=="fla", host=="mammal", var=="mean", factor=="2" | factor=="4")
+fla_mam_mx= data %>% filter(virus=="fla", host=="mammal", var=="max", factor=="2")
+fla_mam_ot= data %>% filter(virus=="fla", host=="mammal", var=="ot", factor=="2")
+
+
+data<- bind_rows(all_mam_mean, all_mam_ot, cov_mam_mean, fla_mam_mean,
+                 fla_mam_mx,fla_mam_ot)
 
 ## check missing
 miss=setdiff(data$tip,bats$tip) #105 missing
@@ -242,58 +249,89 @@ rm(bats)
 ## merge with data
 bats=merge(bset,data,by="tip",all.x=T)
 
-#convert factor variable to be a factor
-bats$factor <- factor(bats$factor)
-
 #save 
 setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
-#write.csv(bats, "bats_georanges.csv")
+write.csv(bats, "bats_georanges.csv")
 
+
+
+
+
+
+
+#START HERE to skip getting bat geo ranges
 #load in bat geo range data
 setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
 bats=read.csv("bats_georanges.csv")
 
+#convert factor variable to be a factor
+bats$factor <- factor(bats$factor)
 
 #save data into separate virus variables
-fla<- bats%>% filter(virus=="fla")
-all<- bats %>%filter(virus=="all")
-cov<- bats %>%filter(virus=="cov")
-
+all_me<- bats %>% filter(virus=="all", var=="mean")
+all_ot<- bats %>% filter(virus=="all", var=="ot")
+cov<- bats %>%filter(virus=="cov", var=="mean") #same for max
+fla_me<- bats%>% filter(virus=="fla", var=="mean")
+fla_mx<- bats%>% filter(virus=="fla", var=="max")
+fla_ot<- bats%>% filter(virus=="fla", var=="ot")
 
 ## get world map
+#make sure packages at the top are loaded in!
 library(ggalt)
 require(proj4)
 library(ggthemes)
 library(viridis)
 library(mapproj)
+library(patchwork)
 wdata=map_data("world")
 #wdata=wdata[-which(wdata$region=='Antarctica'),]
 
-bmaps<-ggplot() +
+#all viruses-Mean CFR
+bmaps_allme<-ggplot() +
   ## base layer
   geom_polygon(data=wdata, aes(x=long, y=lat, group=group),
                fill="grey90", colour="grey90", linewidth=0.2) +
   
   ## add shapefiles
-  geom_polygon(data=all, aes(x=long, y=lat, group=paste(tip, group),
+  geom_polygon(data=all_me, aes(x=long, y=lat, group=paste(tip, group),
                fill=factor), alpha=0.25) +
   scale_fill_manual(values=c("purple2", "orange2","turquoise2", "magenta2"))+
-  
   guides(fill = FALSE) +
   theme_void() +
   coord_map("gilbert", xlim = c(-180, 180))+
-  ggtitle("Geographic range of risky bat hosts MeanCFR all viruses")+
-  theme(plot.title = element_text(hjust = 0.5))
-
+  #ggtitle("Geographic ranges of risky bat hosts: MeanCFR-All Viruses")+
+  ggtitle("MeanCFR-All Viruses")+
+  theme(plot.title = element_text(hjust = 0.5, size=8))
+  #theme(plot.title.position = "plot", plot.title = element_text(hjust = 0.6, size = 11))
+plot(bmaps_allme)
 #save
-print(bmaps)
 setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
-#ggsave("map_allviruses.jpg", bmaps, device = "jpeg", width = 6, height = 6, units = "in")
+#ggsave("map_allviruses_MeanCFR.jpg", bmaps_allme, device = "jpeg", width = 6, height = 6, units = "in")
 
 
+#all viruses-OT 
+bmaps_allot<-ggplot() +
+  ## base layer
+  geom_polygon(data=wdata, aes(x=long, y=lat, group=group),
+               fill="grey90", colour="grey90", linewidth=0.2) +
+  
+  ## add shapefiles
+  geom_polygon(data=all_ot, aes(x=long, y=lat, group=paste(tip, group),
+                                fill=factor), alpha=0.25) +
+  scale_fill_manual(values=c("purple2", "orange2","turquoise2", "magenta2"))+
+  guides(fill = FALSE) +
+  theme_void() +
+  coord_map("gilbert", xlim = c(-180, 180))+
+  #ggtitle("Geographic range of risky bat hosts: Fraction with Onward Transmission-All Viruses")+
+  ggtitle("Fraction with Onward Transmission-All Viruses")+
+  theme(plot.title = element_text(hjust = 0.5, size=8))
+  #theme(plot.title.position = "plot", plot.title = element_text(hjust = 0.6, size = 11)) 
+print(bmaps_allot)
+#save
+#ggsave("map_allviruses_OT.jpg", bmaps_allot, device = "jpeg", width = 7, height = 6, units = "in")
 
 #coronaviridae
-bmaps<-ggplot() +
+bmaps_cov<-ggplot() +
   ## base layer
   geom_polygon(data=wdata, aes(x=long, y=lat, group=group),
                fill="grey90", colour="grey90", linewidth=0.2) +
@@ -308,35 +346,81 @@ bmaps<-ggplot() +
   guides(fill = FALSE) +
   theme_void() +
   coord_map("gilbert", xlim = c(-180, 180))+
-  ggtitle(expression("Geographic range of risky bat hosts MeanCFR-"~italic("Coronaviridae"))) +
-  theme(plot.title = element_text(hjust = 0.5))
-  
+  #ggtitle(expression("Geographic range of risky bat hosts: MeanCFR/MaxCFR-"~italic("Coronaviridae"))) +
+  ggtitle(expression("MeanCFR/MaxCFR-"~italic("Coronaviridae"))) +
+  theme(plot.title = element_text(hjust = 0.5, size=8))
 #save
-print(bmaps)
+print(bmaps_cov)
 setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
-#ggsave("map_cov.jpg", bmaps, device = "jpeg", width = 6, height = 6, units = "in")
+#ggsave("map_cov.jpg", bmaps_cov, device = "jpeg", width = 6, height = 6, units = "in")
 
 
-
-#flaviviridae
-bmaps<-ggplot() +
+#flaviviridae+ Mean CFR
+bmaps_flame<-ggplot() +
   ## base layer
   geom_polygon(data=wdata, aes(x=long, y=lat, group=group),
                fill="grey90", colour="grey90", linewidth=0.2) +
   
   ## add shapefiles
-  geom_polygon(data=fla, aes(x=long, y=lat, group=paste(tip, group),
+  geom_polygon(data=fla_me, aes(x=long, y=lat, group=paste(tip, group),
                              fill=factor), alpha=0.25) +
   scale_fill_manual(values=c("turquoise2", "magenta2","purple2", "orange2"))+
   
   guides(fill = FALSE) +
   theme_void() +
   coord_map("gilbert", xlim = c(-180, 180))+
-  ggtitle(expression("Geographic range of risky bat hosts MeanCFR-"~italic("Flaviviridae"))) +
-  theme(plot.title = element_text(hjust = 0.5))
-
+  #ggtitle(expression("Geographic range of risky bat hosts: MeanCFR-"~italic("Flaviviridae"))) +
+  ggtitle(expression("MeanCFR-"~italic("Flaviviridae"))) +
+  theme(plot.title = element_text(hjust = 0.5, size=8))
+plot(bmaps_flame)
 #save
-print(bmaps)
-setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
-#ggsave("map_flav.jpg", bmaps, device = "jpeg", width = 6, height = 6, units = "in")
+#ggsave("map_fla_MeanCFR.jpg", bmaps_flame, device = "jpeg", width = 6, height = 6, units = "in")
+
+
+#flaviviridae + MaxCFR
+bmaps_flamx<-ggplot() +
+  ## base layer
+  geom_polygon(data=wdata, aes(x=long, y=lat, group=group),
+               fill="grey90", colour="grey90", linewidth=0.2) +
+  
+  ## add shapefiles
+  geom_polygon(data=fla_mx, aes(x=long, y=lat, group=paste(tip, group),
+                             fill=factor), alpha=0.25) +
+  scale_fill_manual(values=c("turquoise2", "magenta","purple2", "orange2"))+
+  
+  guides(fill = FALSE) +
+  theme_void() +
+  coord_map("gilbert", xlim = c(-180, 180))+
+  #ggtitle(expression("Geographic range of risky bat hosts: MaxCFR-"~italic("Flaviviridae"))) +
+  ggtitle(expression("MaxCFR-"~italic("Flaviviridae"))) +
+  theme(plot.title = element_text(hjust = 0.5,size=8))
+plot(bmaps_flamx)
+#save
+#ggsave("map_fla_MaxCFR.jpg", bmaps_flamx, device = "jpeg", width = 6, height = 6, units = "in")
+
+#flaviviridae + OT
+bmaps_flaot<-ggplot() +
+  ## base layer
+  geom_polygon(data=wdata, aes(x=long, y=lat, group=group),
+               fill="grey90", colour="grey90", linewidth=0.2) +
+  
+  ## add shapefiles
+  geom_polygon(data=fla_ot, aes(x=long, y=lat, group=paste(tip, group),
+                             fill=factor), alpha=0.25) +
+  scale_fill_manual(values=c("turquoise2", "magenta2","purple2", "orange2"))+
+  
+  guides(fill = FALSE) +
+  theme_void() +
+  coord_map("gilbert", xlim = c(-180, 180))+
+  #ggtitle(expression("Geographic range of risky bat hosts: Fraction with Onward Transmission-"~italic("Flaviviridae"))) +
+  ggtitle(expression("Fraction with Onward Transmission-"~italic("Flaviviridae"))) +
+  theme(plot.title = element_text(hjust = 0.5, size=8))
+plot(bmaps_flaot)
+#save
+#ggsave("map_fla_OT.jpg", bmaps_flaot, device = "jpeg", width = 7, height = 6, units = "in")
+
+#try some plot combos
+giant_bmap<- bmaps_allme+ bmaps_allot+ bmaps_cov+ bmaps_flame+ bmaps_flamx+ bmaps_flaot
+print(giant_bmap)
+#ggsave("map_giant.jpg", giant_bmap, device = "jpeg", width = 8, height = 6, units = "in")
 
