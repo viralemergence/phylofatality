@@ -675,16 +675,17 @@ for(i in 1:nrow(cmean_pf_results)){ ##cmean_pf changes
                     label=cmean_pf_results$factor[i], ##cmean_pf changes
                     offset=pplus+1,
                     hjust=0.75,
-                    offset.text=pplus*5,
+                    offset.text=pplus*10,
                     parse=T,
                     angle=20)
 }
 #save, title
-gg_cmean<- gg+  ggtitle("Phylofactor Clades: MeanCFR-All Viruses")+ theme(plot.title = element_text(hjust = 0.5))
+#gg_cmean<- gg+  ggtitle("Phylofactor Clades: MeanCFR-All Viruses")+ theme(plot.title = element_text(hjust = 0.5))
+gg_cmean<- gg+  ggtitle("MeanCFR-All Viruses")+ theme(plot.title = element_text(hjust = 0.5, size=8))
 plot(gg_cmean)
 
 setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
-ggsave("MeanCFR_allviruses.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("MeanCFR_allviruses.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ### cfr max: mammals_all viruses
@@ -706,17 +707,19 @@ for(i in 1:nrow(cmax_pf_results)){
                     label=cmax_pf_results$factor[i],
                     offset=pplus,
                     hjust=0.75,
-                    offset.text=pplus*5,
+                    offset.text=pplus*10,
                     parse=T,
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-gg_cmax<- gg+  ggtitle("Phylofactor Clades: MaxCFR-All Viruses")+ 
-  theme(plot.title = element_text(hjust = 0.5))
+
+
+#gg_cmax<- gg+  ggtitle("Phylofactor Clades: MaxCFR-All Viruses")+ theme(plot.title = element_text(hjust = 0.5))
+gg_cmax<- gg+  ggtitle("MaxCFR-All Viruses")+ theme(plot.title = element_text(hjust = 0.5, size=8))
 
 ## save
 plot(gg_cmax)
-ggsave("MaxCFR_allviruses.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("MaxCFR_allviruses.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ## ot, mammals_all viruses
@@ -738,15 +741,17 @@ for(i in 1:nrow(cot_pf_results)){
                     label=cot_pf_results$factor[i],
                     offset=pplus,
                     hjust=0.75,
-                    offset.text=pplus*5,
+                    offset.text=pplus*10,
                     parse=T,
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-gg_cot=gg+  ggtitle("Phylofactor Clades: Onward Transmission-All Viruses")+ theme(plot.title = element_text(hjust = 0.5))
+#gg_cot=gg+  ggtitle("Phylofactor Clades: Onward Transmission-All Viruses")+ theme(plot.title = element_text(hjust = 0.5))
+gg_cot=gg+ggtitle("Fraction with Onward Transmission-All Viruses")+ theme(plot.title = element_text(hjust = 0.5, size=8))
+
 ## save
 plot(gg_cot)
-ggsave("OT_allviruses.jpg", gg_cot, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("OT_allviruses.jpg", gg_cot, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ####coronaviridae
@@ -769,17 +774,19 @@ for(i in 1:nrow(cmean_pf_results_cov)){
                     label=cmean_pf_results_cov$factor[i], 
                     offset=pplus+1,
                     hjust=0.75,
-                    offset.text=pplus*5,
+                    offset.text=pplus*10,
                     parse=T,
-                    angle=20)
+                    angle=20,
+                    label.size=12)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-gg_cmean <- gg +
-  ggtitle(expression("Phylofactor Clades: MeanCFR-" ~ italic("Coronaviridae"))) +
-  theme(plot.title = element_text(hjust = 0.5))
+#gg_cmean <- gg +ggtitle(expression("Phylofactor Clades: MeanCFR-" ~ italic("Coronaviridae"))) + theme(plot.title = element_text(hjust = 0.5))
+#gg_cmean <- gg +ggtitle(expression("MeanCFR-" ~ italic("Coronaviridae"))) + theme(plot.title = element_text(hjust = 0.5, size=8))
+gg_cmean_cov <- gg +ggtitle(expression("MeanCFR/MaxCFR-" ~ italic("Coronaviridae"))) + theme(plot.title = element_text(hjust = 0.5, size=8))
+
 ## save
-plot(gg_cmean)
-ggsave("MeanCFR_coronaviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
+plot(gg_cmean_cov)
+#ggsave("MeanCFR_coronaviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ## cfr max: mammals, coronaviridaee
@@ -801,17 +808,17 @@ for(i in 1:nrow(cmax_pf_results_cov)){
                     label=cmax_pf_results_cov$factor[i],
                     offset=pplus,
                     hjust=0.75,
-                    offset.text=pplus*5,
+                    offset.text=pplus*10,
                     parse=T,
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-gg_cmax <- gg +
-  ggtitle(expression("Phylofactor Clades: MaxCFR-" ~ italic("Coronaviridae"))) +
-  theme(plot.title = element_text(hjust = 0.5))
+#gg_cmax <- gg +ggtitle(expression("Phylofactor Clades: MaxCFR-" ~ italic("Coronaviridae"))) + theme(plot.title = element_text(hjust = 0.5))
+#gg_cmax <- gg +ggtitle(expression("MaxCFR-" ~ italic("Coronaviridae"))) + theme(plot.title = element_text(hjust = 0.5, size=8))
+
 ## save
 plot(gg_cmax)
-ggsave("MaxCFR_coronaviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("MaxCFR_coronaviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ####flaviviridae
@@ -834,17 +841,17 @@ for(i in 1:nrow(cmean_pf_results_fla)){
                     label=cmean_pf_results_fla$factor[i], 
                     offset=pplus+1,
                     hjust=0.75,
-                    offset.text=pplus*5,
+                    offset.text=pplus*10,
                     parse=T,
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-gg_cmean <- gg +
-  ggtitle(expression("Phylofactor Clades: MeanCFR-" ~ italic("Flaviviridae"))) +
-  theme(plot.title = element_text(hjust = 0.5))
+#gg_cmean <- gg + ggtitle(expression("Phylofactor Clades: MeanCFR-" ~ italic("Flaviviridae"))) + theme(plot.title = element_text(hjust = 0.5))
+gg_cmean_fla <- gg + ggtitle(expression("MeanCFR-" ~ italic("Flaviviridae"))) + theme(plot.title = element_text(hjust = 0.5, size=8))
+
 ## save
-plot(gg_cmean)
-ggsave("MeanCFR_flaviviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
+plot(gg_cmean_fla)
+#ggsave("MeanCFR_flaviviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ## cfr max: mammals, flaviviridae
@@ -866,17 +873,17 @@ for(i in 1:nrow(cmax_pf_results_fla)){
                     label=cmax_pf_results_fla$factor[i],
                     offset=pplus,
                     hjust=0.75,
-                    offset.text=pplus*5,
+                    offset.text=pplus*10,
                     parse=T,
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-gg_cmax <- gg +
-  ggtitle(expression("Phylofactor Clades: MaxCFR-" ~ italic("Flaviviridae"))) +
-  theme(plot.title = element_text(hjust = 0.5))
+#gg_cmax <- gg +ggtitle(expression("Phylofactor Clades: MaxCFR-" ~ italic("Flaviviridae"))) + theme(plot.title = element_text(hjust = 0.5))
+gg_cmax_fla <- gg +ggtitle(expression("MaxCFR-" ~ italic("Flaviviridae"))) + theme(plot.title = element_text(hjust = 0.5, size=8))
+
 ## save
-plot(gg_cmax)
-ggsave("MaxCFR_flaviviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
+plot(gg_cmax_fla)
+#ggsave("MaxCFR_flaviviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
 ## ot, mammals, flaviviridae
 gg=ggtree(dtree_fla,size=0.2,layout="circular",
@@ -897,15 +904,22 @@ for(i in 1:nrow(cot_pf_results_fla)){
                     label=cot_pf_results_fla$factor[i],
                     offset=pplus,
                     hjust=0.75,
-                    offset.text=pplus*5,
+                    offset.text=pplus*10,
                     parse=T,
                     angle=20)
 }
 #gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-gg_ot <- gg +
-  ggtitle(expression("Phylofactor Clades: Onward Transmission-"~italic("Flaviviridae"))) +
-  theme(plot.title = element_text(hjust = 0.5))
+#gg_ot <- gg + ggtitle(expression("Phylofactor Clades: Onward Transmission-"~italic("Flaviviridae"))) +theme(plot.title = element_text(hjust = 0.5))
+gg_ot_fla <- gg + ggtitle(expression("Fraction with Onward Transmission-"~italic("Flaviviridae"))) +theme(plot.title = element_text(hjust = 0.5, size=8))
+
 ## save
-plot(gg_ot)
-ggsave("OT_flaviviridae.jpg", gg_ot, device = "jpeg", width = 10, height = 6, units = "in")
+plot(gg_ot_fla)
+#ggsave("OT_flaviviridae.jpg", gg_ot, device = "jpeg", width = 10, height = 6, units = "in")
+
+
+#try to facet wrap my plots
+giant_phylo<- gg_cmean+gg_cmax+gg_cmean_cov+gg_cmean_fla+gg_cmax_fla+gg_ot_fla
+
+print(giant_phylo)
+ggsave("giant_phylofactor.jpg", giant_phylo, device = "jpeg", width = 8, height = 6, units = "in")
 
