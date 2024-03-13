@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu 
-## last update 9/19/23
+## last update 3/13/24
 
 ## clean environxment & plots
 rm(list=ls()) 
@@ -16,6 +16,7 @@ library(ape)
 library(plyr)
 library(purrr)
 library(Hmisc)
+library(fastDummies)
 
 ## load virion
 #setwd("~/Desktop/virion/Virion")
@@ -88,10 +89,39 @@ vdata=vdata[vdata$Virus%in%cfr$Virus,]
 ## remove missing host
 vdata=vdata[!is.na(vdata$Host),]
 
-## filter virion
-vdata %<>%
-  select(Host, Virus, VirusGenus, VirusFamily) %>% 
-  distinct() %>% drop_na()
+## summarize detection method
+table(vdata$DetectionMethod)
+
+## make binary columns for detection
+dums=dummy_cols(vdata["DetectionMethod"])
+
+## merge
+dums$DetectionMethod=NULL
+vdata=data.frame(vdata,dums)
+rm(dums)
+
+## unique ID
+vdata$pair=paste(vdata$Host,vdata$Virus)
+
+## aggregate detection and filter
+vdata=aggregate(cbind(DetectionMethod_Antibodies,
+                DetectionMethod_Isolation.Observation,
+                DetectionMethod_Not.specified,
+                DetectionMethod_PCR.Sequencing)~pair+Host+Virus+VirusGenus+VirusFamily,data=vdata,sum)
+
+## binary
+vdata[c("DetectionMethod_Antibodies",
+        "DetectionMethod_Isolation.Observation",
+        "DetectionMethod_Not.specified",
+        "DetectionMethod_PCR.Sequencing")]=ifelse(vdata[c("DetectionMethod_Antibodies",
+               "DetectionMethod_Isolation.Observation",
+               "DetectionMethod_Not.specified",
+               "DetectionMethod_PCR.Sequencing")]>0,1,0)
+
+## how many unique host-virus associations are PCR or isolation?
+vdata$evidence=ifelse(vdata$DetectionMethod_PCR.Sequencing==1 | vdata$DetectionMethod_PCR.Sequencing==1,1,0)
+table(vdata$evidence)
+table(vdata$VirusFamily,vdata$evidence)
 
 ## load in host taxonomy
 #setwd("~/Desktop/phylofatality/phylo")
@@ -211,7 +241,7 @@ vfam_hosts$VirusFamily=rownames(vfam_hosts)
 rownames(vfam_hosts)=NULL
 names(vfam_hosts)=c("hosts","VirusFamily")
 
-## cutoff of n=20 or more host species for now
+## cutoff of n=30 or more host species for now
 vfam=vfam_hosts[vfam_hosts$hosts>30,]
 
 ## function to derive vfam-specific responses
