@@ -20,16 +20,18 @@ library(phylofactor)
 library(parallel)
 library(emmeans)
 #library(ade4)
-#library(phytools)
+library(phytools)
 
 ## load in virulence data
 #setwd("~/Desktop/phylofatality")
-setwd("~/Desktop/GitHub/phylofatality")
+#setwd("~/Desktop/GitHub/phylofatality")
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
 data=read.csv("CFRbySpecies.csv")
 
 ## load Upham phylogeny
 #setwd("~/Desktop/phylofatality/phylo")
-setwd("~/Desktop/GitHub/phylofatality/phylo")
+#setwd("~/Desktop/GitHub/phylofatality/phylo")
+setwd("~/Desktop/PCM Class/phylofatality/phylo")
 tree=read.nexus('MamPhy_fullPosterior_BDvr_Completed_5911sp_topoCons_NDexp_MCC_v2_target.tre')
 
 ## load in taxonomy
@@ -52,7 +54,7 @@ data$label=data$species
 data$Species=data$species
 
 ## define non-onward viruses
-data$ntrans=data$virusesWithOT-data$htrans
+data$ntrans_all.viruses=data$virusesWithOT_all.viruses-data$htrans_all.viruses
 
 ## merge
 cdata=comparative.data(phy=tree,data=data,names.col=species,vcv=T,na.omit=F,warn.dropped=T)
@@ -61,17 +63,17 @@ cdata=comparative.data(phy=tree,data=data,names.col=species,vcv=T,na.omit=F,warn
 cdata$data$taxonomy=paste(cdata$data$fam,cdata$data$gen,cdata$data$Species,sep='; ')
 
 ## separate dataset for onward transmission (remove NA)
-cdata2=cdata[!is.na(cdata$data$on.frac),]
+cdata2=cdata[!is.na(cdata$data$on.frac_all.viruses),]
 
 ## pagel's lambda on mammals
-mod_me=pgls(meanCFR~1,data=cdata,lambda="ML")
-mod_mx=pgls(maxCFR~1,data=cdata,lambda="ML")
-mod_ot=pgls(on.frac~1,data=cdata2,lambda="ML")
+mod_me=pgls(meanCFR_all.viruses~1,data=cdata,lambda="ML")
+mod_mx=pgls(maxCFR_all.viruses~1,data=cdata,lambda="ML")
+mod_ot=pgls(on.frac_all.viruses~1,data=cdata2,lambda="ML")
 
 ## we can also implement these tests using phylosig
-psl_me=phylosig(cdata$phy,cdata$data$meanCFR,method="lambda",test=T)
-psl_mx=phylosig(cdata$phy,cdata$data$maxCFR,method="lambda",test=T)
-psl_ot=phylosig(cdata2$phy,cdata2$data$on.frac,method="lambda",test=T)
+psl_me=phylosig(cdata$phy,cdata$data$meanCFR_all.viruses,method="lambda",test=T)
+psl_mx=phylosig(cdata$phy,cdata$data$maxCFR_all.viruses,method="lambda",test=T)
+psl_ot=phylosig(cdata2$phy,cdata2$data$on.frac_all.viruses,method="lambda",test=T)
 
 ## compare that values are equivalent
 round(mod_me$param["lambda"],3)==round(psl_me$lambda,3)
@@ -79,9 +81,9 @@ round(mod_mx$param["lambda"],3)==round(psl_mx$lambda,3)
 round(mod_ot$param["lambda"],3)==round(psl_ot$lambda,3)
 
 ## we can also use phylosig to estimate Bloomberg's K
-psk_me=phylosig(cdata$phy,cdata$data$meanCFR,method="K",test=T)
-psk_mx=phylosig(cdata$phy,cdata$data$maxCFR,method="K",test=T)
-psk_ot=phylosig(cdata2$phy,cdata2$data$on.frac,method="K",test=T)
+psk_me=phylosig(cdata$phy,cdata$data$meanCFR_all.viruses,method="K",test=T)
+psk_mx=phylosig(cdata$phy,cdata$data$maxCFR_all.viruses,method="K",test=T)
+psk_ot=phylosig(cdata2$phy,cdata2$data$on.frac_all.viruses,method="K",test=T)
 
 ## Moran's I will use inverse distances
 d=1/cophenetic(cdata$phy)
@@ -92,31 +94,31 @@ d2=1/cophenetic(cdata2$phy)
 diag(d2)=0
 
 ## Moran's I
-Moran.I(cdata$data$meanCFR,d)
-Moran.I(cdata$data$maxCFR,d)
-Moran.I(cdata2$data$on.frac,d2)
+Moran.I(cdata$data$meanCFR_all.viruses,d)
+Moran.I(cdata$data$maxCFR_all.viruses,d)
+Moran.I(cdata2$data$on.frac_all.viruses,d2)
 
 ## correlograms
-form=meanCFR+maxCFR~ord/fam/gen
-form2=on.frac~ord/fam/gen
+form=meanCFR_all.viruses+maxCFR_all.viruses~ord/fam/gen
+form2=on.frac_all.viruses~ord/fam/gen
 
 ## run
 plot(correlogram.formula(form,data=cdata$data))
 plot(correlogram.formula(form2,data=cdata2$data))
 
 ## similar in ade4
-gearymoran(d,data.frame(cdata$data$meanCFR,
-                        cdata$data$maxCFR),alter="two-sided")
-gearymoran(d2,cdata2$data$on.frac,alter="two-sided")
+gearymoran(d,data.frame(cdata$data$meanCFR_all.viruses,
+                        cdata$data$maxCFR_all.viruses),alter="two-sided")
+gearymoran(d2,cdata2$data$on.frac_all.viruses,alter="two-sided")
 
 ## subset to bats
 bdata=cdata[cdata$data$ord=="CHIROPTERA",]
 bdata2=cdata2[cdata2$data$ord=="CHIROPTERA",]
 
 ## pagel's lambda
-bmod_me=pgls(meanCFR~1,data=bdata,lambda="ML")
-bmod_mx=pgls(maxCFR~1,data=bdata,lambda="ML")
-bmod_ot=pgls(on.frac~1,data=bdata2,lambda="ML")
+bmod_me=pgls(meanCFR_all.viruses~1,data=bdata,lambda="ML")
+bmod_mx=pgls(maxCFR_all.viruses~1,data=bdata,lambda="ML")
+bmod_ot=pgls(on.frac_all.viruses~1,data=bdata2,lambda="ML")
 
 ## summarize estimates
 mlist=list(mod_me,mod_mx,mod_ot,bmod_me,bmod_mx,bmod_ot)
@@ -124,10 +126,20 @@ pdata=data.frame(dataset=c(rep("all mammals",3),rep("bats only",3)),
                  variable=c(rep(c("meanCFR","maxCFR","on.frac"),2)),
                  lambda=sapply(mlist,function(x) x$param["lambda"]),
                  lambda_lower=sapply(mlist,function(x) x$param.CI$lambda$ci.val[1]),
-                 lambda_upper=sapply(mlist,function(x) x$param.CI$lambda$ci.val[2]))
+                 lambda_upper=sapply(mlist,function(x) x$param.CI$lambda$ci.val[2]),
+                 lambda_lower_p=sapply(mlist,function(x) x$param.CI$lambda$bounds.p[1]),
+                 lambda_upper_p=sapply(mlist,function(x) x$param.CI$lambda$bounds.val[1]))
 pdata$variable=factor(pdata$variable,levels=c("meanCFR","maxCFR","on.frac"))
 
-## plot
+#save
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+write.csv(pdata, "PS_allviruses.csv")
+
+## reopen csv
+setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+pdata=read.csv("PS_allviruses.csv")
+
+##plot
 ggplot(pdata,aes(variable,lambda))+
   theme_bw()+
   geom_segment(aes(x=variable,xend=variable,y=lambda_lower,yend=lambda_upper))+
