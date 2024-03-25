@@ -1,9 +1,9 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu 
-## last update 3/13/24
+## last update 3/25/2024
 
-## clean environxment & plots
+## clean environment & plots
 rm(list=ls()) 
 graphics.off()
 gc()
