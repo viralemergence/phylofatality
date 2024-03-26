@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu 
-## last update 3/25/2024
+## last update 3/26/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -88,6 +88,10 @@ vdata=vdata[vdata$Virus%in%cfr$Virus,]
 
 ## remove missing host
 vdata=vdata[!is.na(vdata$Host),]
+
+#save for summary statistics later
+setwd("~/Desktop/GitHub/phylofatality/data")
+write_csv(vdata, "vdata.csv")
 
 ## summarize detection method
 table(vdata$DetectionMethod)
@@ -302,5 +306,5 @@ vdata=merge(vdata,vset,by="species",all=T)
 
 ## export
 #setwd("~/Desktop/phylofatality")
-setwd("~/Desktop/GitHub/phylofatality")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
 write_csv(vdata,"CFRBySpecies.csv")
