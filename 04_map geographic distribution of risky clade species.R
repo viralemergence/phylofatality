@@ -404,7 +404,7 @@ bmaps_flaot<-ggplot() +
                              fill=factor), alpha=0.25) +
   scale_fill_manual(values=c("turquoise2", "magenta2","purple2", "orange2"))+
   
-  guides(fill = FALSE) 
+  guides(fill = FALSE) +
   theme_void() +
   coord_map("gilbert", xlim = c(-180, 180))+
   #ggtitle(expression("Geographic range of risky bat hosts: Fraction with Onward Transmission-"~italic("Flaviviridae"))) +
