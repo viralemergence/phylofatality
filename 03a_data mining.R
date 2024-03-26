@@ -1,11 +1,9 @@
 ## phylofatality
 ## 03_data mining (species extraction from risky clades)
-## danbeck@ou.edu, caroline cummings, Cole Brookson
-## last update 2/3/2024
+## danbeck@ou.edu, carolinecummings2018@gmail.com, Cole Brookson
+## last update 3/26/2024
 
-## clean environment & plots
-rm(list=ls()) 
-graphics.off()
+#don't clean global environment
 
 ## packages
 library(dplyr)
@@ -14,11 +12,11 @@ library(tidyr)
 library(tidyverse)
 
 ## load in clade virulence data
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
 data=read.csv("pf_allclades.csv")
 
 ## load in host taxonomy
-setwd("~/Desktop/PCM Class/phylofatality/phylo")
+setwd("~/Desktop/GitHub/phylofatality/phylo")
 taxa=read.csv('taxonomy_mamPhy_5911species.csv',header=T)
 taxa$tip=taxa$Species_Name
 
@@ -49,16 +47,13 @@ data[which(data$var == "means"), "var"] <- "mean"
 
 #save data of risky clades
 rawdata_risk<-data
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
-#write.csv(rawdata_risk,"pf_riskyclades.csv")
 
 #pull out species in each clade
 data$species=data$taxa
 data=data %>% dplyr::select(species, everything())
 data=data %>% separate_rows(species, sep = ", ")
 
-#Cole helped me match the fams and gens to species
-# COLE TESTING =================================================================
+#Cole helped match the fams and gens to species
 `%notin%` <- Negate(`%in%`)
 data_fam <- data %>% 
   # pick out the family one by only keeping the ones that are all uppercase
@@ -101,22 +96,17 @@ joined_fam <- joined_fam %>%
 # bind together
 all_joined <- rbind(joined_fam, joined_gen)
 
-# END COLE TESTING =============================================================
-
 #remove NAs
 species=all_joined[!is.na(all_joined$taxa),]
 
 #clean up table
-species=species %>% select(Species_Name, virus, host, var, factor, tips, node,
+species=species %>% dplyr::select(Species_Name, virus, host, var, factor, tips, node,
                            clade.y, other, taxa)
 species$species=species$Species_Name
 species$clade=species$clade.y
 species$Species_Name=NULL
 species$clade.y=NULL
-species=species %>% select(species, virus, host, var, factor, tips, node,
+species=species %>% dplyr::select(species, virus, host, var, factor, tips, node,
                            clade, other, taxa)
 #sanity check
-species %>% n_distinct()
-#save species data
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
-#write.csv(species,"pf_riskyspecies.csv")
+species %>% n_distinct() #17885

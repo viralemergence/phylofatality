@@ -1,7 +1,7 @@
 ## phylofatality
 ##03_phylofactor to map clades
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 2/4/2024
+## last update 3/26/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -24,11 +24,11 @@ library(phytools)
 library(dplyr)
 
 ## load in virulence data
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
 data=read.csv("CFRbySpecies.csv")
 
 ## load Upham phylogeny
-setwd("~/Desktop/PCM Class/phylofatality/phylo")
+setwd("~/Desktop/GitHub/phylofatality/phylo")
 tree=read.nexus('MamPhy_fullPosterior_BDvr_Completed_5911sp_topoCons_NDexp_MCC_v2_target.tre')
 
 ## load in taxonomy
@@ -584,20 +584,14 @@ results<- do.call("rbind", list(cmean_pf_results,cmean_pf_results_cov,cmean_pf_r
                                 cot_pf_results_tog,bmean_pf_results,bmean_pf_results_cov,bmean_pf_results_fla,
                                 bmean_pf_results_rha,bmax_pf_results,bmax_pf_results_cov, bmax_pf_results_fla,bmax_pf_results_rha,
                                 bot_pf_results))
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
-#write.csv(results,"pf_allclades.csv")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
+write.csv(results,"pf_allclades.csv")
 
-##quick intermission --> go to 03b_data mining and run this script --> come back
+#================================================================================
+##quick intermission --> go to 03a_data mining and run this script --> come back
 
-## visualize risky clades
 
-## load in risky species data from 03b_data mining
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
-species=read.csv("pf_riskyspecies.csv")
-clades=read.csv("pf_allclades.csv")
-rclades=read.csv("pf_riskyclades.csv")
-
-#you get the legend in your console
+#visualize clades (you get the legend in your console)
 #mammal meanCFR
 pf.tree(cmean_pf,factors=1:4,size=0.1,alphas=rep(0.75,5))
 pf.tree(cmean_pf_cov,factors=1:2,size=0.1,alphas=rep(0.75,5))
@@ -634,7 +628,6 @@ dtree_fla=treeio::full_join(as.treedata(cdata_fla$phy),cdata_fla$data,by="label"
 dtree_rha=treeio::full_join(as.treedata(cdata_rha$phy),cdata_rha$data,by="label")
 dtree_tog=treeio::full_join(as.treedata(cdata_tog$phy),cdata_tog$data,by="label")
 dtree_par=treeio::full_join(as.treedata(cdata_par$phy),cdata_par$data,by="label")
-
 
 ## fix palette
 AlberPalettes <- c("YlGnBu","Reds","BuPu", "PiYG")
@@ -684,9 +677,8 @@ for(i in 1:nrow(cmean_pf_results)){ ##cmean_pf changes
 gg_cmean<- gg+  ggtitle("MeanCFR-All Viruses")+ theme(plot.title = element_text(hjust = 0.5, size=8))
 plot(gg_cmean)
 
-setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
-#ggsave("MeanCFR_allviruses.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
-
+setwd("~/Desktop/GitHub/phylofatality/figs")
+ggsave("MeanCFR_allviruses.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 ### cfr max: mammals_all viruses
 gg=ggtree(dtree,size=0.2,layout="circular",
@@ -719,7 +711,7 @@ gg_cmax<- gg+  ggtitle("MaxCFR-All Viruses")+ theme(plot.title = element_text(hj
 
 ## save
 plot(gg_cmax)
-#ggsave("MaxCFR_allviruses.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
+ggsave("MaxCFR_allviruses.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ## ot, mammals_all viruses
@@ -751,7 +743,7 @@ gg_cot=gg+ggtitle("Fraction with Onward Transmission-All Viruses")+ theme(plot.t
 
 ## save
 plot(gg_cot)
-#ggsave("OT_allviruses.jpg", gg_cot, device = "jpeg", width = 10, height = 6, units = "in")
+ggsave("OT_allviruses.jpg", gg_cot, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ####coronaviridae
@@ -786,7 +778,7 @@ gg_cmean_cov <- gg +ggtitle(expression("MeanCFR/MaxCFR-" ~ italic("Coronaviridae
 
 ## save
 plot(gg_cmean_cov)
-#ggsave("MeanCFR_coronaviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
+ggsave("MeanCFR_coronaviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ## cfr max: mammals, coronaviridaee
@@ -818,7 +810,7 @@ for(i in 1:nrow(cmax_pf_results_cov)){
 
 ## save
 plot(gg_cmax)
-#ggsave("MaxCFR_coronaviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
+ggsave("MaxCFR_coronaviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ####flaviviridae
@@ -831,7 +823,7 @@ gg=ggtree(dtree_fla,size=0.2,layout="circular",
 
 ## add clades
 for(i in 1:nrow(cmean_pf_results_fla)){ 
-
+  
   gg=gg+
     geom_hilight(node=cmean_pf_results_fla$node[i], 
                  alpha=0.15,
@@ -851,7 +843,7 @@ gg_cmean_fla <- gg + ggtitle(expression("MeanCFR-" ~ italic("Flaviviridae"))) + 
 
 ## save
 plot(gg_cmean_fla)
-#ggsave("MeanCFR_flaviviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
+ggsave("MeanCFR_flaviviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ## cfr max: mammals, flaviviridae
@@ -883,7 +875,7 @@ gg_cmax_fla <- gg +ggtitle(expression("MaxCFR-" ~ italic("Flaviviridae"))) + the
 
 ## save
 plot(gg_cmax_fla)
-#ggsave("MaxCFR_flaviviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
+ggsave("MaxCFR_flaviviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
 ## ot, mammals, flaviviridae
 gg=ggtree(dtree_fla,size=0.2,layout="circular",
@@ -914,12 +906,10 @@ gg_ot_fla <- gg + ggtitle(expression("Fraction with Onward Transmission-"~italic
 
 ## save
 plot(gg_ot_fla)
-#ggsave("OT_flaviviridae.jpg", gg_ot, device = "jpeg", width = 10, height = 6, units = "in")
-
+ggsave("OT_flaviviridae.jpg", gg_ot_fla, device = "jpeg", width = 10, height = 6, units = "in")
 
 #try to facet wrap my plots
 giant_phylo<- gg_cmean+gg_cmax+gg_cmean_cov+gg_cmean_fla+gg_cmax_fla+gg_ot_fla
 
 print(giant_phylo)
 ggsave("giant_phylofactor.jpg", giant_phylo, device = "jpeg", width = 8, height = 6, units = "in")
-
