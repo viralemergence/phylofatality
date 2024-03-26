@@ -23,14 +23,14 @@ library(emmeans)
 library(phytools)
 library(egg)
 
+###Preface before starting: To just look at the plots, begin at L409-412 after loading packages
+
 ## load in virulence data
-#setwd("~/Desktop/GitHub/phylofatality")
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
 data=read.csv("CFRbySpecies.csv")
 
 ## load Upham phylogeny
-#setwd("~/Desktop/GitHub/phylofatality/phylo")
-setwd("~/Desktop/PCM Class/phylofatality/phylo")
+setwd("~/Desktop/GitHub/phylofatality/phylo")
 tree=read.nexus('MamPhy_fullPosterior_BDvr_Completed_5911sp_topoCons_NDexp_MCC_v2_target.tre')
 
 ## load in taxonomy
@@ -84,7 +84,7 @@ data_par$ntrans_par=data_par$virusesWithOT_paramyxoviridae-data_par$htrans_param
 
 ## merge: all mammals, all viruses
 cdata=comparative.data(phy=tree,data=data,names.col=species,vcv=T,na.omit=F,warn.dropped=T)
-#all mammals, 5 viruses
+#merge: all mammals, 5 viruses
 #coronaviridae
 cdata_cor=comparative.data(phy=tree,data=data_cor,names.col=species,vcv=T,na.omit=F,warn.dropped=T)
 #flaviviridae
@@ -98,7 +98,7 @@ cdata_par=comparative.data(phy=tree,data=data_par,names.col=species,vcv=T,na.omi
 
 ## taxonomy: all mammals, all viruses
 cdata$data$taxonomy=paste(cdata$data$fam,cdata$data$gen,cdata$data$Species,sep='; ')
-#all mammals, 5 viruses
+#taxonomy: all mammals, 5 viruses
 #coronaviridae
 cdata_cor$data$taxonomy=paste(cdata_cor$data$fam,cdata_cor$data$gen,cdata_cor$data$Species,sep='; ')
 #flaviviridae
@@ -344,7 +344,7 @@ pdata_par$variable=factor(pdata_par$variable,levels=c("meanCFR","maxCFR","on.fra
 
 #save
 pagel<- rbind(pdata,pdata_cor, pdata_fla, pdata_rha, pdata_tog, pdata_par)
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(pagel,"PS_data.csv")
 
 #summarize bloomberg's K
@@ -403,11 +403,12 @@ kdata_par$variable=factor(kdata_tog$variable,levels=c("meanCFR","maxCFR","on.fra
 
 #save
 bloombergk<- rbind(kdata,kdata_cor, kdata_fla, kdata_rha, kdata_tog, kdata_par)
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
-write.csv(bloombergk,"K_data.csv")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
+#write.csv(bloombergk,"K_data.csv")
 
-#plotting, reload in data
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+#plotting (can start here and reload in data)
+#don't forget to reload in packages
+setwd("~/Desktop/GitHub/phylofatality/csv files")
 ps=read.csv("PS_data.csv")
 
 #try splitting data by variable
@@ -443,7 +444,7 @@ meanCFR <- ggplot(pagel_me, aes(vfamily, lambda, color = vfamily)) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))
 plot(meanCFR)
 
-#by variable
+#maxCFR
 maxCFR <- ggplot(pagel_mx, aes(vfamily, lambda, color = vfamily)) +
   theme_bw() +
   facet_wrap(~dataset)+
@@ -468,7 +469,7 @@ maxCFR <- ggplot(pagel_mx, aes(vfamily, lambda, color = vfamily)) +
   theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))
 plot(maxCFR)
 
-#by variable
+#OT
 ot <- ggplot(pagel_ot, aes(vfamily, lambda, color = vfamily)) +
   theme_bw() +
   facet_wrap(~dataset)+
@@ -496,7 +497,6 @@ ot <- ggplot(pagel_ot, aes(vfamily, lambda, color = vfamily)) +
 plot(ot)
 
 #combine plots
-setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
+setwd("~/Desktop/GitHub/phylofatality/figs")
 stack_plot<- plot(meanCFR/maxCFR/ot)
-ggsave("stack_plot.jpg", stack_plot, device = "jpeg", width = 8, height =12, units = "in")
-
+#ggsave("02a_stack_plot.jpg", stack_plot, device = "jpeg", width = 8, height =12, units = "in")
