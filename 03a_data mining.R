@@ -108,5 +108,7 @@ species$Species_Name=NULL
 species$clade.y=NULL
 species=species %>% dplyr::select(species, virus, host, var, factor, tips, node,
                            clade, other, taxa)
-#sanity check
+#sanity check and save
 species %>% n_distinct() #17885
+setwd("~/Desktop/GitHub/phylofatality/csv files")
+write.csv(species,"pf_riskyspecies.csv")
