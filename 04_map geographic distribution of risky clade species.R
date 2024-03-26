@@ -404,7 +404,7 @@ bmaps_flaot<-ggplot() +
                              fill=factor), alpha=0.25) +
   scale_fill_manual(values=c("turquoise2", "magenta2","purple2", "orange2"))+
   
-  guides(fill = FALSE) +
+  guides(fill = FALSE) 
   theme_void() +
   coord_map("gilbert", xlim = c(-180, 180))+
   #ggtitle(expression("Geographic range of risky bat hosts: Fraction with Onward Transmission-"~italic("Flaviviridae"))) +
@@ -414,8 +414,9 @@ plot(bmaps_flaot)
 #save
 #ggsave("map_fla_OT.jpg", bmaps_flaot, device = "jpeg", width = 7, height = 6, units = "in")
 
-#try some plot combos
+#try some plot combos to save
 giant_bmap<- bmaps_allme+ bmaps_allot+ bmaps_cov+ bmaps_flame+ bmaps_flamx+ bmaps_flaot
 print(giant_bmap)
+setwd("~/Desktop/GitHub/phylofatality/figs")
 ggsave("map_giant.jpg", giant_bmap, device = "jpeg", width = 8, height = 6, units = "in")
 
