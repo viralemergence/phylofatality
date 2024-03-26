@@ -1,5 +1,5 @@
 ## phylofatality
-## 06_map geographic distribution of risky clade species
+## 04_map geographic distribution of risky clade species
 ## danbeck@ou.edu, carolinecummings@ou.edu
 ## last update 3/26/2024
 
