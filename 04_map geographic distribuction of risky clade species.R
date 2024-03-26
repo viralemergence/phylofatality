@@ -1,7 +1,7 @@
 ## phylofatality
 ## 06_map geographic distribution of risky clade species
 ## danbeck@ou.edu, carolinecummings@ou.edu
-## last update 2/4/2023
+## last update 3/26/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -17,11 +17,11 @@ library(sp)
 library(tidyverse)
 
 #load in species data from all risky clades
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
 data=read.csv("pf_riskyspecies.csv")
 
 ## load in mammal shapefile pruned to bats (spatial data)
-setwd("~/Desktop/PCM Class/phylofatality/clean")
+setwd("~/Desktop/GitHub/")
 bats=readRDS("bat shp.rds")
 
 ## tip
@@ -250,19 +250,13 @@ rm(bats)
 bats=merge(bset,data,by="tip",all.x=T)
 
 #save 
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
-write.csv(bats, "bats_georanges.csv")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
+#write.csv(bats, "bats_georanges.csv")
 
-
-
-
-
-
-
-#START HERE to skip getting bat geo ranges
+#START HERE to skip to bat geo ranges
 #load in bat geo range data
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
-bats=read.csv("bats_georanges.csv")
+#setwd("~/Desktop/GitHub/phylofatality/csv files")
+#bats=read.csv("bats_georanges.csv")
 
 #convert factor variable to be a factor
 bats$factor <- factor(bats$factor)
@@ -305,7 +299,7 @@ bmaps_allme<-ggplot() +
   #theme(plot.title.position = "plot", plot.title = element_text(hjust = 0.6, size = 11))
 plot(bmaps_allme)
 #save
-setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
+#setwd("~/Desktop/GitHub/phylofatality/figs")
 #ggsave("map_allviruses_MeanCFR.jpg", bmaps_allme, device = "jpeg", width = 6, height = 6, units = "in")
 
 
@@ -349,9 +343,10 @@ bmaps_cov<-ggplot() +
   #ggtitle(expression("Geographic range of risky bat hosts: MeanCFR/MaxCFR-"~italic("Coronaviridae"))) +
   ggtitle(expression("MeanCFR/MaxCFR-"~italic("Coronaviridae"))) +
   theme(plot.title = element_text(hjust = 0.5, size=8))
+
 #save
 print(bmaps_cov)
-setwd("~/Desktop/PCM Class/phylofatality/clean/figs")
+setwd("~/Desktop/GitHub/phylofatality/figs")
 #ggsave("map_cov.jpg", bmaps_cov, device = "jpeg", width = 6, height = 6, units = "in")
 
 
@@ -422,5 +417,5 @@ plot(bmaps_flaot)
 #try some plot combos
 giant_bmap<- bmaps_allme+ bmaps_allot+ bmaps_cov+ bmaps_flame+ bmaps_flamx+ bmaps_flaot
 print(giant_bmap)
-#ggsave("map_giant.jpg", giant_bmap, device = "jpeg", width = 8, height = 6, units = "in")
+ggsave("map_giant.jpg", giant_bmap, device = "jpeg", width = 8, height = 6, units = "in")
 
