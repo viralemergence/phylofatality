@@ -1,7 +1,7 @@
 ## phylofatality
 ## 02_PS, K and PS plots
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 2/03/2024
+## last update 3/26/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -20,7 +20,6 @@ library(Hmisc)
 library(phylofactor)
 library(parallel)
 library(emmeans)
-#library(ade4)
 library(phytools)
 library(egg)
 

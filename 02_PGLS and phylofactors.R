@@ -1,7 +1,7 @@
 ## phylofatality
 ## 02_PGLS and phylofactor
 ## danbeck@ou.edu
-## last update 8/25/23
+## last update 3/26/204
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -19,19 +19,17 @@ library(Hmisc)
 library(phylofactor)
 library(parallel)
 library(emmeans)
-#library(ade4)
+library(ade4)
 library(phytools)
 
 ## load in virulence data
 #setwd("~/Desktop/phylofatality")
-#setwd("~/Desktop/GitHub/phylofatality")
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
 data=read.csv("CFRbySpecies.csv")
 
 ## load Upham phylogeny
 #setwd("~/Desktop/phylofatality/phylo")
-#setwd("~/Desktop/GitHub/phylofatality/phylo")
-setwd("~/Desktop/PCM Class/phylofatality/phylo")
+setwd("~/Desktop/GitHub/phylofatality/phylo")
 tree=read.nexus('MamPhy_fullPosterior_BDvr_Completed_5911sp_topoCons_NDexp_MCC_v2_target.tre')
 
 ## load in taxonomy
@@ -131,15 +129,16 @@ pdata=data.frame(dataset=c(rep("all mammals",3),rep("bats only",3)),
                  lambda_upper_p=sapply(mlist,function(x) x$param.CI$lambda$bounds.val[1]))
 pdata$variable=factor(pdata$variable,levels=c("meanCFR","maxCFR","on.frac"))
 
-#save
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+#save to open later 
+setwd("~/Desktop/GitHub/phylofatality/csv files")
 write.csv(pdata, "PS_allviruses.csv")
 
 ## reopen csv
-setwd("~/Desktop/PCM Class/phylofatality/clean/csv files")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
 pdata=read.csv("PS_allviruses.csv")
 
 ##plot
+##PS of viral virulence measures across all mammals and within bats (all viruses)
 ggplot(pdata,aes(variable,lambda))+
   theme_bw()+
   geom_segment(aes(x=variable,xend=variable,y=lambda_lower,yend=lambda_upper))+
@@ -282,9 +281,9 @@ pfsum=function(pf){
 ## CFR mean
 set.seed(1)
 cmean_pf=gpf(Data=cdata$data,tree=cdata$phy,
-           frmla.phylo=meanCFR~phylo+virusesWithCFR,
+           frmla.phylo=meanCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
            family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cmean_pf)
+HolmProcedure(cmean_pf) #4
 
 ## summarize
 cmean_pf_results=pfsum(cmean_pf)$results
@@ -292,9 +291,9 @@ cmean_pf_results=pfsum(cmean_pf)$results
 ## CFR max
 set.seed(1)
 cmax_pf=gpf(Data=cdata$data,tree=cdata$phy,
-             frmla.phylo=maxCFR~phylo+virusesWithCFR,
+             frmla.phylo=maxCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
              family=gaussian,algorithm='phylo',nfactors=6,min.group.size=10)
-HolmProcedure(cmax_pf)
+HolmProcedure(cmax_pf) #5
 
 ## summarize
 cmax_pf_results=pfsum(cmax_pf)$results
@@ -302,9 +301,9 @@ cmax_pf_results=pfsum(cmax_pf)$results
 ## fraction of viruses with onward transmission
 set.seed(1)
 cot_pf=gpf(Data=cdata2$data,tree=cdata2$phy,
-            frmla.phylo=cbind(htrans,ntrans)~phylo,
+            frmla.phylo=cbind(htrans_all.viruses,ntrans_all.viruses)~phylo,
             family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cot_pf)
+HolmProcedure(cot_pf) #4
 
 ## summarize
 cot_pf_results=pfsum(cot_pf)$results
@@ -312,9 +311,9 @@ cot_pf_results=pfsum(cot_pf)$results
 ## bat CFR mean
 set.seed(1)
 bmean_pf=gpf(Data=bdata$data,tree=bdata$phy,
-             frmla.phylo=meanCFR~phylo+virusesWithCFR,
+             frmla.phylo=meanCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
              family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(bmean_pf)
+HolmProcedure(bmean_pf) #2
 
 ## summarize
 bmean_pf_results=pfsum(bmean_pf)$results
@@ -322,9 +321,9 @@ bmean_pf_results=pfsum(bmean_pf)$results
 ## bat CFR max
 set.seed(1)
 bmax_pf=gpf(Data=bdata$data,tree=bdata$phy,
-            frmla.phylo=maxCFR~phylo+virusesWithCFR,
+            frmla.phylo=maxCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
             family=gaussian,algorithm='phylo',nfactors=3,min.group.size=10)
-HolmProcedure(bmax_pf)
+HolmProcedure(bmax_pf) #2
 
 ## summarize
 bmax_pf_results=pfsum(bmax_pf)$results
@@ -332,9 +331,9 @@ bmax_pf_results=pfsum(bmax_pf)$results
 ## fraction of viruses with onward transmission
 set.seed(1)
 bot_pf=gpf(Data=bdata$data,tree=bdata$phy,
-           frmla.phylo=cbind(htrans,ntrans)~phylo,
+           frmla.phylo=cbind(htrans_all.viruses,ntrans_all.viruses)~phylo,
            family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(bot_pf)
+HolmProcedure(bot_pf) #2
 
 ## summarize
 bot_pf_results=pfsum(bot_pf)$results
@@ -359,7 +358,7 @@ plus=1
 pplus=plus+1
 
 ## mammal
-gg=ggtree(dtree,size=0.2,aes(colour=meanCFR))+
+gg=ggtree(dtree,size=0.2,aes(colour=meanCFR_all.viruses))+
   #scale_colour_manual(values=c("grey80","black"))+
   scale_color_gradient(low="grey90",high="black")+
   guides(colour=F)
@@ -386,7 +385,7 @@ for(i in 1:nrow(cmean_pf_results)){
 gg_cmean=gg
 
 ## cfr max
-gg=ggtree(dtree,size=0.2,aes(colour=maxCFR))+
+gg=ggtree(dtree,size=0.2,aes(colour=maxCFR_all.viruses))+
   #scale_colour_manual(values=c("grey80","black"))+
   scale_color_gradient(low="grey90",high="black")+
   guides(colour=F)
