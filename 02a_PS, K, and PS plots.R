@@ -426,14 +426,14 @@ plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
   facet_grid(variable~dataset)+
   theme(legend.position = "none")+
   theme(axis.text.y = element_text(size = 10))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size=10, color=c("black", rep(moma.colors("Panton"), length(unique(ps$vfamily)) - 1,)))) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size=12, color=c("black", rep(moma.colors("Panton"), length(unique(ps$vfamily)) - 1,)))) +
   guides(color = guide_legend(title = "virus family"))+
   geom_errorbar(
     aes(ymin = lambda_lower, ymax = lambda_upper),
     position = position_dodge(width = 0.2), 
     width = 0, 
-    size = 0.5)+
-  geom_point(position = position_dodge(width = 0.2), size = 2) +
+    size = 1)+
+  geom_point(position = position_dodge(width = 0.2), size = 3) +
   ylim(0, 1) +
   scale_color_manual(values = c("black", rep(moma.colors("Panton"), length(unique(ps$vfamily)) - 1 ))) +
   xlab("Virus Family")+
@@ -443,4 +443,4 @@ plot(plot)
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-ggsave("02a_plot.jpg", plot, device = "jpeg", width = 7, height =12, units = "in")
+ggsave("02a_plot.jpg", plot, device = "jpeg", width = 7, height =10, units = "in")
