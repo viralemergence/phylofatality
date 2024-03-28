@@ -415,10 +415,10 @@ setwd("~/Desktop/GitHub/phylofatality/csv files")
 ps=read.csv("PS_data.csv")
 ps<- ps %>% mutate(variable=ifelse(variable=="meanCFR", "Mean CFR", variable))
 ps<- ps %>% mutate(variable=ifelse(variable=="maxCFR", "Maximum CFR", variable))
-ps <- ps %>% mutate(variable=ifelse(variable == "on.frac", "Fraction of viruses with onward transmission", variable))
+ps <- ps %>% mutate(variable=ifelse(variable == "on.frac", "% with onward transmission", variable))
 
 #reorder 
-ps$variable <- factor(ps$variable, levels = c("Mean CFR", "Maximum CFR", "Fraction of viruses with onward transmission"))
+ps$variable <- factor(ps$variable, levels = c("Mean CFR", "Maximum CFR", "% with onward transmission"))
 
 #plot
 plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
@@ -435,7 +435,7 @@ plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
     size = 1)+
   geom_point(position = position_dodge(width = 0.2), size = 3) +
   ylim(0, 1) +
-  scale_color_manual(values = c("black", rep(moma.colors("Panton"), length(unique(ps$vfamily)) - 1 ))) +
+  scale_color_manual(values = c("black", rep(moma.colors("Panton"), length(unique(ps$vfamily)) - 2 ))) +
   xlab("Virus Family")+
   ylab(expression(paste("Pagel's ", lambda)))+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
