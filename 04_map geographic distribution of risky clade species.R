@@ -419,4 +419,3 @@ giant_bmap<- bmaps_allme+ bmaps_allot+ bmaps_cov+ bmaps_flame+ bmaps_flamx+ bmap
 print(giant_bmap)
 setwd("~/Desktop/GitHub/phylofatality/figs")
 ggsave("map_giant.jpg", giant_bmap, device = "jpeg", width = 8, height = 6, units = "in")
-

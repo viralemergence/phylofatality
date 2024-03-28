@@ -91,7 +91,7 @@ vdata=vdata[!is.na(vdata$Host),]
 
 #save for summary statistics later
 setwd("~/Desktop/GitHub/phylofatality/data")
-write_csv(vdata, "vdata.csv")
+#write_csv(vdata, "vdata.csv")
 
 ## summarize detection method
 table(vdata$DetectionMethod)
@@ -123,9 +123,42 @@ vdata[c("DetectionMethod_Antibodies",
                "DetectionMethod_PCR.Sequencing")]>0,1,0)
 
 ## how many unique host-virus associations are PCR or isolation?
-vdata$evidence=ifelse(vdata$DetectionMethod_PCR.Sequencing==1 | vdata$DetectionMethod_PCR.Sequencing==1,1,0)
-table(vdata$evidence)
+vdata$evidence=ifelse(vdata$DetectionMethod_PCR.Sequencing==1 | vdata$DetectionMethod_Isolation.Observation==1,1,0)
+table(vdata$evidence) #1459
 table(vdata$VirusFamily,vdata$evidence)
+
+#how many unique host-virus associations for each detection type?
+vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1,1,0)
+table(vdata$evidence) #797 isolation
+vdata$evidence=ifelse(vdata$DetectionMethod_PCR.Sequencing==1,1,0)
+table(vdata$evidence) #1103 pcr
+vdata$evidence=ifelse(vdata$DetectionMethod_Antibodies==1,1,0)
+table(vdata$evidence) #1323 antibodies
+vdata$evidence=ifelse(vdata$DetectionMethod_Not.specified==1,1,0)
+table(vdata$evidence) #2545 none
+
+#more specifically, which are lacking strong evidence?
+vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
+                        vdata$DetectionMethod_PCR.Sequencing==1 |
+                        vdata$DetectionMethod_Antibodies==1,1,0)
+table(vdata$evidence) #409 are completely unspecified
+vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
+                        vdata$DetectionMethod_PCR.Sequencing==1 |
+                        vdata$DetectionMethod_Not.specified==1,1,0)
+table(vdata$evidence) #159 are only antibodies
+
+#which are only viral isolation or only PCR or both?
+vdata$evidence=ifelse(vdata$DetectionMethod_Not.specified==1 | 
+                        vdata$DetectionMethod_PCR.Sequencing==1 |
+                        vdata$DetectionMethod_Antibodies==1,1,0)
+table(vdata$evidence) #30 are only viral isolation
+vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
+                        vdata$DetectionMethod_Not.specified==1 |
+                        vdata$DetectionMethod_Not.specified==1,1,0)
+table(vdata$evidence) #324 are only pcr
+vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 & 
+                        vdata$DetectionMethod_PCR.Sequencing==1,1,0)
+table(vdata$evidence) #441
 
 ## load in host taxonomy
 #setwd("~/Desktop/phylofatality/phylo")
