@@ -120,11 +120,67 @@ n_distinct(vdata$Virus) #115
 n_distinct(vdata$VirusFamily) #22
 
 #how many mammals in each virus family
-vdata%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #101
-vdata%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #656
-vdata%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #394
-vdata%>% filter(VirusFamily=="togaviridae") %>% n_distinct() #251
-vdata%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #67
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #98
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #381
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #298
+vdata%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #169
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #46
+
+#how many bats in each virus family
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #35
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #75
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #130
+bats%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #36
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #35
+
+#host-virus associations, what happens when we cut out vector-borne?
+
+#load in cfr data
+setwd("~/Desktop/GitHub/phylofatality/data")
+cfr<- read_csv("cfr.csv")
+
+## fix with virion naming
+cfr %<>% dplyr::rename(Virus = SppName_ICTV_MSL2018b, CFR = CFR_avg, onward=human.trans)
+cfr %<>% mutate(Virus = str_to_lower(Virus))
+
+## check name matching
+setdiff(cfr$Virus,vir$Virus)
+rec <- c("colorado tick fever virus" = "colorado tick fever coltivirus",
+         "ebolavirus" = "zaire ebolavirus",
+         "sealpox virus" = "seal parapoxvirus",
+         "severe acute respiratory syndrome-related coronavirus-2" = "severe acute respiratory syndrome-related coronavirus")
+cfr %<>% mutate(Virus = recode(Virus, !!!rec))
+cfr$Virus[str_detect(cfr$Virus,'middle')] <- "middle east respiratory syndrome-related coronavirus"
+
+## recheck
+setdiff(cfr$Virus,vir$Virus)
+
+#cut out VB
+non_vb<- cfr %>% select(Virus, vFamily, IsVectorBorne) %>% filter(IsVectorBorne=="0")
+miss= setdiff(vdata$Virus, non_vb$Virus)
+vdata=vdata[!vdata$Virus%in%miss,]
+
+#redo stats
+#summmary stats
+n_distinct(vdata$species) #784 unique
+bats<- vdata %>% filter(HostOrder=="chiroptera") 
+n_distinct(bats$species) #186 unique bats
+n_distinct(vdata$Virus) #73
+n_distinct(vdata$VirusFamily) #19
+
+#how many mammals in each virus family
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #98
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #79
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #255
+vdata%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #0
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #46
+
+#how many bats in each virus family
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #35
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #0
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #127
+bats%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #0
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #35
 
 #load in complete vdata from 01_CFR Mean and replace vdata
 setwd("~/Desktop/GitHub/phylofatality/csv files")

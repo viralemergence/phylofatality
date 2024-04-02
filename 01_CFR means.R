@@ -36,6 +36,10 @@ cfr2$cat="stringent"
 cfr=bind_rows(cfr1, cfr2)
 rm(cfr1,cfr2)
 
+#save for summary stats
+setwd("~/Desktop/GitHub/phylofatality/data")
+#write_csv(cfr, "cfr.csv")
+
 ## rename based on CFR average
 cfr %<>% dplyr::select(SppName_ICTV_MSL2018b, CFR_avg, human.trans) %>%
   dplyr::rename(Virus = SppName_ICTV_MSL2018b, CFR = CFR_avg, onward=human.trans)
@@ -340,4 +344,4 @@ vdata=merge(vdata,vset,by="species",all=T)
 ## export
 #setwd("~/Desktop/phylofatality")
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-write_csv(vdata,"CFRBySpecies.csv")
+#write_csv(vdata,"CFRBySpecies.csv")

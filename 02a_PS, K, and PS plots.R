@@ -25,7 +25,6 @@ library(egg)
 library(devtools)
 library(MoMAColors)
 
-
 ###Preface before starting: To just look at the plots, begin at L409-412 after loading packages
 
 ## load in virulence data
