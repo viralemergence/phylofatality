@@ -50,7 +50,7 @@ tree=keep.tip(tree,data$species)
 data$label=data$species
 data$Species=data$species
 
-## define non-onward viruses
+## define non-onward viruses (adding 6 columns)
 data$ntrans_all.viruses=data$virusesWithOT_all.viruses-data$htrans_all.viruses
 #5 virus families
 data$ntrans_coronaviridae=data$virusesWithOT_coronaviridae-data$htrans_coronaviridae
@@ -211,49 +211,51 @@ pfsum=function(pf){
 ## NOTE THAT gpf() WON'T WORK UNDER R 4.2 OR HIGHER DUE TO THE FOLLOWING CHANGE:
 ## https://stackoverflow.com/questions/72848442/r-warning-lengthx-2-1-in-coercion-to-logical1/72848495#72848495
 
-## all viruses meanCFR mammals
+
+###Run Phylofactor
+##1 all viruses meanCFR mammals
 set.seed(1)
 cmean_pf=gpf(Data=cdata$data,tree=cdata$phy,
              frmla.phylo=meanCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
              family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmean_pf) #4
 
-#coronaviridae meanCFR mammals
+#2 coronaviridae meanCFR mammals
 set.seed(1)
 cmean_pf_cov=gpf(Data=cdata_cov$data,tree=cdata_cov$phy,
                  frmla.phylo=meanCFR_coronaviridae~phylo+virusesWithCFR_coronaviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmean_pf_cov) #2
 
-#flaviviridae meanCFR mammals
+#3 flaviviridae meanCFR mammals
 set.seed(1)
 cmean_pf_fla=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
                  frmla.phylo=meanCFR_flaviviridae~phylo+virusesWithCFR_flaviviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmean_pf_fla) #4
 
-#rhabdoviridae meanCFR mammals
+#4 rhabdoviridae meanCFR mammals
 set.seed(1)
 cmean_pf_rha=gpf(Data=cdata_rha$data,tree=cdata_rha$phy,
                  frmla.phylo=meanCFR_rhabdoviridae~phylo+virusesWithCFR_rhabdoviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmean_pf_rha) #2
 
-#togaviridae meanCFR mammals
+#5 togaviridae meanCFR mammals
 set.seed(1)
 cmean_pf_tog=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
                  frmla.phylo=meanCFR_togaviridae~phylo+virusesWithCFR_togaviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmean_pf_tog) #1
 
-#paramyxoviridae meanCFR mammals
+#6 paramyxoviridae meanCFR mammals
 set.seed(1)
 cmean_pf_par=gpf(Data=cdata_par$data,tree=cdata_par$phy,
                  frmla.phylo=meanCFR_paramyxoviridae~phylo+virusesWithCFR_paramyxoviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmean_pf_par) #0 
 
-## summarize mammals, all viruses, 5 virus families
+## summarize Mean CFR mammals, all viruses, 5 virus families
 #save what each of the clades are for each vfamily
 cmean_pf_results=pfsum(cmean_pf)$results
 cmean_pf_results_cov=pfsum(cmean_pf_cov)$results #4
@@ -262,49 +264,49 @@ cmean_pf_results_rha=pfsum(cmean_pf_rha)$results #4
 cmean_pf_results_tog=pfsum(cmean_pf_tog)$results #2
 #cmean_pf_results_par=pfsum(cmean_pf_par)$results #0 factors
 
-## all viruses maxCFR mammals
+##1 all viruses MaxCFR mammals
 set.seed(1)
 cmax_pf=gpf(Data=cdata$data,tree=cdata$phy,
             frmla.phylo=maxCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
             family=gaussian,algorithm='phylo',nfactors=6,min.group.size=10)
 HolmProcedure(cmax_pf) #5
 
-#coronaviridae maxCFR  mammals
+#2 coronaviridae MaxCFR mammals
 set.seed(1)
 cmax_pf_cov=gpf(Data=cdata_cov$data,tree=cdata_cov$phy,
                 frmla.phylo=maxCFR_coronaviridae~phylo+virusesWithCFR_coronaviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmax_pf_cov) #2
 
-#flaviviridae maxCFR mammals
+#3 flaviviridae maxCFR mammals
 set.seed(1)
 cmax_pf_fla=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
                 frmla.phylo=maxCFR_flaviviridae~phylo+virusesWithCFR_flaviviridae,
                 family=gaussian,algorithm='phylo',nfactors=6,min.group.size=10)
 HolmProcedure(cmax_pf_fla) #5
 
-#rhabdoviridae maxCFR mammals
+#4 rhabdoviridae maxCFR mammals
 set.seed(1)
 cmax_pf_rha=gpf(Data=cdata_rha$data,tree=cdata_rha$phy,
                 frmla.phylo=maxCFR_rhabdoviridae~phylo+virusesWithCFR_rhabdoviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmax_pf_rha) #2
 
-#togaviridae maxCFR mammals
+#5 togaviridae maxCFR mammals
 set.seed(1)
 cmax_pf_tog=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
                 frmla.phylo=maxCFR_togaviridae~phylo+virusesWithCFR_togaviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmean_pf_tog) #1
 
-#paramyxoviridae maxCFR mammals
+#6 paramyxoviridae maxCFR mammals
 set.seed(1)
 cmax_pf_par=gpf(Data=cdata_par$data,tree=cdata_par$phy,
                 frmla.phylo=maxCFR_paramyxoviridae~phylo+virusesWithCFR_paramyxoviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmean_pf_par) #0 
 
-## summarize all viruses, 5 virus families
+## summarize Max CFR all viruses, 5 virus families
 #save what each of the clades are for each vfamily
 cmax_pf_results=pfsum(cmax_pf)$results #5
 cmax_pf_results_cov=pfsum(cmax_pf_cov)$results #2
@@ -313,7 +315,7 @@ cmax_pf_results_rha=pfsum(cmax_pf_rha)$results #2
 cmax_pf_results_tog=pfsum(cmax_pf_tog)$results #1
 #cmax_pf_results_par=pfsum(cmean_pf_par)$results #0 factors
 
-#onward transmission all viruses, mammals
+#1 onward transmission all viruses, mammals
 set.seed(1)
 cot_pf=gpf(Data=cdata2$data,tree=cdata2$phy,
            frmla.phylo=cbind(htrans_all.viruses,ntrans_all.viruses)~phylo,
@@ -332,7 +334,7 @@ cdata2_tog_ot<-cdata2_tog_ot[!is.na(cdata2_tog_ot$data$ntrans_togaviridae),]
 cdata2_par_ot<-cdata2[!is.na(cdata2$data$htrans_paramyxoviridae),]
 cdata2_par_ot<-cdata2_par_ot[!is.na(cdata2_par_ot$data$ntrans_paramyxoviridae),]
 
-#coronaviridae ot mammals
+#2 coronaviridae ot mammals
 set.seed(1)
 cot_pf_cov=gpf(Data=cdata2_cov_ot$data,tree=cdata2_cov_ot$phy,
                frmla.phylo=cbind(htrans_coronaviridae,ntrans_coronaviridae)~phylo,
@@ -342,14 +344,14 @@ HolmProcedure(cot_pf_cov) #0
 cdata2_cov_ot$data$on.frac_coronaviridae 
 # no variance, 0 is correct, all cor have onward transmission
 
-#flaviviridae ot mammals
+#3 flaviviridae ot mammals
 set.seed(1)
 cot_pf_fla=gpf(Data=cdata2_fla_ot$data,tree=cdata2_fla_ot$phy,
                frmla.phylo=cbind(htrans_flaviviridae,ntrans_flaviviridae)~phylo,
                family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cot_pf_fla) #3
 
-#rhabdoviridae ot mammals
+#4 rhabdoviridae ot mammals
 set.seed(1)
 cot_pf_rha=gpf(Data=cdata2_rha_ot$data,tree=cdata2_rha_ot$phy,
                frmla.phylo=cbind(htrans_rhabdoviridae,ntrans_rhabdoviridae)~phylo,
@@ -359,21 +361,21 @@ HolmProcedure(cot_pf_rha) #0
 cdata2_rha_ot$data$on.frac_rhabdoviridae
 # no variance, 0 is correct, rhabdoviridae don't have onward transmission
 
-#togaviridae ot mammals
+#5 togaviridae ot mammals
 set.seed(1)
 cot_pf_tog=gpf(Data=cdata2_tog_ot$data,tree=cdata2_tog_ot$phy,
                frmla.phylo=cbind(htrans_togaviridae,ntrans_togaviridae)~phylo,
                family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cot_pf_tog) #1
 
-#paramyxoviridae ot mammals
+#6 paramyxoviridae ot mammals
 set.seed(1)
 cot_pf_par=gpf(Data=cdata2_par$data,tree=cdata2_par$phy,
                frmla.phylo=cbind(htrans_paramyxoviridae,ntrans_paramyxoviridae)~phylo,
                family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cot_pf_par) #0
 
-#summarize all viruses 5 virus families
+#summarize OT all viruses 5 virus families
 cot_pf_results=pfsum(cot_pf)$results #4
 #cot_pf_results_cov=pfsum(cot_pf_cov)$results #0
 cot_pf_results_fla=pfsum(cot_pf_fla)$results #3
@@ -381,14 +383,14 @@ cot_pf_results_fla=pfsum(cot_pf_fla)$results #3
 cot_pf_results_tog=pfsum(cot_pf_tog)$results #1
 #cot_pf_results_par=pfsum(cot_pf_par)$results #0
 
-## all viruses bat CFR mean
+##1 all viruses bat CFR mean
 set.seed(1)
 bmean_pf=gpf(Data=bdata$data,tree=bdata$phy,
              frmla.phylo=meanCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
              family=gaussian,algorithm='phylo',nfactors=2,min.group.size=10)
 HolmProcedure(bmean_pf) #2
 
-#coronaviridae meanCFR bat 
+#2 coronaviridae meanCFR bat 
 bdata_cov<-bdata[!is.na(bdata$data$meanCFR_coronaviridae),]
 set.seed(1)
 bmean_pf_cov=gpf(Data=bdata_cov$data,tree=bdata_cov$phy,
@@ -396,7 +398,7 @@ bmean_pf_cov=gpf(Data=bdata_cov$data,tree=bdata_cov$phy,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bmean_pf_cov) #1
 
-#flaviviridae meanCFR bat
+#3 flaviviridae meanCFR bat
 bdata_fla<-bdata[!is.na(bdata$data$meanCFR_flaviviridae),]
 set.seed(1)
 bmean_pf_fla=gpf(Data=bdata_fla$data,tree=bdata_fla$phy,
@@ -404,7 +406,7 @@ bmean_pf_fla=gpf(Data=bdata_fla$data,tree=bdata_fla$phy,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bmean_pf_fla) #2
 
-#rhabdoviridae meanCFR bat
+#4 rhabdoviridae meanCFR bat
 bdata_rha<-bdata[!is.na(bdata$data$meanCFR_rhabdoviridae),]
 set.seed(1)
 bmean_pf_rha=gpf(Data=bdata_rha$data,tree=bdata_rha$phy,
@@ -412,7 +414,7 @@ bmean_pf_rha=gpf(Data=bdata_rha$data,tree=bdata_rha$phy,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bmean_pf_rha) #2
 
-#togaviridae meanCFR bat
+#5 togaviridae meanCFR bat
 bdata_tog<-bdata[!is.na(bdata$data$meanCFR_togaviridae),]
 set.seed(1)
 bmean_pf_tog=gpf(Data=bdata_tog$data,tree=bdata_tog$phy,
@@ -420,7 +422,7 @@ bmean_pf_tog=gpf(Data=bdata_tog$data,tree=bdata_tog$phy,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bmean_pf_tog) #0
 
-#paramyxoviridae meanCFR bat
+#6 paramyxoviridae meanCFR bat
 bdata_par<-bdata[!is.na(bdata$data$meanCFR_paramyxoviridae),]
 set.seed(1)
 bmean_pf_par=gpf(Data=bdata_par$data,tree=bdata_par$phy,
@@ -428,7 +430,7 @@ bmean_pf_par=gpf(Data=bdata_par$data,tree=bdata_par$phy,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bmean_pf_par) #0 
 
-## summarize meanCFR bat
+## summarize MeanCFR bat
 bmean_pf_results=pfsum(bmean_pf)$results #2
 bmean_pf_results_cov=pfsum(bmean_pf_cov)$results #1
 bmean_pf_results_fla=pfsum(bmean_pf_fla)$results #2
@@ -436,42 +438,42 @@ bmean_pf_results_rha=pfsum(bmean_pf_rha)$results #2
 #bmean_pf_results_tog=pfsum(bmean_pf_tog)$results #0 factors
 #bmean_pf_results_par=pfsum(bmean_pf_par)$results #0 factors
 
-## all viruses bat CFR max
+##1 all viruses bat CFR max
 set.seed(1)
 bmax_pf=gpf(Data=bdata$data,tree=bdata$phy,
             frmla.phylo=maxCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
             family=gaussian,algorithm='phylo',nfactors=3,min.group.size=10)
 HolmProcedure(bmax_pf) #2
 
-#coronaviridae maxCFR bat
+#2 coronaviridae maxCFR bat
 set.seed(1)
 bmax_pf_cov=gpf(Data=bdata_cov$data,tree=bdata_cov$phy,
                 frmla.phylo=maxCFR_coronaviridae~phylo+virusesWithCFR_coronaviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bmax_pf_cov) #1
 
-#flaviviridae maxCFR bat
+#3 flaviviridae maxCFR bat
 set.seed(1)
 bmax_pf_fla=gpf(Data=bdata_fla$data,tree=bdata_fla$phy,
                 frmla.phylo=maxCFR_flaviviridae~phylo+virusesWithCFR_flaviviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bmax_pf_fla) #1
 
-#rhabdoviridae maxCFR bat
+#4 rhabdoviridae maxCFR bat
 set.seed(1)
 bmax_pf_rha=gpf(Data=bdata_rha$data,tree=bdata_rha$phy,
                 frmla.phylo=maxCFR_rhabdoviridae~phylo+virusesWithCFR_rhabdoviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bmax_pf_rha) #1
 
-#togaviridae maxCFR bat
+#5 togaviridae maxCFR bat
 set.seed(1)
 bmax_pf_tog=gpf(Data=bdata_tog$data,tree=bdata_tog$phy,
                 frmla.phylo=maxCFR_togaviridae~phylo+virusesWithCFR_togaviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bmax_pf_tog) #0
 
-#paramyxoviridae maxCFR bat
+#6 paramyxoviridae maxCFR bat
 set.seed(1)
 bmax_pf_par=gpf(Data=bdata_par$data,tree=bdata_par$phy,
                 frmla.phylo=maxCFR_paramyxoviridae~phylo+virusesWithCFR_paramyxoviridae,
@@ -486,7 +488,7 @@ bmax_pf_results_rha=pfsum(bmax_pf_rha)$results #1
 #bmax_pf_results_tog=pfsum(bmean_pf_tog)$results #0 factors
 #bmax_pf_results_par=pfsum(bmean_pf_par)$results #0 factors
 
-## fraction of viruses with onward transmission bats
+##1 fraction of viruses with onward transmission bats
 set.seed(1)
 bot_pf=gpf(Data=bdata2$data,tree=bdata2$phy,
            frmla.phylo=cbind(htrans_all.viruses,ntrans_all.viruses)~phylo,
@@ -505,35 +507,35 @@ bdata2_tog<-bdata2_tog[!is.na(bdata2_tog$data$ntrans_togaviridae),]
 bdata2_par<-bdata[!is.na(bdata$data$htrans_paramyxoviridae),]
 bdata2_par<-bdata2_par[!is.na(bdata2_par$data$ntrans_paramyxoviridae),]
 
-#coronaviridae ot bats
+#2 coronaviridae ot bats
 set.seed(1)
 bot_pf_cov=gpf(Data=bdata2_cov$data,tree=bdata2_cov$phy,
                frmla.phylo=cbind(htrans_coronaviridae,ntrans_coronaviridae)~phylo,
                family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bot_pf_cov) #0
 
-#flaviviridae ot bats
+#3 flaviviridae ot bats
 set.seed(1)
 bot_pf_fla=gpf(Data=bdata2_fla$data,tree=bdata2_fla$phy,
                frmla.phylo=cbind(htrans_flaviviridae,ntrans_flaviviridae)~phylo,
                family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bot_pf_fla) #0
 
-#rhabdoviridae ot bats
+#4 rhabdoviridae ot bats
 set.seed(1)
 bot_pf_rha=gpf(Data=bdata2_rha$data,tree=bdata2_rha$phy,
                frmla.phylo=cbind(htrans_rhabdoviridae,ntrans_rhabdoviridae)~phylo,
                family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bot_pf_rha) #0
 
-#togaviridae ot bats
+#5 togaviridae ot bats
 set.seed(1)
 bot_pf_tog=gpf(Data=bdata2_tog$data,tree=bdata2_tog$phy,
                frmla.phylo=cbind(htrans_togaviridae,ntrans_togaviridae)~phylo,
                family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bot_pf_tog) #0
 
-#paramyxoviridae ot bats
+#6 paramyxoviridae ot bats
 set.seed(1)
 bot_pf_par=gpf(Data=bdata2_par$data,tree=bdata2_par$phy,
                frmla.phylo=cbind(htrans_paramyxoviridae,ntrans_paramyxoviridae)~phylo,
@@ -590,34 +592,6 @@ write.csv(results,"pf_allclades.csv")
 #================================================================================
 ##quick intermission --> go to 03a_data mining and run this script --> come back
 
-
-#visualize clades (you get the legend in your console)
-#mammal meanCFR
-pf.tree(cmean_pf,factors=1:4,size=0.1,alphas=rep(0.75,5))
-pf.tree(cmean_pf_cov,factors=1:2,size=0.1,alphas=rep(0.75,5))
-pf.tree(cmean_pf_fla,factors=c(1:2,4),size=0.1,alphas=rep(0.75,5)) 
-pf.tree(cmean_pf_rha,factors=1:2,size=0.1,alphas=rep(0.75,5))
-pf.tree(cmean_pf_tog,factors=1,size=0.1,alphas=rep(0.75,5))
-#mammals maxCFR
-pf.tree(cmax_pf,factors=c(1,3),size=0.1,alphas=rep(0.75,5)) 
-pf.tree(cmax_pf_cov,factors=1:2,size=0.1,alphas=rep(0.75,5))
-pf.tree(cmax_pf_fla,factors=c(1:4),size=0.1,alphas=rep(0.75,5))
-pf.tree(cmax_pf_rha,factors=1:2,size=0.1,alphas=rep(0.75,5))
-pf.tree(cmax_pf_tog,factors=1,size=0.1,alphas=rep(0.75,5))
-#mammal ot
-pf.tree(cot_pf,factors=1:4,size=0.1,alphas=rep(0.75,5)) 
-pf.tree(cot_pf_fla,factors=1:2,size=0.1,alphas=rep(0.75,5))
-pf.tree(cot_pf_tog,factors=1,size=0.1,alphas=rep(0.75,5))
-#bat meanCFR
-pf.tree(bmean_pf,factors=1,size=0.1,alphas=rep(0.75,5))
-pf.tree(bmean_pf_cov,factors=1,size=0.1,alphas=rep(0.75,5))
-pf.tree(bmean_pf_fla,factors=1:2,size=0.1,alphas=rep(0.75,5)) 
-#bat maxCFR
-pf.tree(bmax_pf_cov,factors=1,size=0.1,alphas=rep(0.75,5))
-pf.tree(bmax_pf_fla,factors=1,size=0.1,alphas=rep(0.75,5)) 
-#bat ot
-#none are risky
-
 ## save trees
 dtree=treeio::full_join(as.treedata(cdata$phy),cdata$data,by="label")
 btree=treeio::full_join(as.treedata(bdata$phy),bdata$data,by="label")
@@ -629,6 +603,8 @@ dtree_rha=treeio::full_join(as.treedata(cdata_rha$phy),cdata_rha$data,by="label"
 dtree_tog=treeio::full_join(as.treedata(cdata_tog$phy),cdata_tog$data,by="label")
 dtree_par=treeio::full_join(as.treedata(cdata_par$phy),cdata_par$data,by="label")
 
+#===============================================================================
+####Plotting
 ## fix palette
 AlberPalettes <- c("YlGnBu","Reds","BuPu", "PiYG")
 AlberColours <- sapply(AlberPalettes, function(a) RColorBrewer::brewer.pal(5, a)[4])
@@ -645,7 +621,7 @@ plus=1
 pplus=plus+1
 
 
-## cfr mean: mammal_all viruses
+##1 CFR mean: mammal_all viruses
 gg=ggtree(dtree,size=0.2, layout="circular",
           aes(colour=meanCFR_all.viruses, group=node))+ 
   #scale_colour_manual(values=c("grey80","black"))+
@@ -672,15 +648,17 @@ for(i in 1:nrow(cmean_pf_results)){ ##cmean_pf changes
                     parse=T,
                     angle=20)
 }
-#save, title
-#gg_cmean<- gg+  ggtitle("Phylofactor Clades: MeanCFR-All Viruses")+ theme(plot.title = element_text(hjust = 0.5))
-gg_cmean<- gg+  ggtitle("MeanCFR-All Viruses")+ theme(plot.title = element_text(hjust = 0.5, size=8))
+#plot
+gg_cmean<- gg+ 
+  ggtitle("MeanCFR-All Viruses")+ 
+  theme(plot.title = element_text(hjust = 0.5, size=8))
 plot(gg_cmean)
 
+#save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-ggsave("MeanCFR_allviruses.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("MeanCFR_allviruses.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
-### cfr max: mammals_all viruses
+###2 CFR max: mammals_all viruses
 gg=ggtree(dtree,size=0.2,layout="circular",
           aes(colour=maxCFR_all.viruses, group=node))+
   #scale_colour_manual(values=c("grey80","black"))+
@@ -703,18 +681,19 @@ for(i in 1:nrow(cmax_pf_results)){
                     parse=T,
                     angle=20)
 }
-#gg+geom_tippoint(aes(colour=meanCFR),shape=15)
 
-
-#gg_cmax<- gg+  ggtitle("Phylofactor Clades: MaxCFR-All Viruses")+ theme(plot.title = element_text(hjust = 0.5))
-gg_cmax<- gg+  ggtitle("MaxCFR-All Viruses")+ theme(plot.title = element_text(hjust = 0.5, size=8))
+#plot
+gg_cmax<- gg+
+  geom_tippoint(aes(colour=maxCFR_all.viruses),shape=15)+
+  ggtitle("MaxCFR-All Viruses")+ 
+  theme(plot.title = element_text(hjust = 0.5, size=8))
 
 ## save
 plot(gg_cmax)
-ggsave("MaxCFR_allviruses.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("MaxCFR_allviruses.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
 
-## ot, mammals_all viruses
+##3 ot, mammals_all viruses
 gg=ggtree(dtree,size=0.2,layout="circular",
           aes(colour=on.frac_all.viruses, group=node))+
   #scale_colour_manual(values=c("grey80","black"))+
@@ -737,17 +716,20 @@ for(i in 1:nrow(cot_pf_results)){
                     parse=T,
                     angle=20)
 }
-#gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-#gg_cot=gg+  ggtitle("Phylofactor Clades: Onward Transmission-All Viruses")+ theme(plot.title = element_text(hjust = 0.5))
-gg_cot=gg+ggtitle("Fraction with Onward Transmission-All Viruses")+ theme(plot.title = element_text(hjust = 0.5, size=8))
+
+#plot
+gg_cot=gg+
+  ggtitle("Fraction with Onward Transmission-All Viruses")+
+  geom_tippoint(aes(colour=on.frac_all.viruses),shape=15)+
+  theme(plot.title = element_text(hjust = 0.5, size=8))
 
 ## save
 plot(gg_cot)
-ggsave("OT_allviruses.jpg", gg_cot, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("OT_allviruses.jpg", gg_cot, device = "jpeg", width = 10, height = 6, units = "in")
 
 
-####coronaviridae
-## cfr mean: mammals, coronaviridae
+####4 coronaviridae
+##4 CFR mean/max: mammals, coronaviridae
 gg=ggtree(dtree_cov,size=0.2,layout="circular",
           aes(colour=meanCFR_coronaviridae, group=node))+
   #scale_colour_manual(values=c("grey80","black"))+
@@ -771,50 +753,19 @@ for(i in 1:nrow(cmean_pf_results_cov)){
                     angle=20,
                     label.size=12)
 }
-#gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-#gg_cmean <- gg +ggtitle(expression("Phylofactor Clades: MeanCFR-" ~ italic("Coronaviridae"))) + theme(plot.title = element_text(hjust = 0.5))
-#gg_cmean <- gg +ggtitle(expression("MeanCFR-" ~ italic("Coronaviridae"))) + theme(plot.title = element_text(hjust = 0.5, size=8))
-gg_cmean_cov <- gg +ggtitle(expression("MeanCFR/MaxCFR-" ~ italic("Coronaviridae"))) + theme(plot.title = element_text(hjust = 0.5, size=8))
+#plot
+gg_cmean_cov <- gg+
+  ggtitle(expression("MeanCFR/MaxCFR-" ~ italic("Coronaviridae")))+
+  geom_tippoint(aes(colour=meanCFR_coronaviridae),shape=15)+
+  theme(plot.title = element_text(hjust = 0.5, size=8))
 
 ## save
 plot(gg_cmean_cov)
-ggsave("MeanCFR_coronaviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("MeanCFR/MaxCFR_coronaviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 
-## cfr max: mammals, coronaviridaee
-gg=ggtree(dtree_cov,size=0.2,layout="circular",
-          aes(colour=maxCFR_coronaviridae, group=node))+
-  #scale_colour_manual(values=c("grey80","black"))+
-  scale_color_gradient(low="grey90",high="black")+
-  guides(colour=F)
-
-## add clades
-for(i in 1:nrow(cmax_pf_results_cov)){
-  
-  gg=gg+
-    geom_hilight(node=cmax_pf_results_cov$node[i],
-                 alpha=0.15,
-                 fill=ifelse(cmax_pf_results_cov$clade[i]>
-                               cmax_pf_results_cov$other[i],pcols[2],pcols[1]))+
-    geom_cladelabel(node=cmax_pf_results_cov$node[i],
-                    label=cmax_pf_results_cov$factor[i],
-                    offset=pplus,
-                    hjust=0.75,
-                    offset.text=pplus*10,
-                    parse=T,
-                    angle=20)
-}
-#gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-#gg_cmax <- gg +ggtitle(expression("Phylofactor Clades: MaxCFR-" ~ italic("Coronaviridae"))) + theme(plot.title = element_text(hjust = 0.5))
-#gg_cmax <- gg +ggtitle(expression("MaxCFR-" ~ italic("Coronaviridae"))) + theme(plot.title = element_text(hjust = 0.5, size=8))
-
-## save
-plot(gg_cmax)
-ggsave("MaxCFR_coronaviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
-
-
-####flaviviridae
-## cfr mean: mammals, flaviviridae
+####5 flaviviridae
+##5 CFR mean: mammals, flaviviridae
 gg=ggtree(dtree_fla,size=0.2,layout="circular",
           aes(colour=meanCFR_flaviviridae, group=node))+ 
   #scale_colour_manual(values=c("grey80","black"))+
@@ -837,16 +788,18 @@ for(i in 1:nrow(cmean_pf_results_fla)){
                     parse=T,
                     angle=20)
 }
-#gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-#gg_cmean <- gg + ggtitle(expression("Phylofactor Clades: MeanCFR-" ~ italic("Flaviviridae"))) + theme(plot.title = element_text(hjust = 0.5))
-gg_cmean_fla <- gg + ggtitle(expression("MeanCFR-" ~ italic("Flaviviridae"))) + theme(plot.title = element_text(hjust = 0.5, size=8))
+#plot
+gg_cmean_fla <- gg+ 
+  ggtitle(expression("MeanCFR-" ~ italic("Flaviviridae")))+
+  geom_tippoint(aes(colour=meanCFR_flaviviridae),shape=15)+
+  theme(plot.title = element_text(hjust = 0.5, size=8))
 
 ## save
 plot(gg_cmean_fla)
-ggsave("MeanCFR_flaviviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("MeanCFR_flaviviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 
-## cfr max: mammals, flaviviridae
+##6 CFR max: mammals, flaviviridae
 gg=ggtree(dtree_fla,size=0.2,layout="circular",
           aes(colour=maxCFR_flaviviridae, group=node))+
   #scale_colour_manual(values=c("grey80","black"))+
@@ -869,15 +822,17 @@ for(i in 1:nrow(cmax_pf_results_fla)){
                     parse=T,
                     angle=20)
 }
-#gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-#gg_cmax <- gg +ggtitle(expression("Phylofactor Clades: MaxCFR-" ~ italic("Flaviviridae"))) + theme(plot.title = element_text(hjust = 0.5))
-gg_cmax_fla <- gg +ggtitle(expression("MaxCFR-" ~ italic("Flaviviridae"))) + theme(plot.title = element_text(hjust = 0.5, size=8))
+#gg
+gg_cmax_fla <- gg+
+  ggtitle(expression("MaxCFR-" ~ italic("Flaviviridae")))+
+  geom_tippoint(aes(colour=maxCFR_flavivirida),shape=15)+
+  theme(plot.title = element_text(hjust = 0.5, size=8))
 
 ## save
 plot(gg_cmax_fla)
-ggsave("MaxCFR_flaviviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("MaxCFR_flaviviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
-## ot, mammals, flaviviridae
+##7 OT, mammals, flaviviridae
 gg=ggtree(dtree_fla,size=0.2,layout="circular",
           aes(colour=on.frac_flaviviridae, group=node))+
   #scale_colour_manual(values=c("grey80","black"))+
@@ -900,16 +855,19 @@ for(i in 1:nrow(cot_pf_results_fla)){
                     parse=T,
                     angle=20)
 }
-#gg+geom_tippoint(aes(colour=meanCFR),shape=15)
-#gg_ot <- gg + ggtitle(expression("Phylofactor Clades: Onward Transmission-"~italic("Flaviviridae"))) +theme(plot.title = element_text(hjust = 0.5))
-gg_ot_fla <- gg + ggtitle(expression("Fraction with Onward Transmission-"~italic("Flaviviridae"))) +theme(plot.title = element_text(hjust = 0.5, size=8))
+#plot
+gg_ot_fla <- gg+
+  ggtitle(expression("% with Onward Transmission-"~italic("Flaviviridae")))+
+  geom_tippoint(aes(colour=on.frac_flaviviridae),shape=15)+
+  theme(plot.title = element_text(hjust = 0.5, size=8))
 
 ## save
 plot(gg_ot_fla)
-ggsave("OT_flaviviridae.jpg", gg_ot_fla, device = "jpeg", width = 10, height = 6, units = "in")
+#ggsave("OT_flaviviridae.jpg", gg_ot_fla, device = "jpeg", width = 10, height = 6, units = "in")
 
-#try to facet wrap my plots
-giant_phylo<- gg_cmean+gg_cmax+gg_cmean_cov+gg_cmean_fla+gg_cmax_fla+gg_ot_fla
+#try to  wrap my plots
+giant_phylo<- gg_cmean+gg_cmax+gg_cot+gg_cmean_cov+gg_cmean_fla+gg_cmax_fla+gg_ot_fla
 
 print(giant_phylo)
-ggsave("giant_phylofactor.jpg", giant_phylo, device = "jpeg", width = 8, height = 6, units = "in")
+#ggsave("03_giant_phylofactor.jpg", giant_phylo, device = "jpeg", width = 8, height = 6, units = "in")
+
