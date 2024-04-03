@@ -1,7 +1,7 @@
 ## phylofatality
 ## 02_PS, K and PS plots
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 3/26/2024
+## last update 4/2/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -24,6 +24,7 @@ library(phytools)
 library(egg)
 library(devtools)
 library(MoMAColors)
+library(stringr)
 
 ###Preface before starting: To just look at the plots, begin at L409-412 after loading packages
 
@@ -412,20 +413,28 @@ setwd("~/Desktop/GitHub/phylofatality/csv files")
 #don't forget to reload in packages
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 ps=read.csv("PS_data.csv")
+ps$vfamily <- str_to_title(ps$vfamily)
 ps<- ps %>% mutate(variable=ifelse(variable=="meanCFR", "Mean CFR", variable))
 ps<- ps %>% mutate(variable=ifelse(variable=="maxCFR", "Maximum CFR", variable))
-ps <- ps %>% mutate(variable=ifelse(variable == "on.frac", "% with onward transmission", variable))
+ps <- ps %>% mutate(variable=ifelse(variable == "on.frac", "Percent with onward transmission", variable))
 
 #reorder 
-ps$variable <- factor(ps$variable, levels = c("Mean CFR", "Maximum CFR", "% with onward transmission"))
+ps$variable <- factor(ps$variable, levels = c("Mean CFR", "Maximum CFR", "Percent with onward transmission"))
+
+#fix palette
+Panton<- list(c("#e84a00","#bb1d2c","#9b0c43","#661f66","#2c1f62","#006289","#004759"))
+OKeeffe = list(c("#f3d567", "#ee9b43", "#e74b47", "#b80422", "#172767", "#19798b"))
+Warhol = list(c("#ff0066", "#328c97", "#d1aac2", "#a5506d", "#b3e0bf","#2A9D3D", "#edf181", "#db7003", "#fba600", "#f8c1a6", "#A30000","#ff3200", "#011a51", "#97d1d9",  "#916c37"))
+ustwo = list(c("#d7433b", "#f06a63", "#ff8e5e", "#ffcc3d", "#95caa6", "#008d98"))
 
 #plot
 plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
   theme_bw() +
   facet_grid(variable~dataset)+
+  theme(strip.text = element_text(size = 12.5))+
   theme(legend.position = "none")+
   theme(axis.text.y = element_text(size = 10))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size=12, color=c("black", rep(moma.colors("Panton"), length(unique(ps$vfamily)) - 1,)))) +
+  theme(axis.text.x = element_text(angle = 45, face="italic", hjust = 1, size=11, color=c("black", "#e74b47", "#b80422", "#a5506d","#328c97","#2A9D3D")))+
   guides(color = guide_legend(title = "virus family"))+
   geom_errorbar(
     aes(ymin = lambda_lower, ymax = lambda_upper),
@@ -434,9 +443,10 @@ plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
     size = 1)+
   geom_point(position = position_dodge(width = 0.2), size = 3) +
   ylim(0, 1) +
-  scale_color_manual(values = c("black", rep(moma.colors("Panton"), length(unique(ps$vfamily)) - 2 ))) +
-  xlab("Virus Family")+
-  ylab(expression(paste("Pagel's ", lambda)))+
+  scale_color_manual(values = c("black","#e74b47", "#b80422", "#a5506d","#328c97","#2A9D3D")) +
+  labs(x = "Virus Family", y = expression(paste("Pagel's ", lambda)))+
+  theme(axis.title.x = element_text(size = 14, margin = margin(t = 20)))+
+  theme(axis.title.y = element_text(size = 14, margin = margin(t = 20)))+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 plot(plot)
 
