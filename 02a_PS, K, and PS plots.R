@@ -434,7 +434,7 @@ ustwo = list(c("#d7433b", "#f06a63", "#ff8e5e", "#ffcc3d", "#95caa6", "#008d98")
 plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
   theme_bw() +
   facet_grid(variable~dataset)+
-  theme(strip.text = element_text(size = 12.5))+
+  theme(strip.text = element_text(size = 12))+
   theme(legend.position = "none")+
   theme(axis.text.y = element_text(size = 10))+
   theme(axis.text.x = element_text(angle = 45, 
@@ -451,8 +451,8 @@ plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
   ylim(0, 1) +
   scale_color_manual(values = c("black","#e74b47", "#b80422", "#a5506d","#328c97","#2A9D3D")) +
   labs(x = "Virus Family", y = expression(paste("Pagel's ", lambda)))+
-  theme(axis.title.x = element_text(size = 14, margin = margin(t = 20)))+
-  theme(axis.title.y = element_text(size = 14, margin = margin(t = 20)))+
+  theme(axis.title.x = element_text(size = 16, margin = margin(t = 20)))+
+  theme(axis.title.y = element_text(size = 16, margin = margin(r = 18)))+
   scale_x_discrete(labels=c("all viruses",expression(italic(Coronaviridae)),
                             expression(italic(Flaviviridae)),expression(italic(Paramyxoviridae)),
                             expression(italic(Rhabdoviridae)),expression(italic(Togaviridae))))+
