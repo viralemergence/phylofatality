@@ -413,10 +413,13 @@ setwd("~/Desktop/GitHub/phylofatality/csv files")
 #don't forget to reload in packages
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 ps=read.csv("PS_data.csv")
+
+#fix up variable names
 ps$vfamily <- str_to_title(ps$vfamily)
 ps<- ps %>% mutate(variable=ifelse(variable=="meanCFR", "Mean CFR", variable))
 ps<- ps %>% mutate(variable=ifelse(variable=="maxCFR", "Maximum CFR", variable))
 ps <- ps %>% mutate(variable=ifelse(variable == "on.frac", "Percent with onward transmission", variable))
+ps <- ps %>% mutate(vfamily = ifelse(vfamily == "All Viruses", "all viruses", vfamily))
 
 #reorder 
 ps$variable <- factor(ps$variable, levels = c("Mean CFR", "Maximum CFR", "Percent with onward transmission"))
@@ -434,7 +437,11 @@ plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
   theme(strip.text = element_text(size = 12.5))+
   theme(legend.position = "none")+
   theme(axis.text.y = element_text(size = 10))+
-  theme(axis.text.x = element_text(angle = 45, face="italic", hjust = 1, size=11, color=c("black", "#e74b47", "#b80422", "#a5506d","#328c97","#2A9D3D")))+
+  theme(axis.text.x = element_text(angle = 45, 
+                                   hjust = 1,
+                                   face="italic",
+                                   size=11, 
+                                   color=c("black", "#e74b47", "#b80422", "#a5506d","#328c97","#2A9D3D")))+
   guides(color = guide_legend(title = "virus family"))+
   geom_errorbar(
     aes(ymin = lambda_lower, ymax = lambda_upper),
