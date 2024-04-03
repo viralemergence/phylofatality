@@ -1,7 +1,7 @@
 ## phylofatality
 ##03_phylofactor to map clades
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 3/26/2024
+## last update 4/3/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -666,7 +666,7 @@ gg=ggtree(dtree,size=0.2,layout="circular",
   guides(colour=F)
 
 ## add clades
-for(i in 1:nrow(cmax_pf_results)){
+for(i in 1:nrow(cmax_pf_results)){ #cmax_pf_results
   
   gg=gg+
     geom_hilight(node=cmax_pf_results$node[i],
@@ -701,7 +701,7 @@ gg=ggtree(dtree,size=0.2,layout="circular",
   guides(colour=F)
 
 ## add clades
-for(i in 1:nrow(cot_pf_results)){
+for(i in 1:nrow(cot_pf_results)){ #cot_pf_results
   
   gg=gg+
     geom_hilight(node=cot_pf_results$node[i],
@@ -737,7 +737,7 @@ gg=ggtree(dtree_cov,size=0.2,layout="circular",
   guides(colour=F)
 
 ## add clades
-for(i in 1:nrow(cmean_pf_results_cov)){ 
+for(i in 1:nrow(cmean_pf_results_cov)){ #cmean_pf_results_cov
   
   gg=gg+
     geom_hilight(node=cmean_pf_results_cov$node[i],
@@ -825,7 +825,7 @@ for(i in 1:nrow(cmax_pf_results_fla)){
 #gg
 gg_cmax_fla <- gg+
   ggtitle(expression("MaxCFR-" ~ italic("Flaviviridae")))+
-  geom_tippoint(aes(colour=maxCFR_flavivirida),shape=15)+
+  geom_tippoint(aes(colour=maxCFR_flaviviridae),shape=15)+
   theme(plot.title = element_text(hjust = 0.5, size=8))
 
 ## save
