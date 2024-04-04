@@ -22,6 +22,7 @@ library(emmeans)
 #library(ade4)
 library(phytools)
 library(dplyr)
+library(patchwork)
 
 ## load in virulence data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
@@ -587,7 +588,7 @@ results<- do.call("rbind", list(cmean_pf_results,cmean_pf_results_cov,cmean_pf_r
                                 bmean_pf_results_rha,bmax_pf_results,bmax_pf_results_cov, bmax_pf_results_fla,bmax_pf_results_rha,
                                 bot_pf_results))
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-write.csv(results,"pf_allclades.csv")
+#write.csv(results,"pf_allclades.csv")
 
 #================================================================================
 ##quick intermission --> go to 03a_data mining and run this script --> come back
@@ -605,6 +606,21 @@ dtree_par=treeio::full_join(as.treedata(cdata_par$phy),cdata_par$data,by="label"
 
 #===============================================================================
 ####Plotting
+
+#clean environment before plotting
+rm(bdata, bdata_cov, bdata_fla, bdata_par, bdata_rha, bdata_tog, 
+   bdata2, bdata2_cov, bdata2_fla, bdata2_par, bdata2_rha, bdata2_tog,
+   bmax_pf, bmax_pf_cov, bmax_pf_fla, bmax_pf_par, bmax_pf_tog, bmax_pf_rha,
+   bmean_pf, bmean_pf_cov, bmean_pf_fla, bmean_pf_par, bmean_pf_tog, bmean_pf_rha,
+   bot_pf, bot_pf_cov, bot_pf_fla, bot_pf_par, bot_pf_tog, bot_pf_rha,
+   cdata, cdata_cov, cdata_fla, cdata_par, cdata_rha, cdata_tog, 
+   cdata2, cdata2_cov, cdata2_fla, cdata2_par, cdata2_rha, cdata2_tog,
+   cdata_ot, cdata2_cov_ot, cdata2_fla_ot, cdata2_par_ot, cdata2_rha_ot, cdata2_tog_ot,
+   cmax_pf, cmax_pf_cov, cmax_pf_fla, cmax_pf_par, cmax_pf_tog, cmax_pf_rha,
+   cmean_pf, cmean_pf_cov, cmean_pf_fla, cmean_pf_par, cmean_pf_tog, cmean_pf_rha,
+   cot_pf, cot_pf_cov, cot_pf_fla, cot_pf_par, cot_pf_tog, cot_pf_rha,
+   results, taxonomy, data)
+
 ## fix palette
 AlberPalettes <- c("YlGnBu","Reds","BuPu", "PiYG")
 AlberColours <- sapply(AlberPalettes, function(a) RColorBrewer::brewer.pal(5, a)[4])
@@ -621,50 +637,47 @@ plus=1
 pplus=plus+1
 
 
-##1 CFR mean: mammal_all viruses
-gg=ggtree(dtree,size=0.2, layout="circular",
-          aes(colour=meanCFR_all.viruses, group=node))+ 
-  #scale_colour_manual(values=c("grey80","black"))+
-  scale_color_gradient(low="grey90",high="black")+
-  guides(colour=F)
-
 #fix labels for the plot below
 #cmean_pf_results$factor[1]="1: subclade~of~italic(Natalidae, Molossidae, Vespertilionidae, Nycteridae, Emballonuridae)" 
 #cmean_pf_results$factor[3]="3: subclade~of~italic(Rhinopomatidae, Megadeermatidae, Rhinolophidae, Hipposideridae, Pteropodidae, Noctilionidae, Morpoopidae, Phyllostomidae)"
 
+##1 CFR mean: mammal_all viruses
+gg=ggtree(dtree,size=0.2,layout="circular",
+          aes(colour=meanCFR_all.viruses, group=node))+
+  scale_color_gradient(low="grey90",high="black")+
+  guides(colour=F)
 ## add clades
-for(i in 1:nrow(cmean_pf_results)){ ##cmean_pf changes
+for(i in 1:nrow(cmean_pf_results)){ 
   
   gg=gg+
-    geom_hilight(node=cmean_pf_results$node[i], ##cmean_pf changes
+    geom_hilight(node=cmean_pf_results$node[i],
                  alpha=0.15,
-                 fill=ifelse(cmean_pf_results$clade[i]> ##cmean_pf changes
-                               cmean_pf_results$other[i],pcols[2],pcols[1]))+ ##cmean_pf changes
-    geom_cladelabel(node=cmean_pf_results$node[i], ##cmean_pf changes
-                    label=cmean_pf_results$factor[i], ##cmean_pf changes
-                    offset=pplus+1,
+                 fill=ifelse(cmean_pf_results$clade[i]>
+                               cmean_pf_results$other[i],pcols[2],pcols[1]))+
+    geom_cladelabel(node=cmean_pf_results$node[i],
+                    label=cmean_pf_results$factor[i],
+                    offset=pplus*2,
                     hjust=0.75,
-                    offset.text=pplus*10,
+                    offset.text=pplus*7,
                     parse=T,
-                    angle=20)
+                    fontsize=4,
+                    angle=10)
 }
 #plot
-gg_cmean<- gg+ 
-  ggtitle("MeanCFR-All Viruses")+ 
-  theme(plot.title = element_text(hjust = 0.5, size=8))
+gg_cmean= gg+
+  geom_tippoint(aes(colour=meanCFR_all.viruses),shape=15, size=0.5)+
+  labs(x = "all viruses")+
+  ggtitle("MeanCFR")+ 
+  theme(axis.title.y = element_text(size = 15, margin = margin(r = -10)))+
+  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -1)))
 plot(gg_cmean)
 
-#save
-setwd("~/Desktop/GitHub/phylofatality/figs")
-#ggsave("MeanCFR_allviruses.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 ###2 CFR max: mammals_all viruses
 gg=ggtree(dtree,size=0.2,layout="circular",
           aes(colour=maxCFR_all.viruses, group=node))+
-  #scale_colour_manual(values=c("grey80","black"))+
   scale_color_gradient(low="grey90",high="black")+
   guides(colour=F)
-
 ## add clades
 for(i in 1:nrow(cmax_pf_results)){ #cmax_pf_results
   
@@ -675,31 +688,26 @@ for(i in 1:nrow(cmax_pf_results)){ #cmax_pf_results
                                cmax_pf_results$other[i],pcols[2],pcols[1]))+
     geom_cladelabel(node=cmax_pf_results$node[i],
                     label=cmax_pf_results$factor[i],
-                    offset=pplus,
+                    offset=pplus*2,
                     hjust=0.75,
-                    offset.text=pplus*10,
+                    offset.text=pplus*7,
                     parse=T,
-                    angle=20)
+                    fontsize=4,
+                    angle=10)
 }
-
 #plot
-gg_cmax<- gg+
-  geom_tippoint(aes(colour=maxCFR_all.viruses),shape=15)+
-  ggtitle("MaxCFR-All Viruses")+ 
-  theme(plot.title = element_text(hjust = 0.5, size=8))
-
-## save
+gg_cmax= gg+
+  geom_tippoint(aes(colour=maxCFR_all.viruses),shape=15, size=0.5)+
+  ggtitle("MaxCFR")+ 
+  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -1)))
 plot(gg_cmax)
-#ggsave("MaxCFR_allviruses.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ##3 ot, mammals_all viruses
 gg=ggtree(dtree,size=0.2,layout="circular",
           aes(colour=on.frac_all.viruses, group=node))+
-  #scale_colour_manual(values=c("grey80","black"))+
   scale_color_gradient(low="grey90",high="black")+
   guides(colour=F)
-
 ## add clades
 for(i in 1:nrow(cot_pf_results)){ #cot_pf_results
   
@@ -710,33 +718,27 @@ for(i in 1:nrow(cot_pf_results)){ #cot_pf_results
                                cot_pf_results$other[i],pcols[2],pcols[1]))+
     geom_cladelabel(node=cot_pf_results$node[i],
                     label=cot_pf_results$factor[i],
-                    offset=pplus,
+                    offset=pplus*2,
                     hjust=0.75,
-                    offset.text=pplus*10,
+                    offset.text=pplus*7,
                     parse=T,
-                    angle=20)
+                    fontsize=4,
+                    angle=10)
 }
-
 #plot
 gg_cot=gg+
-  ggtitle("Fraction with Onward Transmission-All Viruses")+
-  geom_tippoint(aes(colour=on.frac_all.viruses),shape=15)+
-  theme(plot.title = element_text(hjust = 0.5, size=8))
-
-## save
+  ggtitle("% with Onward Transmission")+
+  geom_tippoint(aes(colour=on.frac_all.viruses),shape=15, size=0.5)+
+  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -1)))
 plot(gg_cot)
-#ggsave("OT_allviruses.jpg", gg_cot, device = "jpeg", width = 10, height = 6, units = "in")
-
 
 ####4 coronaviridae
 ##4 CFR mean/max: mammals, coronaviridae
 gg=ggtree(dtree_cov,size=0.2,layout="circular",
           aes(colour=meanCFR_coronaviridae, group=node))+
-  #scale_colour_manual(values=c("grey80","black"))+
   scale_color_gradient(low="grey90",high="black")+
   guides(colour=F)
-
-## add clades
+# add clades
 for(i in 1:nrow(cmean_pf_results_cov)){ #cmean_pf_results_cov
   
   gg=gg+
@@ -746,32 +748,33 @@ for(i in 1:nrow(cmean_pf_results_cov)){ #cmean_pf_results_cov
                                cmean_pf_results_cov$other[i],pcols[2],pcols[1]))+ 
     geom_cladelabel(node=cmean_pf_results_cov$node[i],
                     label=cmean_pf_results_cov$factor[i], 
-                    offset=pplus+1,
+                    offset=pplus*2,
                     hjust=0.75,
-                    offset.text=pplus*10,
+                    offset.text=pplus*7,
                     parse=T,
-                    angle=20,
+                    fontsize=4,
+                    angle=10,
                     label.size=12)
 }
 #plot
 gg_cmean_cov <- gg+
-  ggtitle(expression("MeanCFR/MaxCFR-" ~ italic("Coronaviridae")))+
-  geom_tippoint(aes(colour=meanCFR_coronaviridae),shape=15)+
-  theme(plot.title = element_text(hjust = 0.5, size=8))
-
-## save
+  geom_tippoint(aes(colour=meanCFR_coronaviridae),shape=15, size=0.5)+
+  theme(axis.title.y = element_text(size = 15, margin= margin(r= -10)))+
+  labs(x = expression(italic(Coronaviridae)))
 plot(gg_cmean_cov)
-#ggsave("MeanCFR/MaxCFR_coronaviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
+
+#quick CoV Max one
+gg_cmax_cov <- gg+
+  geom_tippoint(aes(colour=maxCFR_coronaviridae),shape=15, size=0.5)
+plot(gg_cmax_cov)
 
 ####5 flaviviridae
 ##5 CFR mean: mammals, flaviviridae
 gg=ggtree(dtree_fla,size=0.2,layout="circular",
           aes(colour=meanCFR_flaviviridae, group=node))+ 
-  #scale_colour_manual(values=c("grey80","black"))+
   scale_color_gradient(low="grey90",high="black")+
   guides(colour=F)
-
 ## add clades
 for(i in 1:nrow(cmean_pf_results_fla)){ 
   
@@ -782,30 +785,26 @@ for(i in 1:nrow(cmean_pf_results_fla)){
                                cmean_pf_results_fla$other[i],pcols[2],pcols[1]))+ 
     geom_cladelabel(node=cmean_pf_results_fla$node[i], 
                     label=cmean_pf_results_fla$factor[i], 
-                    offset=pplus+1,
+                    offset=pplus*2,
                     hjust=0.75,
-                    offset.text=pplus*10,
+                    offset.text=pplus*7,
                     parse=T,
-                    angle=20)
+                    fontsize=4,
+                    angle=10)
 }
 #plot
 gg_cmean_fla <- gg+ 
-  ggtitle(expression("MeanCFR-" ~ italic("Flaviviridae")))+
-  geom_tippoint(aes(colour=meanCFR_flaviviridae),shape=15)+
-  theme(plot.title = element_text(hjust = 0.5, size=8))
-
-## save
+  geom_tippoint(aes(colour=meanCFR_flaviviridae), shape=15, size=0.5)+
+  theme(axis.title.y = element_text(size = 15, margin= margin(r= -10)))+
+  labs(x = expression(italic(Flaviviridae)))
 plot(gg_cmean_fla)
-#ggsave("MeanCFR_flaviviridae.jpg", gg_cmean, device = "jpeg", width = 10, height = 6, units = "in")
 
 
 ##6 CFR max: mammals, flaviviridae
 gg=ggtree(dtree_fla,size=0.2,layout="circular",
           aes(colour=maxCFR_flaviviridae, group=node))+
-  #scale_colour_manual(values=c("grey80","black"))+
   scale_color_gradient(low="grey90",high="black")+
   guides(colour=F)
-
 ## add clades
 for(i in 1:nrow(cmax_pf_results_fla)){
   
@@ -816,29 +815,23 @@ for(i in 1:nrow(cmax_pf_results_fla)){
                                cmax_pf_results_fla$other[i],pcols[2],pcols[1]))+
     geom_cladelabel(node=cmax_pf_results_fla$node[i],
                     label=cmax_pf_results_fla$factor[i],
-                    offset=pplus,
+                    offset=pplus*2,
                     hjust=0.75,
-                    offset.text=pplus*10,
+                    offset.text=pplus*7,
                     parse=T,
-                    angle=20)
+                    font=4,
+                    angle=10)
 }
-#gg
+#plot
 gg_cmax_fla <- gg+
-  ggtitle(expression("MaxCFR-" ~ italic("Flaviviridae")))+
-  geom_tippoint(aes(colour=maxCFR_flaviviridae),shape=15)+
-  theme(plot.title = element_text(hjust = 0.5, size=8))
-
-## save
+  geom_tippoint(aes(colour=maxCFR_flaviviridae), shape=15, size=0.5)
 plot(gg_cmax_fla)
-#ggsave("MaxCFR_flaviviridae.jpg", gg_cmax, device = "jpeg", width = 10, height = 6, units = "in")
 
 ##7 OT, mammals, flaviviridae
 gg=ggtree(dtree_fla,size=0.2,layout="circular",
           aes(colour=on.frac_flaviviridae, group=node))+
-  #scale_colour_manual(values=c("grey80","black"))+
   scale_color_gradient(low="grey90",high="black")+
   guides(colour=F)
-
 ## add clades
 for(i in 1:nrow(cot_pf_results_fla)){
   
@@ -849,25 +842,29 @@ for(i in 1:nrow(cot_pf_results_fla)){
                                cot_pf_results_fla$other[i],pcols[2],pcols[1]))+
     geom_cladelabel(node=cot_pf_results_fla$node[i],
                     label=cot_pf_results_fla$factor[i],
-                    offset=pplus,
+                    offset=pplus*2,
                     hjust=0.75,
-                    offset.text=pplus*10,
+                    offset.text=pplus*7,
                     parse=T,
-                    angle=20)
+                    fontsize=4,
+                    angle=10)
 }
 #plot
 gg_ot_fla <- gg+
-  ggtitle(expression("% with Onward Transmission-"~italic("Flaviviridae")))+
-  geom_tippoint(aes(colour=on.frac_flaviviridae),shape=15)+
-  theme(plot.title = element_text(hjust = 0.5, size=8))
-
-## save
+  geom_tippoint(aes(colour=on.frac_flaviviridae), shape=15, size=0.5)
 plot(gg_ot_fla)
-#ggsave("OT_flaviviridae.jpg", gg_ot_fla, device = "jpeg", width = 10, height = 6, units = "in")
 
-#try to  wrap my plots
-giant_phylo<- gg_cmean+gg_cmax+gg_cot+gg_cmean_cov+gg_cmean_fla+gg_cmax_fla+gg_ot_fla
+#try to wrap my plots
+big_plot= (gg_cmean+ gg_cmax+ gg_cot)/(gg_cmean_cov+ gg_cmax_cov+ plot_spacer())/
+                                         (gg_cmean_fla+ gg_cmax_fla+ gg_ot_fla)
+#more edits
+big_plot<- 
+  big_plot + plot_annotation(tag_levels = 'A')& 
+  theme(plot.tag.position = c(0.17, 0.85),
+        plot.tag = element_text(size = 12))
+plot(big_plot)
 
-print(giant_phylo)
-#ggsave("03_giant_phylofactor.jpg", giant_phylo, device = "jpeg", width = 8, height = 6, units = "in")
+#save
+setwd("~/Desktop/GitHub/phylofatality/figs")
+ggsave("03_giant_phylofactor.jpg", big_plot, device = "jpeg", width = 9, height = 10, units = "in")
 
