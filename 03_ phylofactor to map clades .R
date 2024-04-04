@@ -866,5 +866,5 @@ plot(big_plot)
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-ggsave("03_giant_phylofactor.jpg", big_plot, device = "jpeg", width = 10, height = 10, units = "in")
+#ggsave("03_giant_phylofactor.jpg", big_plot, device = "jpeg", width = 10, height = 10, units = "in")
 
