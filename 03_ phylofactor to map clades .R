@@ -668,8 +668,8 @@ gg_cmean= gg+
   geom_tippoint(aes(colour=meanCFR_all.viruses),shape=15, size=0.5)+
   labs(x = "all viruses")+
   ggtitle("MeanCFR")+ 
-  theme(axis.title.y = element_text(size = 15, margin = margin(r = -10)))+
-  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -1)))
+  theme(axis.title.y = element_text(size = 18, margin = margin(r = -10)))+
+  theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -1)))
 plot(gg_cmean)
 
 
@@ -699,7 +699,7 @@ for(i in 1:nrow(cmax_pf_results)){ #cmax_pf_results
 gg_cmax= gg+
   geom_tippoint(aes(colour=maxCFR_all.viruses),shape=15, size=0.5)+
   ggtitle("MaxCFR")+ 
-  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -1)))
+  theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -1)))
 plot(gg_cmax)
 
 
@@ -729,7 +729,7 @@ for(i in 1:nrow(cot_pf_results)){ #cot_pf_results
 gg_cot=gg+
   ggtitle("% with Onward Transmission")+
   geom_tippoint(aes(colour=on.frac_all.viruses),shape=15, size=0.5)+
-  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -1)))
+  theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -1)))
 plot(gg_cot)
 
 ####4 coronaviridae
@@ -759,14 +759,14 @@ for(i in 1:nrow(cmean_pf_results_cov)){ #cmean_pf_results_cov
 #plot
 gg_cmean_cov <- gg+
   geom_tippoint(aes(colour=meanCFR_coronaviridae),shape=15, size=0.5)+
-  theme(axis.title.y = element_text(size = 15, margin= margin(r= -10)))+
+  theme(axis.title.y = element_text(size = 18, margin= margin(r= -10)))+
   labs(x = expression(italic(Coronaviridae)))
 plot(gg_cmean_cov)
 
 
 #quick CoV Max one
 gg_cmax_cov <- gg+
-  geom_tippoint(aes(colour=maxCFR_coronaviridae),shape=15, size=0.5)
+  geom_tippoint(aes(colour=maxCFR_coronaviridae),shape=20, size=0.5)
 plot(gg_cmax_cov)
 
 ####5 flaviviridae
@@ -795,7 +795,7 @@ for(i in 1:nrow(cmean_pf_results_fla)){
 #plot
 gg_cmean_fla <- gg+ 
   geom_tippoint(aes(colour=meanCFR_flaviviridae), shape=15, size=0.5)+
-  theme(axis.title.y = element_text(size = 15, margin= margin(r= -10)))+
+  theme(axis.title.y = element_text(size = 18, margin= margin(r= -10)))+
   labs(x = expression(italic(Flaviviridae)))
 plot(gg_cmean_fla)
 
@@ -861,10 +861,10 @@ big_plot= (gg_cmean+ gg_cmax+ gg_cot)/(gg_cmean_cov+ gg_cmax_cov+ plot_spacer())
 big_plot<- 
   big_plot + plot_annotation(tag_levels = 'A')& 
   theme(plot.tag.position = c(0.17, 0.85),
-        plot.tag = element_text(size = 12))
+        plot.tag = element_text(size = 15))
 plot(big_plot)
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-ggsave("03_giant_phylofactor.jpg", big_plot, device = "jpeg", width = 9, height = 10, units = "in")
+ggsave("03_giant_phylofactor.jpg", big_plot, device = "jpeg", width = 10, height = 10, units = "in")
 
