@@ -111,4 +111,4 @@ species=species %>% dplyr::select(species, virus, host, var, factor, tips, node,
 #sanity check and save
 species %>% n_distinct() #17885
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-write.csv(species,"pf_riskyspecies.csv")
+#write.csv(species,"pf_riskyspecies.csv")

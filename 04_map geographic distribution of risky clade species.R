@@ -1,7 +1,7 @@
 ## phylofatality
 ## 04_map geographic distribution of risky clade species
 ## danbeck@ou.edu, carolinecummings@ou.edu
-## last update 3/26/2024
+## last update 4/4/2024
 
 ## clean environment & plots
 rm(list=ls()) 

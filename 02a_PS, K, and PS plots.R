@@ -1,7 +1,7 @@
 ## phylofatality
 ## 02_PS, K and PS plots
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 4/2/2024
+## last update 4/4/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -26,7 +26,7 @@ library(devtools)
 library(MoMAColors)
 library(stringr)
 
-###Preface before starting: To just look at the plots, begin at L409-412 after loading packages
+###Preface before starting: To just look at the plots, begin at L412 after loading packages
 
 ## load in virulence data
 setwd("~/Desktop/GitHub/phylofatality/csv files")

@@ -1,7 +1,7 @@
 ## phylofatality
 ##03_phylofactor to map clades
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 4/3/2024
+## last update 4/5/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -214,6 +214,7 @@ pfsum=function(pf){
 
 
 ###Run Phylofactor
+{
 ##1 all viruses meanCFR mammals
 set.seed(1)
 cmean_pf=gpf(Data=cdata$data,tree=cdata$phy,
@@ -549,6 +550,7 @@ bot_pf_results=pfsum(bot_pf)$results #2
 #bot_pf_results_rha=pfsum(bot_pf_rha)$results #0
 #bot_pf_results_tog=pfsum(bot_pf_tog)$results #0
 #bot_pf_results_par=pfsum(bot_pf_par)$results #0
+}
 
 #make a dataframe
 #add an ID variable
