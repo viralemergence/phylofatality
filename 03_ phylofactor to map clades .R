@@ -644,10 +644,56 @@ pplus=plus+1
 #cmean_pf_results$factor[3]="3: subclade~of~italic(Rhinopomatidae, Megadeermatidae, Rhinolophidae, Hipposideridae, Pteropodidae, Noctilionidae, Morpoopidae, Phyllostomidae)"
 
 ##1 CFR mean: mammal_all viruses
-gg=ggtree(dtree,size=0.2,layout="circular",
-          aes(colour=meanCFR_all.viruses, group=node))+
-  scale_color_gradient(low="grey90",high="black")+
-  guides(colour=F)
+## DB NOTE: the original code here was coloring branches rather than tips, so nix
+## group-as-node also creates problems downstream
+## see revised code below
+# gg=ggtree(dtree,size=0.2,layout="circular",
+#           aes(colour=meanCFR_all.viruses, group=node))+
+#   scale_color_gradient(low="grey90",high="black")+
+#   guides(colour=F)
+gg=ggtree(dtree,size=0.2,layout="circular")
+
+## save raw data
+tdata=gg$data
+
+## tips only
+tdata=tdata[which(tdata$isTip==T),]
+
+## set x max 
+## DB NOTE: toggle this to get the desired segment lengths you want
+## you'll need to tinker with this for each plot
+xmax=max(tdata$x)+20
+
+## make data frame for total samples
+samp=data.frame(x=tdata$x,
+                y=tdata$y,
+                yend=tdata$y,
+                xend=scales::rescale(tdata$meanCFR_all.viruses,c(max(tdata$x),xmax)),
+                species=tdata$Species)
+
+#plot tree with segments
+gg = gg+
+  #geom_tippoint(aes(colour=meanCFR_all.viruses),shape=15, size=0.5)+
+  geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend),size=0.25,alpha=0.5)+
+  labs(x = "all viruses")+
+  ggtitle("MeanCFR")+ 
+  theme(axis.title.y = element_text(size = 18, margin = margin(r = -10)))+
+  theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -1)))
+
+## you could also color the segments by the response using the xend variable
+## alternative to above code
+# gg = gg+
+#   #geom_tippoint(aes(colour=meanCFR_all.viruses),shape=15, size=0.5)+
+#   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend,colour=xend),size=0.25,alpha=0.5)+
+#   scale_colour_gradient(low="grey90",high="black")+
+#   labs(x = "all viruses")+
+#   guides(colour="none")+
+#   ggtitle("MeanCFR")+ 
+#   theme(axis.title.y = element_text(size = 18, margin = margin(r = -10)))+
+#   theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -1)))
+
+## NOW add clades and numbers
+## you'll need to adjust the clade label offset and text offset to not overlap with segments
 ## add clades
 for(i in 1:nrow(cmean_pf_results)){ 
   
@@ -665,15 +711,9 @@ for(i in 1:nrow(cmean_pf_results)){
                     fontsize=4,
                     angle=10)
 }
-#plot
-gg_cmean= gg+
-  geom_tippoint(aes(colour=meanCFR_all.viruses),shape=15, size=0.5)+
-  labs(x = "all viruses")+
-  ggtitle("MeanCFR")+ 
-  theme(axis.title.y = element_text(size = 18, margin = margin(r = -10)))+
-  theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -1)))
+gg_cmean=gg
 plot(gg_cmean)
-
+## in this example, you'd either want to increase the clade label offset or make segments smaller
 
 ###2 CFR max: mammals_all viruses
 gg=ggtree(dtree,size=0.2,layout="circular",
