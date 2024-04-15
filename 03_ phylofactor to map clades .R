@@ -680,7 +680,7 @@ for(i in 1:nrow(cmean_pf_results)){
   
   gg=gg+
     geom_hilight(node=cmean_pf_results$node[i],
-                 alpha=0.15,
+                 alpha=0.5,
                  fill=ifelse(cmean_pf_results$clade[i]>
                                cmean_pf_results$other[i],pcols[2],pcols[1]))+
     geom_cladelabel(node=cmean_pf_results$node[i],
@@ -732,7 +732,7 @@ for(i in 1:nrow(cmax_pf_results)){
   
   gg=gg+
     geom_hilight(node=cmax_pf_results$node[i],
-                 alpha=0.15,
+                 alpha=0.4,
                  fill=ifelse(cmax_pf_results$clade[i]>
                                cmax_pf_results$other[i],pcols[2],pcols[1]))+
     geom_cladelabel(node=cmax_pf_results$node[i],
@@ -784,7 +784,7 @@ plot(gg_cmax)
     
     gg=gg+
       geom_hilight(node=cot_pf_results$node[i],
-                   alpha=0.15,
+                   alpha=0.4,
                    fill=ifelse(cot_pf_results$clade[i]>
                                  cot_pf_results$other[i],pcols[2],pcols[1]))+
       geom_cladelabel(node=cot_pf_results$node[i],
@@ -836,7 +836,7 @@ plot(gg_cmax)
     
     gg=gg+
       geom_hilight(node=cmean_pf_results_cov$node[i],
-                   alpha=0.15,
+                   alpha=0.4,
                    fill=ifelse(cmean_pf_results_cov$clade[i]>
                                  cmean_pf_results_cov$other[i],pcols[2],pcols[1]))+
       geom_cladelabel(node=cmean_pf_results_cov$node[i],
@@ -888,7 +888,7 @@ plot(gg_cmax)
     
     gg=gg+
       geom_hilight(node=cmax_pf_results_cov$node[i],
-                   alpha=0.15,
+                   alpha=0.4,
                    fill=ifelse(cmax_pf_results_cov$clade[i]>
                                  cmax_pf_results_cov$other[i],pcols[2],pcols[1]))+
       geom_cladelabel(node=cmax_pf_results_cov$node[i],
@@ -992,7 +992,7 @@ for(i in 1:nrow(cmax_pf_results_fla)){
   
   gg=gg+
     geom_hilight(node=cmax_pf_results_fla$node[i],
-                 alpha=0.15,
+                 alpha=0.4,
                  fill=ifelse(cmax_pf_results_fla$clade[i]>
                                cmax_pf_results_fla$other[i],pcols[2],pcols[1]))+
     geom_cladelabel(node=cmax_pf_results_fla$node[i],
@@ -1044,7 +1044,7 @@ for(i in 1:nrow(cot_pf_results_fla)){
   
   gg=gg+
     geom_hilight(node=cot_pf_results_fla$node[i],
-                 alpha=0.15,
+                 alpha=0.4,
                  fill=ifelse(cot_pf_results_fla$clade[i]>
                                cot_pf_results_fla$other[i],pcols[2],pcols[1]))+
     geom_cladelabel(node=cot_pf_results_fla$node[i],
