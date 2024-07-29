@@ -74,7 +74,7 @@ bivariate.map<-function(rasterx, rastery, colormatrix=col.matrix, nquantiles=10)
   return(r)}
 
 
-#3 Create raster #1: geographic ranges of CoV risky clade
+#3 Create raster #1: geographic ranges of bats (CoV risky clade)
 #load in risky species
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 species <- read_csv("pf_riskyspecies.csv")
@@ -138,17 +138,15 @@ rasterVis::levelplot(map,
                      xlab = NULL, ylab = NULL,
                      maxpixels = 5e6)
 
-#load in human footprint and convert to raster
+#5 Load in human footprint data and create raster #2
 setwd("~/Desktop/GitHub/phylofatality/data/footprint/")
 footprint <-raster('~/Desktop/GitHub/phylofatality/data/footprint/wildareas-v3-2009-human-footprint.tif')
 
-#Make sure the projections are the same. Terra package is faster, so convert
-#both map and footprint to SpatRasters first
+#Make sure the projections are the same
+#Terra package is faster, so first convert both map and footprint to SpatRasters
 footprint <- rast(footprint)
 map <- rast(map)
 #bats<- rast(bats)
-
-#make sure the projections are the same
 footprint <- project(footprint, map)
 #footprint <- project(footprint, bats)
 
@@ -157,13 +155,11 @@ footprint <- raster(footprint)
 map <- raster(map)
 #bats <- raster(bats)
 
-
 #these might not be necessary, get rid of outliers and ensure everything is aligned?
 footprint[footprint>50] <- 0
 footprint <- footprint + map*0
 #footprint <- footprint + bats*0
 
-#sanity check
 #check extent, resolution, and projections of rasters (need to be identical)
 print(extent(footprint))
 print(extent(map))
@@ -172,12 +168,12 @@ print(res(map))
 print(crs(footprint))
 print(crs(map))
 
-#check raster layers
+#check raster layers individually
 my.colors = colorRampPalette(c("#be64ac","lightblue", "yellow","orangered", "red"))
 plot(footprint,frame.plot=F,axes=F,box=F,add=F,legend.width=1,legend.shrink=1,col=my.colors(255)) 
 plot(map,frame.plot=F,axes=F,box=F,add=F,legend.width=1,legend.shrink=1,col=my.colors(255)) 
 
-#bivariate map
+#6 Map the bivariate map
 bivmap<-bivariate.map(footprint, map, colormatrix=col.matrix, nquantiles=10)
 #bivmap<-bivariate.map(footprint, bats, colormatrix=col.matrix, nquantiles=10)
 
