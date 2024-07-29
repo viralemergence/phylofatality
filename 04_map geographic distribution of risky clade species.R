@@ -21,14 +21,14 @@ setwd("~/Desktop/GitHub/phylofatality/csv files")
 data=read.csv("pf_riskyspecies.csv")
 
 ## load in mammal shapefile pruned to bats (spatial data)
-setwd("~/Desktop/GitHub/")
+setwd("~/Desktop/GitHub/phylofatality/data")
 bats=readRDS("bat shp.rds")
 
 ## tip
 bats$tip=gsub(" ","_",bats$binomial)
 data$tip=data$species
 
-#filter data to include species in risky bat clades for mean cfr
+#filter data to include species in risky bat clades
 rawdata=data
 all_mam_mean= data %>% filter(virus=="all", host=="mammal", var=="mean", factor=="1" | factor=="3")
 all_mam_ot= data %>% filter(virus=="all", host=="mammal", var=="ot", factor=="2")
@@ -185,7 +185,6 @@ miss
 #Vampyressa_elisabethae - missing in the bats dataset
 #Vampyressa_sinchi - missing in the bats dataset
 
-
 ## drop missing
 data=data[!data$tip%in%miss,]
 
@@ -244,6 +243,7 @@ cat("Indices of problematic geometries:", prob_geos, "\n")
 bset=do.call(rbind.data.frame,lset)
 
 ## clean
+rawbats<- bats
 rm(bats)
 
 ## merge with data
@@ -252,11 +252,6 @@ bats=merge(bset,data,by="tip",all.x=T)
 #save 
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(bats, "bats_georanges.csv")
-
-#START HERE to skip to bat geo ranges
-#load in bat geo range data
-#setwd("~/Desktop/GitHub/phylofatality/csv files")
-#bats=read.csv("bats_georanges.csv")
 
 #convert factor variable to be a factor
 bats$factor <- factor(bats$factor)
@@ -289,13 +284,16 @@ bmaps_allme<-ggplot() +
   ## add shapefiles
   geom_polygon(data=all_me, aes(x=long, y=lat, group=paste(tip, group),
                fill=factor), alpha=0.25) +
-  scale_fill_manual(values=c("purple2", "orange2","turquoise2", "magenta2"))+
+  scale_fill_manual(values=c("purple2", "orange2","turquoise2", "magenta2"),
+                    labels=c("Emballonuroidea and Vespertilionoidea bat superfamilies", 
+                             "Residual bat families from Yangochiroptera and Yinpterochiroptera"))+
   guides(fill = FALSE) +
   theme_void() +
   coord_map("gilbert", xlim = c(-180, 180))+
   #ggtitle("Geographic ranges of risky bat hosts: MeanCFR-All Viruses")+
-  ggtitle("MeanCFR-All Viruses")+
-  theme(plot.title = element_text(hjust = 0.5, size=8))
+  #ggtitle("MeanCFR-All Viruses")+
+  ggtitle("Mean CFR—Risky Bat Clades")+
+  theme(plot.title = element_text(hjust = 0.5, size=20))
   #theme(plot.title.position = "plot", plot.title = element_text(hjust = 0.6, size = 11))
 plot(bmaps_allme)
 #save
@@ -417,5 +415,47 @@ plot(bmaps_flaot)
 #try some plot combos to save
 giant_bmap<- bmaps_allme+ bmaps_allot+ bmaps_cov+ bmaps_flame+ bmaps_flamx+ bmaps_flaot
 print(giant_bmap)
-setwd("~/Desktop/GitHub/phylofatality/figs")
-ggsave("map_giant.jpg", giant_bmap, device = "jpeg", width = 8, height = 6, units = "in")
+#setwd("~/Desktop/GitHub/phylofatality/figs")
+#ggsave("map_giant.jpg", giant_bmap, device = "jpeg", width = 8, height = 6, units = "in")
+
+
+#try bivariate map
+
+#load packages
+library(biscale)
+library(sf)
+library(cowplot)
+library(raster)
+library(rgdal)
+library(dismo)
+library(XML)
+library(maps)
+library(sp)
+#library(velox)
+library(classInt)
+
+#try getting data
+hfi_colin <- raster('~/Desktop/GitHub/hantaro/data/footprint/wildareas-v3-2009-human-footprint.tif')
+hfi<- raster('~/Desktop/GitHub/phylofatality/hfp2020.tif')
+
+stack things<- 
+
+
+# organize data into classees
+data <- bi_class(stl_race_income, x = pctWhite, y = medInc, style = "quantile", dim = 3)
+
+# create map
+map <- ggplot() +
+  geom_sf(data = data, mapping = aes(fill = bi_class), color = "white", size = 0.1, show.legend = FALSE) +
+  bi_scale_fill(pal = "GrPink", dim = 3) +
+  labs(
+    title = "Race and Income in St. Louis, MO",
+    subtitle = "Gray Pink (GrPink) Palette"
+  ) +
+  bi_theme()
+
+
+
+
+
+

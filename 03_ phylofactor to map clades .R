@@ -1074,3 +1074,225 @@ plot(big_plot)
 setwd("~/Desktop/GitHub/phylofatality/figs")
 #ggsave("03_giant_phylofactor.jpg", big_plot, device = "jpeg", width = 10, height = 10, units = "in")
 
+
+
+###intermission for poster
+##1 CFR mean: mammal_all viruses 
+{
+  #base of the plot
+  gg=ggtree(dtree,size=0.2,layout="circular")
+  
+  ## save raw data
+  tdata=gg$data
+  
+  ## tips only
+  tdata=tdata[which(tdata$isTip==T),]
+  
+  ## set x max 
+  xmax=max(tdata$x)+18 #tinker with this for each plot
+  
+  ## make data frame for total samples
+  samp=data.frame(x=tdata$x,
+                  y=tdata$y,
+                  yend=tdata$y,
+                  xend=scales::rescale(tdata$meanCFR_all.viruses,c(max(tdata$x),xmax)),
+                  species=tdata$Species)
+  
+  #plot tree with segments
+  gg = gg+
+    geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+    labs(x = "across mammals")+
+    ggtitle("Mean CFR")+ 
+    theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
+    theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
+  plot(gg)
+  
+  
+  ## Now add clades and numbers
+  for(i in 1:nrow(cmean_pf_results)){ 
+    
+    gg=gg+
+      geom_hilight(node=cmean_pf_results$node[i],
+                   alpha=0.5,
+                   fill=ifelse(cmean_pf_results$clade[i]>
+                                 cmean_pf_results$other[i],pcols[2],pcols[1]))+
+      geom_cladelabel(node=cmean_pf_results$node[i],
+                      label=cmean_pf_results$factor[i],
+                      offset=pplus*10,
+                      hjust=0.75,
+                      offset.text=pplus*5,
+                      parse=T,
+                      fontsize=4,
+                      angle=10)
+  }
+  gg_cmean_poster=gg
+  plot(gg_cmean_poster)
+}
+
+##2 CFR max: mammals_all viruses
+{
+  #base of the plot
+  gg=ggtree(dtree,size=0.2,layout="circular")
+  
+  ## save raw data
+  tdata=gg$data
+  
+  ## tips only
+  tdata=tdata[which(tdata$isTip==T),]
+  
+  ## set x max 
+  xmax=max(tdata$x)+18 #tinker with this for each plot
+  
+  ## make data frame for total samples
+  samp=data.frame(x=tdata$x,
+                  y=tdata$y,
+                  yend=tdata$y,
+                  xend=scales::rescale(tdata$maxCFR_all.viruses,c(max(tdata$x),xmax)),
+                  species=tdata$Species)
+  
+  #plot tree with segments
+  gg = gg+
+    geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+    #labs(x = "across mammals")+
+    ggtitle("Max CFR")+ 
+    theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
+    theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
+  plot(gg)
+  
+  
+  ## Now add clades and numbers
+  for(i in 1:nrow(cmax_pf_results)){ 
+    
+    gg=gg+
+      geom_hilight(node=cmax_pf_results$node[i],
+                   alpha=0.4,
+                   fill=ifelse(cmax_pf_results$clade[i]>
+                                 cmax_pf_results$other[i],pcols[2],pcols[1]))+
+      geom_cladelabel(node=cmax_pf_results$node[i],
+                      label=cmax_pf_results$factor[i],
+                      offset=pplus*10,
+                      hjust=0.75,
+                      offset.text=pplus*5,
+                      parse=T,
+                      fontsize=4,
+                      angle=10)
+  }
+  gg_cmax_poster=gg
+  plot(gg_cmax_poster)
+}
+
+##3 CFR mean: bat_all viruses 
+{
+  #base of the plot
+  gg=ggtree(btree,size=0.2,layout="circular")
+
+  ## save raw data
+  tdata=gg$data
+  
+  ## tips only
+  tdata=tdata[which(tdata$isTip==T),]
+  
+  ## set x max 
+  xmax=max(tdata$x)+18 #tinker with this for each plot
+  
+  ## make data frame for total samples
+  samp=data.frame(x=tdata$x,
+                  y=tdata$y,
+                  yend=tdata$y,
+                  xend=scales::rescale(tdata$meanCFR_all.viruses,c(max(tdata$x),xmax)),
+                  species=tdata$Species)
+  
+  #plot tree with segments
+  gg = gg+
+    geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+    labs(x = "bats only")+
+    #ggtitle("MeanCFR")+ 
+    theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
+    theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
+  plot(gg)
+  
+  
+  ## Now add clades and numbers
+  for(i in 1:nrow(bmean_pf_results)){ 
+    
+    gg=gg+
+      geom_hilight(node=bmean_pf_results$node[i],
+                   alpha=0.5,
+                   fill=ifelse(bmean_pf_results$clade[i]>
+                                 bmean_pf_results$other[i],pcols[2],pcols[1]))+
+      geom_cladelabel(node=bmean_pf_results$node[i],
+                      label=bmean_pf_results$factor[i],
+                      offset=pplus*10,
+                      hjust=0.75,
+                      offset.text=pplus*4,
+                      parse=T,
+                      fontsize=4,
+                      angle=10)
+  }
+  gg_bmean_poster=gg
+  plot(gg_bmean_poster)
+}
+
+##4 CFR max: bats_all viruses
+{
+  #base of the plot
+  gg=ggtree(btree,size=0.2,layout="circular")
+  
+  ## save raw data
+  tdata=gg$data
+  
+  ## tips only
+  tdata=tdata[which(tdata$isTip==T),]
+  
+  ## set x max 
+  xmax=max(tdata$x)+18 #tinker with this for each plot
+  
+  ## make data frame for total samples
+  samp=data.frame(x=tdata$x,
+                  y=tdata$y,
+                  yend=tdata$y,
+                  xend=scales::rescale(tdata$maxCFR_all.viruses,c(max(tdata$x),xmax)),
+                  species=tdata$Species)
+  
+  #plot tree with segments
+  gg = gg+
+    geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+    #labs(x = "bats only")+
+    #ggtitle("MaxCFR")+ 
+    theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
+    theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
+  plot(gg)
+  
+  
+  ## Now add clades and numbers
+  for(i in 1:nrow(bmax_pf_results)){ 
+    
+    gg=gg+
+      geom_hilight(node=bmax_pf_results$node[i],
+                   alpha=0.4,
+                   fill=ifelse(bmax_pf_results$clade[i]>
+                                 bmax_pf_results$other[i],pcols[2],pcols[1]))+
+      geom_cladelabel(node=bmax_pf_results$node[i],
+                      label=bmax_pf_results$factor[i],
+                      offset=pplus*10,
+                      hjust=0.75,
+                      offset.text=pplus*4,
+                      parse=T,
+                      fontsize=4,
+                      angle=10)
+  }
+  gg_bmax_poster=gg
+  plot(gg_bmax_poster)
+}
+
+#try to wrap my plots
+big_plot_poster=(gg_cmean_poster+ gg_cmax_poster)/(gg_bmean_poster+ gg_bmax_poster)+
+  theme(plot.background = element_rect(fill='transparent', color=NA))
+
+plot(big_plot_poster)
+#ggsave("big_plot_poster.png", big_plot_poster, bg="transparent")
+
+#test<- big_plot_poster + theme(rect = element_rect(fill = "transparent"))
+#plot(test)
+setwd("~/Desktop/GitHub/phylofatality/figs")
+#ggsave("03_giant_phylofactor_poster.jpg", big_plot_poster, device = "jpeg", width = 10, height = 10, units = "in")
