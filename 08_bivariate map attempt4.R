@@ -25,7 +25,10 @@ library(sf)
 library(terra)
 
 #1 Create a color matrix (nquantiles=10)
-colmat<-function(nquantiles=10, upperleft=rgb(0,150,235, maxColorValue=255), upperright=rgb(130,0,80, maxColorValue=255), bottomleft="grey", bottomright=rgb(255,230,15, maxColorValue=255), xlab="x label", ylab="y label"){
+colmat<-function(nquantiles=10, upperleft=rgb(0,150,235, maxColorValue=255), 
+                 upperright=rgb(130,0,80, maxColorValue=255), bottomleft="grey", 
+                 bottomright=rgb(255,230,15, maxColorValue=255), xlab="x label", 
+                 ylab="y label"){
   my.data<-seq(0,1,.01)
   my.class<-classIntervals(my.data,n=nquantiles,style="quantile")
   my.pal.1<-findColours(my.class,c(upperleft,bottomleft))
@@ -34,7 +37,8 @@ colmat<-function(nquantiles=10, upperleft=rgb(0,150,235, maxColorValue=255), upp
   for(i in 1:101){
     my.col<-c(paste(my.pal.1[i]),paste(my.pal.2[i]))
     col.matrix[102-i,]<-findColours(my.class,my.col)}
-  plot(c(1,1),pch=19,col=my.pal.1, cex=0.5,xlim=c(0,1),ylim=c(0,1),frame.plot=F, xlab=xlab, ylab=ylab,cex.lab=1.3)
+  plot(c(1,1),pch=19,col=my.pal.1, cex=0.5,xlim=c(0,1),ylim=c(0,1),frame.plot=F, 
+       xlab=xlab, ylab=ylab,cex.lab=1.3)
   for(i in 1:101){
     col.temp<-col.matrix[i-1,]
     points(my.data,rep((i-1)/100,101),pch=15,col=col.temp, cex=1)}
@@ -73,92 +77,76 @@ bivariate.map<-function(rasterx, rastery, colormatrix=col.matrix, nquantiles=10)
   r[1:length(r)]<-cols
   return(r)}
 
-
 #3 Create raster #1: geographic ranges of bats (CoV risky clade)
-#load in risky species
+#first, load in risky species data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-species <- read_csv("pf_riskyspecies.csv")
+clade <- read_csv("pf_riskyspecies.csv")
 
-#subset data 
-cov_mean<-species %>% 
+#subset data (94 species in CoV risky bat clade)
+clade<-clade %>% 
   filter(host=="bat", var=="mean", virus=="cov")
-cov_mean$species<- gsub("_", " ", cov_mean$species)
+clade$species<- gsub("_", " ", clade$species)
 
-#load in IUCN geographic range data (mammal shapefiles)
+#load in IUCN geographic range data
+#reduce resolution of shapefile
 iucn <- st_read("~/Desktop/GitHub/phylofatality/data/IUCN")
 
 #create a blank raster
 setwd("~/Desktop/GitHub/phylofatality/data/alt_2-5m_bil")
 r <- raster("alt.bil")
-r <- disaggregate((r)*0,2)
+#r <- disaggregate((r)*0,2) ##Colin did this, but it makes it run a long time
+r<- aggregate((r)*0,100)
 
-#create layer
-iucn.cov <- iucn[iucn$binomial %in% cov_mean$species,] 
-map.cov <- fasterize(iucn.cov, r, fun="sum")
+#subset geographic range data to CoV risky species and create a RasterLayer
+iucn<- iucn[iucn$binomial %in% clade$species,] 
+map <- fasterize(iucn, r, fun="sum")
 
 fix <- function(x) {sum(x,r,na.rm=TRUE)+r} # This adds zeros for the continental area
-map.cov <- fix(map.cov)
+map<- fix(map)
 
 #crop the map and clean it up
-map<- map.cov %>% 
+map<- map %>% 
   crop(c(-170, 170,-90,90)) %>% 
   raster::trim()
 
-#rename the layer
-names(map)
-names(map) <- c('CoV')
-
-##3 ALTERNATIVE load in mammal shapefile pruned to bats (spatial data)
-#setwd("~/Desktop/GitHub/phylofatality/data")
-#bats=readRDS("bat shp.rds")
-#bats.cov <- bats[bats$binomial %in% cov_mean$species,] 
-#bats.cov <- st_as_sf(bats.cov)
-#bats.cov <- fasterize(bats.cov, r, fun="sum")
-#fix <- function(x) {sum(x,r,na.rm=TRUE)+r} # This adds zeros for the continental area
-#bats.cov <- fix(bats.cov)
-#crop the map and clean it up
-#bats<- bats.cov %>% 
-#  crop(c(-170, 170,-90,90)) %>% 
-#  raster::trim()
-
+#clean up environment
+rm(r,clade,iucn)
 
 #4 Generate heatmap of CoV clade visualization
-library(rasterVis)
-library(RColorBrewer)
+{
+#library(rasterVis)
+#library(RColorBrewer)
 
-mycolors <- colorRampPalette(rev(brewer.pal(10,"Spectral")))(21)
-mycolors[1] <- "#C0C0C0"
+#mycolors <- colorRampPalette(rev(brewer.pal(10,"Spectral")))(21)
+#mycolors[1] <- "#C0C0C0"
 
-rasterVis::levelplot(map,  
-                     col.regions = mycolors,
-                     #at = seq(0, 15, 1),
-                     alpha = 0.5, 
-                     scales=list(alternating=FALSE),
-                     par.strip.text=list(cex=0),
-                     xlab = NULL, ylab = NULL,
-                     maxpixels = 5e6)
+#rasterVis::levelplot(map,  
+#                     col.regions = mycolors,
+#                     #at = seq(0, 15, 1),
+#                     alpha = 0.5, 
+#                     scales=list(alternating=FALSE),
+#                     par.strip.text=list(cex=0),
+#                     xlab = NULL, ylab = NULL,
+#                     maxpixels = 5e6)
+}
 
-#5 Load in human footprint data and create raster #2
+#5 Create Raster #2: Load in human footprint data
 setwd("~/Desktop/GitHub/phylofatality/data/footprint/")
 footprint <-raster('~/Desktop/GitHub/phylofatality/data/footprint/wildareas-v3-2009-human-footprint.tif')
 
 #Make sure the projections are the same
-#Terra package is faster, so first convert both map and footprint to SpatRasters
+#Terra package is faster, so first convert both map and footprint RasterLayer --> SpatRaster
 footprint <- rast(footprint)
 map <- rast(map)
-#bats<- rast(bats)
-footprint <- project(footprint, map)
-#footprint <- project(footprint, bats)
+footprint <- terra::project(footprint, map)
 
-#then convert back to RasterLayer for raster package
+#then convert back to RasterLayer
 footprint <- raster(footprint)
 map <- raster(map)
-#bats <- raster(bats)
 
-#these might not be necessary, get rid of outliers and ensure everything is aligned?
+#these might not be necessary, get rid of outliers and ensure everything is aligned I think
 footprint[footprint>50] <- 0
 footprint <- footprint + map*0
-#footprint <- footprint + bats*0
 
 #check extent, resolution, and projections of rasters (need to be identical)
 print(extent(footprint))
@@ -173,9 +161,9 @@ my.colors = colorRampPalette(c("#be64ac","lightblue", "yellow","orangered", "red
 plot(footprint,frame.plot=F,axes=F,box=F,add=F,legend.width=1,legend.shrink=1,col=my.colors(255)) 
 plot(map,frame.plot=F,axes=F,box=F,add=F,legend.width=1,legend.shrink=1,col=my.colors(255)) 
 
+
 #6 Map the bivariate map
 bivmap<-bivariate.map(footprint, map, colormatrix=col.matrix, nquantiles=10)
-#bivmap<-bivariate.map(footprint, bats, colormatrix=col.matrix, nquantiles=10)
 
 terra:: plot(bivmap, frame.plot = TRUE, axes = F, box = T, add = F, legend = F, col = as.vector(col.matrix), asp = 1)
 map(interior = T, add = T)
