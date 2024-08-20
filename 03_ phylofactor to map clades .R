@@ -690,11 +690,11 @@ samp=data.frame(x=tdata$x,
 #plot tree with segments
 gg = gg+
   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-  #labs(x = "all viruses")+
-  #ggtitle("MeanCFR")+ 
-  theme(axis.title.y = element_text(size= 15, margin= margin(r= -20)))+
+  labs(x = "all viruses")+
+  ggtitle("MeanCFR")+ 
+  theme(axis.title.y = element_text(size= 15, margin= margin(r= -15)))+
   theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
-plot(gg)
+#plot(gg)
 
 ## Now add clades and numbers
 for(i in 1:nrow(cmean_pf_results)){ 
@@ -742,7 +742,7 @@ samp=data.frame(x=tdata$x,
 gg = gg+
   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
   #labs(x = "all viruses")+
- # ggtitle("MaxCFR")+ 
+  ggtitle("MaxCFR")+ 
   theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
   theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
 plot(gg)
@@ -793,9 +793,9 @@ plot(gg_cmax)
   gg = gg+
     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
     #labs(x = "all viruses")+
-    #ggtitle("% viruses with onward tranmission")+ 
+    ggtitle("% of viruses with\nonward tranmission")+ 
     theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
-    theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -15)))
+    theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
   plot(gg)
   
 
@@ -844,7 +844,7 @@ plot(gg_cmax)
   #plot tree with segments
   gg = gg+
     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    #labs(x = expression(italic(Coronaviridae)))+
+    labs(x = expression(italic(Coronaviridae)))+
     #ggtitle("MeanCFR")+ 
     theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
     theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
@@ -917,7 +917,7 @@ plot(gg_cmax)
                       hjust=0.75,
                       offset.text=pplus*4,
                       parse=T,
-                      fontsize=4,
+                      fontsize=3,
                       angle=10)
   }
   gg_cmax_cov=gg
@@ -948,11 +948,11 @@ plot(gg_cmax)
   #plot tree with segments
   gg = gg+
     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    #labs(x = expression(italic(Flaviviridae)))+
+    labs(x = expression(italic(Flaviviridae)))+
     #ggtitle("MeanCFR")+ 
-    theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
+    theme(axis.title.y = element_text(size = 15, margin = margin(r = -15)))+
     theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
-  plot(gg)
+  #plot(gg)
   
   
   ## Now add clades and numbers
@@ -1084,24 +1084,19 @@ plot(gg_ot_fla)
 plot<- ggarrange(gg_cmean, gg_cmax, gg_cot, 
                 gg_cmean_cov, gg_cmax_cov, plot_spacer()+theme_void(),
                 gg_cmean_fla, gg_cmax_fla, gg_ot_fla,
-                labels = c("A", "B", "C", "D", "E", "", "F", "G", "H"),
+                labels = c("A","B","C","D","E","","F","G","H"),
                 align='hv',
-                font.label = list(size = 10),
-                hjust=-10,
-                vjust=5,
+                font.label = list(size = 12),
+                hjust=-20,
+                vjust=18,
+                widths=c(1,1,1),
+                heights=c(1,1,1),
                 ncol = 3, nrow = 3)
 plot(plot) 
 
-fig2<- annotate_figure(plot,
-                        top = text_grob("mean CFR                max CFR.          % of viruses with onward transmission", face = "bold", size = 14),
-                        left = text_grob("flaviviruses                coronaviruses           all viruses", rot = 90, size=14, face="bold"))
-
-print(fig2)
-
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-#ggsave("03_giant_phylofactor.jpg", big_plot, device = "jpeg", width = 10, height = 10, units = "in")
-
+ggsave("03_giant_phylofactor.jpg",  plot, device = "jpeg", width = 8, height = 8, units = "in")
 
 ###code for poster graph
 {
