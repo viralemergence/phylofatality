@@ -1,32 +1,34 @@
 ## phylofatality
 ##03_phylofactor to map clades
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 4/16/2024
+## last update 8/19/2024
 
 ## clean environment & plots
 rm(list=ls()) 
 graphics.off()
 
 ## packages
+#library(ade4)
 library(ape)
 library(caper)
-library(plyr)
+library(data.table)
+library(dplyr)
+library(emmeans)
 library(ggtree)
 library(ggplot2)
-library(data.table)
-library(treeio)
+library(ggpubr)
 library(Hmisc)
-library(phylofactor)
 library(parallel)
-library(emmeans)
-#library(ade4)
-library(phytools)
-library(dplyr)
 library(patchwork)
+library(phylofactor)
+library(phytools)
+library(plyr)
+library(treeio)
 
 ## load in virulence data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 data=read.csv("CFRbySpecies.csv")
+
 
 ## load Upham phylogeny
 setwd("~/Desktop/GitHub/phylofatality/phylo")
@@ -211,7 +213,6 @@ pfsum=function(pf){
 
 ## NOTE THAT gpf() WON'T WORK UNDER R 4.2 OR HIGHER DUE TO THE FOLLOWING CHANGE:
 ## https://stackoverflow.com/questions/72848442/r-warning-lengthx-2-1-in-coercion-to-logical1/72848495#72848495
-
 
 ###Run Phylofactor
 {
@@ -554,6 +555,7 @@ bot_pf_results=pfsum(bot_pf)$results #2
 
 #make a dataframe
 #add an ID variable 
+{
 cmean_pf_results$ID<- "cmean"
 cmean_pf_results_cov$ID<- "cmean_cov"
 cmean_pf_results_fla$ID<- "cmeans_fla"
@@ -581,6 +583,7 @@ bmax_pf_results_fla$ID<-"bmax_fla"
 bmax_pf_results_rha$ID<-"bmax_rha"
 
 bot_pf_results$ID<-"bot"
+}
 
 #bind everything together
 results<- do.call("rbind", list(cmean_pf_results,cmean_pf_results_cov,cmean_pf_results_fla,
@@ -640,9 +643,28 @@ pcols=afun(2)
 plus=1
 pplus=plus+1
 
-#fix labels for the plot below
-#cmean_pf_results$factor[1]="1: subclade~of~italic(Natalidae, Molossidae, Vespertilionidae, Nycteridae, Emballonuridae)" 
-#cmean_pf_results$factor[3]="3: subclade~of~italic(Rhinopomatidae, Megadeermatidae, Rhinolophidae, Hipposideridae, Pteropodidae, Noctilionidae, Morpoopidae, Phyllostomidae)"
+#fix labels for the plot below (drawn attention to the bat subclades)
+{
+#cmean_pf_results$factor[1]="atop(1:~subclade~of~italic(Emballonuroidea), and~italic(Vespertilionoidea))"
+cmean_pf_results$factor[1]="1*'*'"
+cmean_pf_results$factor[3]="3*'*'"
+
+cmean_pf_results_cov$factor[1]="1*'*'"
+
+cmean_pf_results_fla$factor[2]="2*'*'"
+cmean_pf_results_fla$factor[4]="4*'*'"
+
+
+cmax_pf_results$factor[4]="4*'*'"
+
+cmax_pf_results_cov$factor[1]="1*'*'"
+
+cmax_pf_results_fla$factor[2]="2*'*'"
+
+cot_pf_results$factor[2]="2*'*'"
+
+cot_pf_results_fla$factor[2]="2*'*'"
+}
 
 ##1 CFR mean: mammal_all viruses 
 {
@@ -668,12 +690,11 @@ samp=data.frame(x=tdata$x,
 #plot tree with segments
 gg = gg+
   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-  labs(x = "all viruses")+
-  ggtitle("MeanCFR")+ 
-  theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
-  theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
+  #labs(x = "all viruses")+
+  #ggtitle("MeanCFR")+ 
+  theme(axis.title.y = element_text(size= 15, margin= margin(r= -20)))+
+  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
 plot(gg)
-
 
 ## Now add clades and numbers
 for(i in 1:nrow(cmean_pf_results)){ 
@@ -687,9 +708,9 @@ for(i in 1:nrow(cmean_pf_results)){
                     label=cmean_pf_results$factor[i],
                     offset=pplus*10,
                     hjust=0.75,
-                    offset.text=pplus*4,
+                    offset.text=pplus*10,
                     parse=T,
-                    fontsize=4,
+                    fontsize=3,
                     angle=10)
 }
 gg_cmean=gg
@@ -720,30 +741,29 @@ samp=data.frame(x=tdata$x,
 #plot tree with segments
 gg = gg+
   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-  labs(x = "all viruses")+
-  ggtitle("MaxCFR")+ 
-  theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
-  theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
+  #labs(x = "all viruses")+
+ # ggtitle("MaxCFR")+ 
+  theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
+  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
 plot(gg)
 
 
 ## Now add clades and numbers
-for(i in 1:nrow(cmax_pf_results)){ 
+for(i in 1:nrow(cmax_pf_results))
   
   gg=gg+
     geom_hilight(node=cmax_pf_results$node[i],
-                 alpha=0.4,
+                 alpha=0.5,
                  fill=ifelse(cmax_pf_results$clade[i]>
                                cmax_pf_results$other[i],pcols[2],pcols[1]))+
     geom_cladelabel(node=cmax_pf_results$node[i],
                     label=cmax_pf_results$factor[i],
                     offset=pplus*10,
                     hjust=0.75,
-                    offset.text=pplus*4,
+                    offset.text=pplus*10,
                     parse=T,
-                    fontsize=4,
+                    fontsize=3,
                     angle=10)
-}
 gg_cmax=gg
 plot(gg_cmax)
 }
@@ -772,10 +792,10 @@ plot(gg_cmax)
   #plot tree with segments
   gg = gg+
     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    labs(x = "all viruses")+
-    ggtitle("% viruses with onward tranmission")+ 
-    theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
-    theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -30)))
+    #labs(x = "all viruses")+
+    #ggtitle("% viruses with onward tranmission")+ 
+    theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
+    theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -15)))
   plot(gg)
   
 
@@ -784,16 +804,16 @@ plot(gg_cmax)
     
     gg=gg+
       geom_hilight(node=cot_pf_results$node[i],
-                   alpha=0.4,
+                   alpha=0.5,
                    fill=ifelse(cot_pf_results$clade[i]>
                                  cot_pf_results$other[i],pcols[2],pcols[1]))+
       geom_cladelabel(node=cot_pf_results$node[i],
                       label=cot_pf_results$factor[i],
                       offset=pplus*10,
                       hjust=0.75,
-                      offset.text=pplus*4,
+                      offset.text=pplus*10,
                       parse=T,
-                      fontsize=4,
+                      fontsize=3,
                       angle=10)
   }
   gg_cot=gg
@@ -824,10 +844,10 @@ plot(gg_cmax)
   #plot tree with segments
   gg = gg+
     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    labs(x = expression(italic(Coronaviridae)))+
-    ggtitle("MeanCFR")+ 
-    theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
-    theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
+    #labs(x = expression(italic(Coronaviridae)))+
+    #ggtitle("MeanCFR")+ 
+    theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
+    theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
   plot(gg)
   
   
@@ -836,16 +856,16 @@ plot(gg_cmax)
     
     gg=gg+
       geom_hilight(node=cmean_pf_results_cov$node[i],
-                   alpha=0.4,
+                   alpha=0.5,
                    fill=ifelse(cmean_pf_results_cov$clade[i]>
                                  cmean_pf_results_cov$other[i],pcols[2],pcols[1]))+
       geom_cladelabel(node=cmean_pf_results_cov$node[i],
                       label=cmean_pf_results_cov$factor[i],
                       offset=pplus*10,
                       hjust=0.75,
-                      offset.text=pplus*4,
+                      offset.text=pplus*10,
                       parse=T,
-                      fontsize=4,
+                      fontsize=3,
                       angle=10)
   }
   gg_cmean_cov=gg
@@ -876,8 +896,8 @@ plot(gg_cmax)
   #plot tree with segments
   gg = gg+
     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    labs(x = expression(italic(Coronaviridae)))+
-    ggtitle("MaxCFR")+ 
+    #labs(x = expression(italic(Coronaviridae)))+
+    #ggtitle("MaxCFR")+ 
     theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
     theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
   plot(gg)
@@ -888,7 +908,7 @@ plot(gg_cmax)
     
     gg=gg+
       geom_hilight(node=cmax_pf_results_cov$node[i],
-                   alpha=0.4,
+                   alpha=0.5,
                    fill=ifelse(cmax_pf_results_cov$clade[i]>
                                  cmax_pf_results_cov$other[i],pcols[2],pcols[1]))+
       geom_cladelabel(node=cmax_pf_results_cov$node[i],
@@ -928,10 +948,10 @@ plot(gg_cmax)
   #plot tree with segments
   gg = gg+
     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    labs(x = expression(italic(Flaviviridae)))+
-    ggtitle("MeanCFR")+ 
-    theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
-    theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
+    #labs(x = expression(italic(Flaviviridae)))+
+    #ggtitle("MeanCFR")+ 
+    theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
+    theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
   plot(gg)
   
   
@@ -940,16 +960,16 @@ plot(gg_cmax)
     
     gg=gg+
       geom_hilight(node=cmean_pf_results_fla$node[i],
-                   alpha=0.15,
+                   alpha=0.5,
                    fill=ifelse(cmean_pf_results_fla$clade[i]>
                                  cmean_pf_results_fla$other[i],pcols[2],pcols[1]))+
       geom_cladelabel(node=cmean_pf_results_fla$node[i],
                       label=cmean_pf_results_fla$factor[i],
                       offset=pplus*10,
                       hjust=0.75,
-                      offset.text=pplus*4,
+                      offset.text=pplus*10,
                       parse=T,
-                      fontsize=4,
+                      fontsize=3,
                       angle=10)
   }
   gg_cmean_fla=gg
@@ -980,10 +1000,10 @@ samp=data.frame(x=tdata$x,
 #plot tree with segments
 gg = gg+
   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-  labs(x = expression(italic(Flaviviridae)))+
-  ggtitle("MaxCFR")+ 
-  theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
-  theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
+  #labs(x = expression(italic(Flaviviridae)))+
+  #ggtitle("MaxCFR")+ 
+  theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
+  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
 plot(gg)
 
 
@@ -992,16 +1012,16 @@ for(i in 1:nrow(cmax_pf_results_fla)){
   
   gg=gg+
     geom_hilight(node=cmax_pf_results_fla$node[i],
-                 alpha=0.4,
+                 alpha=0.5,
                  fill=ifelse(cmax_pf_results_fla$clade[i]>
                                cmax_pf_results_fla$other[i],pcols[2],pcols[1]))+
     geom_cladelabel(node=cmax_pf_results_fla$node[i],
                     label=cmax_pf_results_fla$factor[i],
                     offset=pplus*10,
                     hjust=0.75,
-                    offset.text=pplus*4,
+                    offset.text=pplus*10,
                     parse=T,
-                    fontsize=4,
+                    fontsize=3,
                     angle=10)
 }
 gg_cmax_fla=gg
@@ -1032,10 +1052,10 @@ samp=data.frame(x=tdata$x,
 #plot tree with segments
 gg = gg+
   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-  labs(x = expression(italic(Flaviviridae)))+
-  ggtitle("% viruses with Onward Transmission")+ 
-  theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
-  theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -30)))
+  #labs(x = expression(italic(Flaviviridae)))+
+ # ggtitle("% viruses with Onward Transmission")+ 
+  theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
+  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
 plot(gg)
 
 
@@ -1044,39 +1064,47 @@ for(i in 1:nrow(cot_pf_results_fla)){
   
   gg=gg+
     geom_hilight(node=cot_pf_results_fla$node[i],
-                 alpha=0.4,
+                 alpha=0.5,
                  fill=ifelse(cot_pf_results_fla$clade[i]>
                                cot_pf_results_fla$other[i],pcols[2],pcols[1]))+
     geom_cladelabel(node=cot_pf_results_fla$node[i],
                     label=cot_pf_results_fla$factor[i],
                     offset=pplus*10,
                     hjust=0.75,
-                    offset.text=pplus*4,
+                    offset.text=pplus*10,
                     parse=T,
-                    fontsize=4,
+                    fontsize=3,
                     angle=10)
 }
 gg_ot_fla=gg
 plot(gg_ot_fla)
 }
 
-#try to wrap my plots
-big_plot= (gg_cmean+ gg_cmax+ gg_cot)/(gg_cmean_cov+ gg_cmax_cov+ plot_spacer())/
-                                         (gg_cmean_fla+ gg_cmax_fla+ gg_ot_fla)
-#more edits
-big_plot<- 
-  big_plot + plot_annotation(tag_levels = 'A')& 
-  theme(plot.tag.position = c(0.17, 0.85),
-        plot.tag = element_text(size = 15))
-plot(big_plot)
+#combine plots
+plot<- ggarrange(gg_cmean, gg_cmax, gg_cot, 
+                gg_cmean_cov, gg_cmax_cov, plot_spacer()+theme_void(),
+                gg_cmean_fla, gg_cmax_fla, gg_ot_fla,
+                labels = c("A", "B", "C", "D", "E", "", "F", "G", "H"),
+                align='hv',
+                font.label = list(size = 10),
+                hjust=-10,
+                vjust=5,
+                ncol = 3, nrow = 3)
+plot(plot) 
+
+fig2<- annotate_figure(plot,
+                        top = text_grob("mean CFR                max CFR.          % of viruses with onward transmission", face = "bold", size = 14),
+                        left = text_grob("flaviviruses                coronaviruses           all viruses", rot = 90, size=14, face="bold"))
+
+print(fig2)
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
 #ggsave("03_giant_phylofactor.jpg", big_plot, device = "jpeg", width = 10, height = 10, units = "in")
 
 
-
-###intermission for poster
+###code for poster graph
+{
 ##1 CFR mean: mammal_all viruses 
 {
   #base of the plot
@@ -1296,3 +1324,5 @@ plot(big_plot_poster)
 #plot(test)
 setwd("~/Desktop/GitHub/phylofatality/figs")
 #ggsave("03_giant_phylofactor_poster.jpg", big_plot_poster, device = "jpeg", width = 10, height = 10, units = "in")
+}
+rm(plot)
