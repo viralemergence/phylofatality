@@ -15,6 +15,7 @@ graphics.off()
 library(classInt)
 library(dismo)
 library(fasterize)
+library(ggpubr)
 library(maps)
 library(raster)
 library(rgdal)
@@ -23,7 +24,6 @@ library(sf)
 library(terra)
 library(tidyverse)
 library(XML)
-
 
 #1 Create a color matrix (nquantiles=10)
 {
@@ -48,20 +48,10 @@ colmat<-function(nquantiles=10, upperleft=rgb(0,150,235, maxColorValue=255),
   seqs[1]<-1
   col.matrix<-col.matrix[c(seqs), c(seqs)]}
 
-col.matrix<-colmat(nquantiles=10, upperright="#be64ac", upperleft="#3b4994",
-                   bottomleft="#e8e8e8", bottomright="#5ac8c8", 
-                   ylab = "Human footprint/pop density", xlab = "Bat host richness")
-
-#color matrix option 2
-#col.matrix<-colmat(nquantiles=10, upperleft="goldenrod1", upperright="deeppink4",
-#                   bottomleft="#e8e8e8", bottomright="deepskyblue2", 
-#                   ylab = "Human footprint", xlab = "Coronavirus hosts")
-
-#color matrix option 3
-#col.matrix<-colmat(nquantiles=10, upperright="goldenrod1", upperleft="deeppink4",
-#                   bottomleft="#e8e8e8", bottomright="deepskyblue2", 
-#                   ylab = "Human footprint", xlab = "Coronavirus hosts")
-
+#color matrix
+col.matrix<-colmat(nquantiles=10, upperleft="goldenrod1", upperright="deeppink4",
+                  bottomleft="#e8e8e8", bottomright="deepskyblue2", 
+                   ylab = "Anthropogenic footprint", xlab = "bat host richness")
 }
 
 #2 Generate the bivariate map (nquantiles=10)
@@ -101,6 +91,8 @@ clade <- read_csv("pf_riskyspecies.csv")
 all<-clade %>% 
   filter(host=="mammal", var=="mean", virus=="all", factor=="1" | factor=="3")
 cov<-clade %>% filter(host=="mammal", var=="mean", virus=="cov", factor=="1")
+fla<- clade %>% 
+  filter(host=="mammal", var=="mean", virus=="fla", factor=="2" | factor=="4")
 
 #load in IUCN geographic range data
 iucn <- st_read("~/Desktop/GitHub/phylofatality/data/IUCN/MAMMALS.shp")
@@ -258,14 +250,19 @@ r <- disaggregate((r)*0,2)
 #subset geographic range data to CoV risky species and create a RasterLayer
 iucn_all<- iucn[iucn$binomial %in% all$species,]
 iucn_cov<- iucn[iucn$binomial %in% cov$species,] 
+iucn_fla <- iucn[iucn$binomial %in% fla$species,] 
 
 map_all <- fasterize(iucn_all, r, fun="sum")
 map_cov <- fasterize(iucn_cov, r, fun="sum")
+map_fla <- fasterize(iucn_fla, r, fun="sum")
+
 
 # This adds zeros for the continental area so they aren't invisible
 fix <- function(x) {sum(x,r,na.rm=TRUE)+r} 
 map_all<- fix(map_all)
 map_cov<- fix(map_cov)
+map_fla<- fix(map_fla)
+
 
 #clean up environment
 rm(names, miss)
@@ -288,82 +285,78 @@ rm(names, miss)
 #                     maxpixels = 5e6)
 }
 
-#5 Create Raster #2: Load in human footprint data and hum population density data
+#5 Create Raster #2: Load in human footprint data and human population density data
 setwd("~/Desktop/GitHub/phylofatality/data/footprint/")
 footprint <-raster('~/Desktop/GitHub/phylofatality/data/footprint/wildareas-v3-2009-human-footprint.tif')
-humpop <-raster('~/Desktop/GitHub/phylofatality/data/footprint/gpw_v4_population_density_rev11_2020_1_deg.tif')
+#humpop <-raster('~/Desktop/GitHub/phylofatality/data/footprint/gpw_v4_population_density_rev11_2020_1_deg.tif')
 
 #Make sure the projections are the same
 #Terra package is faster, so first convert both map and footprint RasterLayer --> SpatRaster
 footprint <- rast(footprint)
-humpop <- rast(humpop)
+#humpop <- rast(humpop)
 map_all <- rast(map_all)
 map_cov <- rast(map_cov)
+map_fla <- rast(map_fla)
+
 
 footprint <- project(footprint, map_all)
-humpop <- project(humpop, map_all)
+#humpop <- project(humpop, map_all)
 
 #then convert back to RasterLayer
 footprint <- raster(footprint)
-humpop <- raster(humpop)
+#humpop <- raster(humpop)
 map_all <- raster(map_all)
 map_cov <- raster(map_cov)
+map_fla <- raster(map_fla)
 
 #get rid of outliers and ensure everything is aligned
 footprint[footprint>50] <- NA
-humpop[humpop<0] <- NA
-#foot <- footprint + map*0
-#foot1 <- footprint + map*NA
+#humpop[humpop<0] <- NA
 
 #check extent, resolution, and projections of rasters (need to be identical)
 {
 print(extent(footprint))
-print(extent(humpop))
+#print(extent(humpop))
 print(extent(map_all))
 print(extent(map_cov))
 
 print(res(footprint))
-print(res(footprint))
+#print(res(humpop))
 print(res(map_all))
 print(res(map_cov))
 
 print(crs(footprint))
 print(crs(map_all))
 }
-#more experiments
-#footprint1 <- aggregate(footprint, fact=1000, fun=mean)
-#map_all1 <- aggregate(map_all, fact=1000, fun=mean)
-#footprint2<- rast(footprint1)
-#map_all2<- rast(map_all1)
 
 ##test out layers
-#footprint <- aggregate(footprint, fact=100, fun=mean)
+footprint <- aggregate(footprint, fact=10, fun=mean)
 #humpop <- aggregate(humpop, fact=100, fun=mean)
-#map_all <- aggregate(map_all, fact=100, fun=mean)
-#map_cov <- aggregate(map_cov, fact=100, fun=mean) #takes 23 minutes to run to here
+map_all <- aggregate(map_all, fact=10, fun=mean)
+map_cov <- aggregate(map_cov, fact=10, fun=mean)
+map_fla <- aggregate(map_fla, fact=10, fun=mean)
 
-#check raster layers individually
-my.colors = colorRampPalette(c("#be64ac","lightblue", "yellow","orangered", "red"))
-plot(map_all,frame.plot=F,axes=F,box=F,add=F,legend.width=1,legend.shrink=1,col=my.colors(255)) 
+#can check raster layers individually
+#my.colors = colorRampPalette(c("#be64ac","lightblue", "yellow","orangered", "red"))
+#plot(map_all,frame.plot=F,axes=F,box=F,add=F,legend.width=1,legend.shrink=1,col=my.colors(255)) 
 
 #6 Map the bivariate map
-bivmap_all_foot<-bivariate.map(footprint, map_all, colormatrix=col.matrix, nquantiles=10)
-bivmap_all_hum<-bivariate.map(humpop, map_all, colormatrix=col.matrix, nquantiles=10)
-bivmap_cov_foot<-bivariate.map(footprint, map_cov, colormatrix=col.matrix, nquantiles=10)
-bivmap_cov_hum<-bivariate.map(humpop, map_cov, colormatrix=col.matrix, nquantiles=10)
+bivmap_all_foot<-bivariate.map(map_all, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_cov_foot<-bivariate.map( map_cov, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_fla_foot<-bivariate.map(map_fla, footprint, colormatrix=col.matrix, nquantiles=10)
 
 all_foot<- terra:: plot(bivmap_all_foot, frame.plot = TRUE, axes = F, box = T, 
                         add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-#map(interior = T, add = T)
 
-all_hum<- terra:: plot(bivmap_all_hum, frame.plot = TRUE, axes = F, box = T, 
-                       add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-#map(interior = T, add = T)
+#Useful for the supplement, could provide target countries for work
+#maps::map(interior = T, add = T)
 
 cov_foot<- terra:: plot(bivmap_cov_foot, frame.plot = TRUE, axes = F, box = T, 
                         add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-#map(interior = T, add = T)
+#maps:map(interior = T, add = T)
 
-cov_hum<- terra:: plot(bivmap_cov_hum, frame.plot = TRUE, axes = F, box = T, 
-                       add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-#map(interior = T, add = T)
+fla_foot<- terra:: plot(bivmap_fla_foot, frame.plot = TRUE, axes = F, box = T, 
+                        add = F, legend = F, col = as.vector(col.matrix), asp = 1)
+#maps:map(interior = T, add = T)
+
+##figure out how to programmatically put these three maps + color matrix into one plot

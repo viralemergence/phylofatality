@@ -1091,14 +1091,15 @@ plot<- ggarrange(gg_cmean, gg_cmax, gg_cot,
                 vjust=18,
                 widths=c(1,1,1),
                 heights=c(1,1,1),
-                ncol = 3, nrow = 3)
+                ncol = 3, nrow = 3,
+                common.legend=TRUE)
 plot(plot) 
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
 ggsave("03_giant_phylofactor.jpg",  plot, device = "jpeg", width = 8, height = 8, units = "in")
 
-###code for poster graph
+###code for EEID poster graph
 {
 ##1 CFR mean: mammal_all viruses 
 {

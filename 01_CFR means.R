@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu 
-## last update 3/26/2024
+## last update 09/09/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -93,6 +93,32 @@ vdata=vdata[vdata$Virus%in%cfr$Virus,]
 ## remove missing host
 vdata=vdata[!is.na(vdata$Host),]
 
+#fix dataset
+{
+#10 rows have the incorrect virus genus
+temp<- vdata
+temp$num <- seq_len(nrow(temp))
+
+temp %>% filter(Host=="bos taurus", Virus=="pestivirus a", VirusGenus=="flavivirus")%>%
+  select(num) %>% print()
+
+vdata[6222, "VirusGenus"] <- "pestivirus"
+vdata[6223, "VirusGenus"] <- "pestivirus"
+vdata[6224, "VirusGenus"] <- "pestivirus"
+vdata[6225, "VirusGenus"] <- "pestivirus"
+vdata[6226, "VirusGenus"] <- "pestivirus"
+vdata[6227, "VirusGenus"] <- "pestivirus"
+vdata[6228, "VirusGenus"] <- "pestivirus"
+vdata[6229, "VirusGenus"] <- "pestivirus"
+vdata[6230, "VirusGenus"] <- "pestivirus"
+vdata[6231, "VirusGenus"] <- "pestivirus"
+
+#check
+vdata %>% filter(Host=="bos taurus", Virus=="pestivirus a", VirusGenus=="flavivirus") %>% print()
+vdata %>% filter(Host=="bos taurus", Virus=="pestivirus a", VirusGenus=="pestivirus") %>% print()
+
+}
+
 #save for summary statistics later
 setwd("~/Desktop/GitHub/phylofatality/data")
 #write_csv(vdata, "vdata.csv")
@@ -110,6 +136,8 @@ rm(dums)
 
 ## unique ID
 vdata$pair=paste(vdata$Host,vdata$Virus)
+n_distinct(vdata$pair) #2,915 unique host-virus associations
+
 
 ## aggregate detection and filter
 vdata=aggregate(cbind(DetectionMethod_Antibodies,
@@ -126,9 +154,9 @@ vdata[c("DetectionMethod_Antibodies",
                "DetectionMethod_Not.specified",
                "DetectionMethod_PCR.Sequencing")]>0,1,0)
 
-## how many unique host-virus associations are PCR or isolation?
+## how many unique host-virus associations are PCR or isolation? #1459
 vdata$evidence=ifelse(vdata$DetectionMethod_PCR.Sequencing==1 | vdata$DetectionMethod_Isolation.Observation==1,1,0)
-table(vdata$evidence) #1459
+table(vdata$evidence) 
 table(vdata$VirusFamily,vdata$evidence)
 
 #how many unique host-virus associations for each detection type?
@@ -145,24 +173,36 @@ table(vdata$evidence) #2545 none
 vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
                         vdata$DetectionMethod_PCR.Sequencing==1 |
                         vdata$DetectionMethod_Antibodies==1,1,0)
-table(vdata$evidence) #409 are completely unspecified
+table(vdata$evidence) 
+#408 are completely unspecified
+#2507 are detected by at least 1 detection method
+
 vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
                         vdata$DetectionMethod_PCR.Sequencing==1 |
                         vdata$DetectionMethod_Not.specified==1,1,0)
-table(vdata$evidence) #159 are only antibodies
+table(vdata$evidence) 
+#159 are only detected by antibodies
+#159/2915 = 5.5%
 
 #which are only viral isolation or only PCR or both?
 vdata$evidence=ifelse(vdata$DetectionMethod_Not.specified==1 | 
                         vdata$DetectionMethod_PCR.Sequencing==1 |
                         vdata$DetectionMethod_Antibodies==1,1,0)
-table(vdata$evidence) #30 are only viral isolation
+table(vdata$evidence) 
+#30 are only viral isolation
+
 vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
                         vdata$DetectionMethod_Not.specified==1 |
-                        vdata$DetectionMethod_Not.specified==1,1,0)
-table(vdata$evidence) #324 are only pcr
-vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 & 
+                        vdata$DetectionMethod_Antibodies==1,1,0)
+table(vdata$evidence) 
+#160 are only pcr
+
+vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
                         vdata$DetectionMethod_PCR.Sequencing==1,1,0)
-table(vdata$evidence) #441
+table(vdata$evidence)
+# 1459 are detected by viral isolation and/or pcr
+# 441 are viral isolation AND pcr
+# 1459/2915 > 50%
 
 ## load in host taxonomy
 #setwd("~/Desktop/phylofatality/phylo")

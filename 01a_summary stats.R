@@ -210,9 +210,9 @@ se3 <- sd3/sqrt(ss3) #0.013
 bdata=vdata[vdata$species%in%bats$species,]
 
 #mean
-mean(bdata$`meanCFR_all viruses`, na.rm=T) #0.521641
-mean(bdata$`maxCFR_all viruses`, na.rm=T) #0.6981767
-mean(bdata$`on.frac_all viruses`, na.rm=T) #0.2947801
+mean(bdata$`meanCFR_all viruses`, na.rm=T) #0.600
+mean(bdata$`maxCFR_all viruses`, na.rm=T) #0.806
+mean(bdata$`on.frac_all viruses`, na.rm=T) #0.2315
 
 #sd
 sd1 <- sd(bdata$`meanCFR_all viruses`, na.rm=T)
