@@ -1,6 +1,7 @@
 ## phylofatality
-## danbeck@ou.edu
-## last update 3/26/204
+## 03_pgls and phylofactors
+## danbeck@ou.edu, carolinecummings2018@gmail.com
+## last update 9/10/204
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -22,12 +23,10 @@ library(ade4)
 library(phytools)
 
 ## load in virulence data
-#setwd("~/Desktop/phylofatality")
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 data=read.csv("CFRbySpecies.csv")
 
 ## load Upham phylogeny
-#setwd("~/Desktop/phylofatality/phylo")
 setwd("~/Desktop/GitHub/phylofatality/phylo")
 tree=read.nexus('MamPhy_fullPosterior_BDvr_Completed_5911sp_topoCons_NDexp_MCC_v2_target.tre')
 
