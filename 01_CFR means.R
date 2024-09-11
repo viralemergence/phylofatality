@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu 
-## last update 09/09/2024
+## last update 09/10/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -19,13 +19,11 @@ library(Hmisc)
 library(fastDummies)
 
 ## load virion
-#setwd("~/Desktop/virion/Virion")
 setwd("~/Desktop/GitHub/virion/Virion")
 vir=vroom("virion.csv.gz")
 vir %<>% filter(HostClass == 'mammalia')
 
 ## load cfr
-#setwd("~/Desktop/phylofatality/data")
 setwd("~/Desktop/GitHub/phylofatality/data")
 cfr1=read_csv("loose_data.csv.txt")
 cfr2=read_csv("stringent_data.csv.txt")
@@ -36,7 +34,7 @@ cfr2$cat="stringent"
 cfr=bind_rows(cfr1, cfr2)
 rm(cfr1,cfr2)
 
-#save for summary stats
+#save to use in 02_summary stats script
 setwd("~/Desktop/GitHub/phylofatality/data")
 #write_csv(cfr, "cfr.csv")
 
@@ -119,7 +117,7 @@ vdata %>% filter(Host=="bos taurus", Virus=="pestivirus a", VirusGenus=="pestivi
 
 }
 
-#save for summary statistics later
+#save for 02_summary statistics script
 setwd("~/Desktop/GitHub/phylofatality/data")
 #write_csv(vdata, "vdata.csv")
 
@@ -137,7 +135,6 @@ rm(dums)
 ## unique ID
 vdata$pair=paste(vdata$Host,vdata$Virus)
 n_distinct(vdata$pair) #2,915 unique host-virus associations
-
 
 ## aggregate detection and filter
 vdata=aggregate(cbind(DetectionMethod_Antibodies,
@@ -167,7 +164,7 @@ table(vdata$evidence) #1103 pcr
 vdata$evidence=ifelse(vdata$DetectionMethod_Antibodies==1,1,0)
 table(vdata$evidence) #1323 antibodies
 vdata$evidence=ifelse(vdata$DetectionMethod_Not.specified==1,1,0)
-table(vdata$evidence) #2545 none
+table(vdata$evidence) #2544 none
 
 #more specifically, which are lacking strong evidence?
 vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
@@ -205,7 +202,6 @@ table(vdata$evidence)
 # 1459/2915 > 50%
 
 ## load in host taxonomy
-#setwd("~/Desktop/phylofatality/phylo")
 setwd("~/Desktop/GitHub/phylofatality/phylo")
 taxa=read.csv('taxonomy_mamPhy_5911species.csv',header=T)
 taxa$tip=taxa$Species_Name
@@ -223,7 +219,6 @@ miss=setdiff(vdata$species,taxa$species)
 vdata$flag=ifelse(vdata$species%in%miss,1,0)
 
 ## fix data names from CLOVER
-#setwd("~/Desktop/clover/clover/clover_0.1_mammalviruses/phylogenies")
 setwd("~/Desktop/GitHub/clover/clover/clover_0.1_mammalviruses/phylogenies")
 tdata=read.csv("mammal_phylo_translations.csv")
 tdata=tdata[!duplicated(tdata$Host),]
@@ -382,6 +377,6 @@ vset=vlist %>% purrr::reduce(full_join,by="species")
 vdata=merge(vdata,vset,by="species",all=T)
 
 ## export
-#setwd("~/Desktop/phylofatality")
+## save for 02_summary statistics script
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write_csv(vdata,"CFRBySpecies.csv")
