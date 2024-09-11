@@ -26,7 +26,6 @@ library(devtools)
 library(MoMAColors)
 library(stringr)
 
-###Preface before starting: To just look at the plots, begin at L412 after loading packages
 
 ## load in virulence data
 setwd("~/Desktop/GitHub/phylofatality/csv files")

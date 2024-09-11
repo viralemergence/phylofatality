@@ -1,7 +1,7 @@
 ## phylofatality
 ## 05_phylofactor to map clades
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 8/19/2024
+## last update 09/10/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -596,7 +596,7 @@ setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(results,"pf_allclades.csv")
 
 #================================================================================
-##quick intermission --> go to 03a_data mining and run this script --> come back
+##quick intermission --> go to 06_data mining and run this script --> come back
 
 ## save trees
 dtree=treeio::full_join(as.treedata(cdata$phy),cdata$data,by="label")
