@@ -287,7 +287,6 @@ rm(names, miss)
 #5 Create Raster #2: Load in human footprint data and human population density data
 setwd("~/Desktop/GitHub/footprint/footprint/")
 footprint <-raster('~/Desktop/GitHub/footprint/footprint/wildareas-v3-2009-human-footprint.tif')
-#humpop <-raster('~/Desktop/GitHub/phylofatality/data/footprint/gpw_v4_population_density_rev11_2020_1_deg.tif')
 
 #Make sure the projections are the same
 #Terra package is faster, so first convert both map and footprint RasterLayer --> SpatRaster

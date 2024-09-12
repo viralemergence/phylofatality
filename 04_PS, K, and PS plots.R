@@ -1,7 +1,7 @@
 ## phylofatality
 ## 04_PS, K and PS plots
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 9/12/2024
+## last update 09/12/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -23,8 +23,9 @@ library(emmeans)
 library(phytools)
 library(egg)
 library(devtools)
-library(MoMAColors)
 library(stringr)
+library(ggpubfigs)
+
 
 
 ## load in virulence data
@@ -156,29 +157,29 @@ mod_ot_par=pgls(on.frac_paramyxoviridae~1,data=cdata2_par,lambda="ML")
 
 #Bloomberg's K
 #all mammals, all viruses
-psk_me=phylosig(cdata$phy,cdata$data$meanCFR_all.viruses,method="K",test=T)
-psk_mx=phylosig(cdata$phy,cdata$data$maxCFR_all.viruses,method="K",test=T)
-psk_ot=phylosig(cdata2$phy,cdata2$data$on.frac_all.viruses,method="K",test=T)
+#psk_me=phylosig(cdata$phy,cdata$data$meanCFR_all.viruses,method="K",test=T)
+#psk_mx=phylosig(cdata$phy,cdata$data$maxCFR_all.viruses,method="K",test=T)
+#psk_ot=phylosig(cdata2$phy,cdata2$data$on.frac_all.viruses,method="K",test=T)
 #coronaviridae
-psk_me_cor=phylosig(cdata_cor$phy,cdata_cor$data$meanCFR,method="K",test=T)
-psk_mx_cor=phylosig(cdata_cor$phy,cdata_cor$data$maxCFR,method="K",test=T)
-psk_ot_cor=phylosig(cdata2_cor$phy,cdata2_cor$data$on.frac,method="K",test=T)
+#psk_me_cor=phylosig(cdata_cor$phy,cdata_cor$data$meanCFR,method="K",test=T)
+#psk_mx_cor=phylosig(cdata_cor$phy,cdata_cor$data$maxCFR,method="K",test=T)
+#psk_ot_cor=phylosig(cdata2_cor$phy,cdata2_cor$data$on.frac,method="K",test=T)
 #flaviviridae
-psk_me_fla=phylosig(cdata_fla$phy,cdata_fla$data$meanCFR,method="K",test=T)
-psk_mx_fla=phylosig(cdata_fla$phy,cdata_fla$data$maxCFR,method="K",test=T)
-psk_ot_fla=phylosig(cdata2_fla$phy,cdata2_fla$data$on.frac,method="K",test=T)
+#psk_me_fla=phylosig(cdata_fla$phy,cdata_fla$data$meanCFR,method="K",test=T)
+#psk_mx_fla=phylosig(cdata_fla$phy,cdata_fla$data$maxCFR,method="K",test=T)
+#psk_ot_fla=phylosig(cdata2_fla$phy,cdata2_fla$data$on.frac,method="K",test=T)
 #rhabdoviridae
-psk_me_rha=phylosig(cdata_rha$phy,cdata_rha$data$meanCFR,method="K",test=T)
-psk_mx_rha=phylosig(cdata_rha$phy,cdata_rha$data$maxCFR,method="K",test=T)
+#psk_me_rha=phylosig(cdata_rha$phy,cdata_rha$data$meanCFR,method="K",test=T)
+#psk_mx_rha=phylosig(cdata_rha$phy,cdata_rha$data$maxCFR,method="K",test=T)
 #psk_ot_rha=phylosig(cdata2_rha$phy,cdata2_rha$data$on.frac,method="K",test=T) #see histogram
 #togaviridae
-psk_me_tog=phylosig(cdata_tog$phy,cdata_tog$data$meanCFR,method="K",test=T)
-psk_mx_tog=phylosig(cdata_tog$phy,cdata_tog$data$maxCFR,method="K",test=T)
-psk_ot_tog=phylosig(cdata2_tog$phy,cdata2_tog$data$on.frac,method="K",test=T)
+#psk_me_tog=phylosig(cdata_tog$phy,cdata_tog$data$meanCFR,method="K",test=T)
+#psk_mx_tog=phylosig(cdata_tog$phy,cdata_tog$data$maxCFR,method="K",test=T)
+#psk_ot_tog=phylosig(cdata2_tog$phy,cdata2_tog$data$on.frac,method="K",test=T)
 #paramyxoviridae
-psk_me_par=phylosig(cdata_par$phy,cdata_par$data$meanCFR,method="K",test=T)
-psk_mx_par=phylosig(cdata_par$phy,cdata_par$data$maxCFR,method="K",test=T)
-psk_ot_par=phylosig(cdata2_par$phy,cdata2_par$data$on.frac,method="K",test=T)
+#psk_me_par=phylosig(cdata_par$phy,cdata_par$data$meanCFR,method="K",test=T)
+#psk_mx_par=phylosig(cdata_par$phy,cdata_par$data$maxCFR,method="K",test=T)
+#psk_ot_par=phylosig(cdata2_par$phy,cdata2_par$data$on.frac,method="K",test=T)
 
 ## bat analyses: subset to bats, all bats, all viruses
 bdata=cdata[cdata$data$ord=="CHIROPTERA",]
@@ -248,29 +249,29 @@ bmod_ot_par=pgls(on.frac_paramyxoviridae~1,data=bdata2_par,lambda="ML")
 
 #Bloomberg's K: bats
 #bats only, all viruses
-bpsk_me=phylosig(bdata$phy,bdata$data$meanCFR_all.viruses,method="K",test=T)
-bpsk_mx=phylosig(bdata$phy,bdata$data$maxCFR_all.viruses,method="K",test=T)
-bpsk_ot=phylosig(bdata2$phy,bdata2$data$on.frac_all.viruses,method="K",test=T)
+#bpsk_me=phylosig(bdata$phy,bdata$data$meanCFR_all.viruses,method="K",test=T)
+#bpsk_mx=phylosig(bdata$phy,bdata$data$maxCFR_all.viruses,method="K",test=T)
+#bpsk_ot=phylosig(bdata2$phy,bdata2$data$on.frac_all.viruses,method="K",test=T)
 #coronaviridae
-bpsk_me_cor=phylosig(bdata_cor$phy,bdata_cor$data$meanCFR,method="K",test=T)
-bpsk_mx_cor=phylosig(bdata_cor$phy,bdata_cor$data$maxCFR,method="K",test=T)
-bpsk_ot_cor=phylosig(bdata2_cor$phy,bdata2_cor$data$on.frac,method="K",test=T)
+#bpsk_me_cor=phylosig(bdata_cor$phy,bdata_cor$data$meanCFR,method="K",test=T)
+#bpsk_mx_cor=phylosig(bdata_cor$phy,bdata_cor$data$maxCFR,method="K",test=T)
+#bpsk_ot_cor=phylosig(bdata2_cor$phy,bdata2_cor$data$on.frac,method="K",test=T)
 #flaviviridae
-bpsk_me_fla=phylosig(bdata_fla$phy,bdata_fla$data$meanCFR,method="K",test=T)
-bpsk_mx_fla=phylosig(bdata_fla$phy,bdata_fla$data$maxCFR,method="K",test=T)
-bpsk_ot_fla=phylosig(bdata2_fla$phy,bdata2_fla$data$on.frac,method="K",test=T)
+#bpsk_me_fla=phylosig(bdata_fla$phy,bdata_fla$data$meanCFR,method="K",test=T)
+#bpsk_mx_fla=phylosig(bdata_fla$phy,bdata_fla$data$maxCFR,method="K",test=T)
+#bpsk_ot_fla=phylosig(bdata2_fla$phy,bdata2_fla$data$on.frac,method="K",test=T)
 #rhabdoviridae
-bpsk_me_rha=phylosig(bdata_rha$phy,bdata_rha$data$meanCFR,method="K",test=T)
-bpsk_mx_rha=phylosig(bdata_rha$phy,bdata_rha$data$maxCFR,method="K",test=T)
+#bpsk_me_rha=phylosig(bdata_rha$phy,bdata_rha$data$meanCFR,method="K",test=T)
+#bpsk_mx_rha=phylosig(bdata_rha$phy,bdata_rha$data$maxCFR,method="K",test=T)
 #bpsk_ot_rha=phylosig(bdata2_rha$phy,bdata2_rha$data$on.frac,method="K",test=T) #see histogram
 #togaviridae
-bpsk_me_tog=phylosig(bdata_tog$phy,bdata_tog$data$meanCFR,method="K",test=T)
-bpsk_mx_tog=phylosig(bdata_tog$phy,bdata_tog$data$maxCFR,method="K",test=T)
-bpsk_ot_tog=phylosig(bdata2_tog$phy,bdata2_tog$data$on.frac,method="K",test=T)
+#bpsk_me_tog=phylosig(bdata_tog$phy,bdata_tog$data$meanCFR,method="K",test=T)
+#bpsk_mx_tog=phylosig(bdata_tog$phy,bdata_tog$data$maxCFR,method="K",test=T)
+#bpsk_ot_tog=phylosig(bdata2_tog$phy,bdata2_tog$data$on.frac,method="K",test=T)
 #paramyxoviridae
-bpsk_me_par=phylosig(bdata_par$phy,bdata_par$data$meanCFR,method="K",test=T)
-bpsk_mx_par=phylosig(bdata_par$phy,bdata_par$data$maxCFR,method="K",test=T)
-bpsk_ot_par=phylosig(bdata2_par$phy,bdata2_par$data$on.frac,method="K",test=T)
+#bpsk_me_par=phylosig(bdata_par$phy,bdata_par$data$meanCFR,method="K",test=T)
+#bpsk_mx_par=phylosig(bdata_par$phy,bdata_par$data$maxCFR,method="K",test=T)
+#bpsk_ot_par=phylosig(bdata2_par$phy,bdata2_par$data$on.frac,method="K",test=T)
 
 ## summarize Lambda estimates: mammals, bats, all viruses
 mlist=list(mod_me,mod_mx,mod_ot,bmod_me,bmod_mx,bmod_ot)
@@ -347,65 +348,65 @@ pdata_par$variable=factor(pdata_par$variable,levels=c("meanCFR","maxCFR","on.fra
 #save
 pagel<- rbind(pdata,pdata_cor, pdata_fla, pdata_rha, pdata_tog, pdata_par)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-#write.csv(pagel,"PS_data.csv")
+write.csv(pagel,"PS_data.csv")
 
 #summarize bloomberg's K
-klist=list(psk_me,psk_mx,psk_ot,bpsk_me,bpsk_mx,bpsk_ot)
-kdata=data.frame(vfamily=rep("all viruses",6),
-                 dataset=c(rep("all mammals",3), rep("bats only", 3)),
-                 variable=c(rep(c("meanCFR", "maxCFR", "on.frac"), 2)),
-                 K=sapply(klist,function(x) x$"K"),
-                 P=sapply(klist,function(x) x$"P"))
-kdata$variable=factor(kdata$variable,levels=c("meanCFR","maxCFR","on.frac"))
+#klist=list(psk_me,psk_mx,psk_ot,bpsk_me,bpsk_mx,bpsk_ot)
+#kdata=data.frame(vfamily=rep("all viruses",6),
+#                 dataset=c(rep("all mammals",3), rep("bats only", 3)),
+#                 variable=c(rep(c("meanCFR", "maxCFR", "on.frac"), 2)),
+#                 K=sapply(klist,function(x) x$"K"),
+#                 P=sapply(klist,function(x) x$"P"))
+#kdata$variable=factor(kdata$variable,levels=c("meanCFR","maxCFR","on.frac"))
 
 #mammals, bats, coronaviridae
-klist=list(psk_me_cor,psk_mx_cor,psk_ot_cor,bpsk_me_cor,bpsk_mx_cor,bpsk_ot_cor)
-kdata_cor=data.frame(vfamily=rep("coronaviridae",6), 
-                     dataset=c(rep("all mammals",3), rep("bats only", 3)),
-                 variable=c(rep(c("meanCFR", "maxCFR", "on.frac"), 2)),
-                 K=sapply(klist,function(x) x$"K"),
-                 P=sapply(klist,function(x) x$"P"))
-kdata_cor$variable=factor(kdata_cor$variable,levels=c("meanCFR","maxCFR","on.frac"))
+#klist=list(psk_me_cor,psk_mx_cor,psk_ot_cor,bpsk_me_cor,bpsk_mx_cor,bpsk_ot_cor)
+#kdata_cor=data.frame(vfamily=rep("coronaviridae",6), 
+#                     dataset=c(rep("all mammals",3), rep("bats only", 3)),
+#                 variable=c(rep(c("meanCFR", "maxCFR", "on.frac"), 2)),
+#                 K=sapply(klist,function(x) x$"K"),
+#                 P=sapply(klist,function(x) x$"P"))
+#kdata_cor$variable=factor(kdata_cor$variable,levels=c("meanCFR","maxCFR","on.frac"))
 
 #flaviviridae
-klist=list(psk_me_fla,psk_mx_fla,psk_ot_fla,bpsk_me_fla,bpsk_mx_fla,bpsk_ot_fla)
-kdata_fla=data.frame(vfamily=rep("flaviviridae",6),
-                     dataset=c(rep("all mammals",3), rep("bats only", 3)),
-                     variable=c(rep(c("meanCFR", "maxCFR", "on.frac"), 2)),
-                     K=sapply(klist,function(x) x$"K"),
-                     P=sapply(klist,function(x) x$"P"))
-kdata_fla$variable=factor(kdata_fla$variable,levels=c("meanCFR","maxCFR","on.frac"))
+#klist=list(psk_me_fla,psk_mx_fla,psk_ot_fla,bpsk_me_fla,bpsk_mx_fla,bpsk_ot_fla)
+#kdata_fla=data.frame(vfamily=rep("flaviviridae",6),
+#                     dataset=c(rep("all mammals",3), rep("bats only", 3)),
+#                     variable=c(rep(c("meanCFR", "maxCFR", "on.frac"), 2)),
+#                     K=sapply(klist,function(x) x$"K"),
+#                     P=sapply(klist,function(x) x$"P"))
+#kdata_fla$variable=factor(kdata_fla$variable,levels=c("meanCFR","maxCFR","on.frac"))
 
 #rhabdoviridae
-klist=list(psk_me_rha,psk_mx_rha,bpsk_me_rha,bpsk_mx_rha)
-kdata_rha=data.frame(vfamily=rep("rhabdoviridae",4),
-                     dataset=c(rep("all mammals",2), rep("bats only", 2)),
-                     variable=c(rep(c("meanCFR", "maxCFR"), 2)),
-                     K=sapply(klist,function(x) x$"K"),
-                     P=sapply(klist,function(x) x$"P"))
-kdata_rha$variable=factor(kdata_rha$variable,levels=c("meanCFR","maxCFR","on.frac"))
+#klist=list(psk_me_rha,psk_mx_rha,bpsk_me_rha,bpsk_mx_rha)
+#kdata_rha=data.frame(vfamily=rep("rhabdoviridae",4),
+#                     dataset=c(rep("all mammals",2), rep("bats only", 2)),
+#                     variable=c(rep(c("meanCFR", "maxCFR"), 2)),
+#                     K=sapply(klist,function(x) x$"K"),
+#                     P=sapply(klist,function(x) x$"P"))
+#kdata_rha$variable=factor(kdata_rha$variable,levels=c("meanCFR","maxCFR","on.frac"))
 
 #togaviridae
-klist=list(psk_me_tog,psk_mx_tog,psk_ot_tog,bpsk_me_tog,bpsk_mx_tog,bpsk_ot_tog)
-kdata_tog=data.frame(vfamily=rep("togaviridae",6),
-                     dataset=c(rep("all mammals",3), rep("bats only", 3)),
-                     variable=c(rep(c("meanCFR", "maxCFR", "on.frac"), 2)),
-                     K=sapply(klist,function(x) x$"K"),
-                     P=sapply(klist,function(x) x$"P"))
-kdata_tog$variable=factor(kdata_tog$variable,levels=c("meanCFR","maxCFR","on.frac"))
+#klist=list(psk_me_tog,psk_mx_tog,psk_ot_tog,bpsk_me_tog,bpsk_mx_tog,bpsk_ot_tog)
+#kdata_tog=data.frame(vfamily=rep("togaviridae",6),
+#                     dataset=c(rep("all mammals",3), rep("bats only", 3)),
+#                    variable=c(rep(c("meanCFR", "maxCFR", "on.frac"), 2)),
+#                     K=sapply(klist,function(x) x$"K"),
+#                     P=sapply(klist,function(x) x$"P"))
+#kdata_tog$variable=factor(kdata_tog$variable,levels=c("meanCFR","maxCFR","on.frac"))
 
 #paramyxoviridae
-klist=list(psk_me_par,psk_mx_par,psk_ot_par,bpsk_me_par,bpsk_mx_par,bpsk_ot_par)
-kdata_par=data.frame(vfamily=rep("paramyxoviridae",6),
-                     dataset=c(rep("all mammals",3), rep("bats only", 3)),
-                     variable=c(rep(c("meanCFR", "maxCFR", "on.frac"), 2)),
-                     K=sapply(klist,function(x) x$"K"),
-                     P=sapply(klist,function(x) x$"P"))
-kdata_par$variable=factor(kdata_tog$variable,levels=c("meanCFR","maxCFR","on.frac"))
+#klist=list(psk_me_par,psk_mx_par,psk_ot_par,bpsk_me_par,bpsk_mx_par,bpsk_ot_par)
+#kdata_par=data.frame(vfamily=rep("paramyxoviridae",6),
+#                     dataset=c(rep("all mammals",3), rep("bats only", 3)),
+#                     variable=c(rep(c("meanCFR", "maxCFR", "on.frac"), 2)),
+#                     K=sapply(klist,function(x) x$"K"),
+#                     P=sapply(klist,function(x) x$"P"))
+#kdata_par$variable=factor(kdata_tog$variable,levels=c("meanCFR","maxCFR","on.frac"))
 
 #save
-bloombergk<- rbind(kdata,kdata_cor, kdata_fla, kdata_rha, kdata_tog, kdata_par)
-setwd("~/Desktop/GitHub/phylofatality/csv files")
+#bloombergk<- rbind(kdata,kdata_cor, kdata_fla, kdata_rha, kdata_tog, kdata_par)
+#setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(bloombergk,"K_data.csv")
 
 #plotting (can start here and reload in data)
@@ -423,13 +424,8 @@ ps <- ps %>% mutate(vfamily = ifelse(vfamily == "All Viruses", "all viruses", vf
 #reorder 
 ps$variable <- factor(ps$variable, levels = c("Mean CFR", "Maximum CFR", "Percent with onward transmission"))
 
-#fix palette
-Panton<- list(c("#e84a00","#bb1d2c","#9b0c43","#661f66","#2c1f62","#006289","#004759"))
-OKeeffe = list(c("#f3d567", "#ee9b43", "#e74b47", "#b80422", "#172767", "#19798b"))
-Warhol = list(c("#ff0066", "#328c97", "#d1aac2", "#a5506d", "#b3e0bf","#2A9D3D", "#edf181", "#db7003", "#fba600", "#f8c1a6", "#A30000","#ff3200", "#011a51", "#97d1d9",  "#916c37"))
-ustwo = list(c("#d7433b", "#f06a63", "#ff8e5e", "#ffcc3d", "#95caa6", "#008d98"))
-
 #plot
+#use ggpubfigs colorblind friendly colors "nickel_five"
 plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
   theme_bw() +
   facet_grid(variable~dataset)+
@@ -439,7 +435,7 @@ plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
   theme(axis.text.x = element_text(angle = 45, 
                                    hjust = 1,
                                    size=11, 
-                                   color=c("black", "#e74b47", "#b80422", "#a5506d","#328c97","#2A9D3D")))+
+                                   color=c("black", "#648FFF", "#FE6100", "#785EF0","#FFB000","#DC267F")))+
   guides(color = guide_legend(title = "virus family"))+
   geom_errorbar(
     aes(ymin = lambda_lower, ymax = lambda_upper),
@@ -448,7 +444,7 @@ plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
     size = 1)+
   geom_point(position = position_dodge(width = 0.2), size = 3) +
   ylim(0, 1) +
-  scale_color_manual(values = c("black","#e74b47", "#b80422", "#a5506d","#328c97","#2A9D3D")) +
+  scale_color_manual(values = c("black", "#648FFF", "#FE6100", "#785EF0","#FFB000","#DC267F")) +
   labs(x = "Virus Family", y = expression(paste("Pagel's ", lambda)))+
   theme(axis.title.x = element_text(size = 16, margin = margin(t = 20)))+
   theme(axis.title.y = element_text(size = 16, margin = margin(r = 18)))+
@@ -460,4 +456,4 @@ plot(plot)
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-#ggsave("02a_plot.jpg", plot, device = "jpeg", width = 7, height =10, units = "in")
+ggsave("fig1.jpg", plot, device = "jpeg", width = 7, height =10, units = "in")
