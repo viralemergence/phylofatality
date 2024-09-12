@@ -1,10 +1,9 @@
 ## phylofatality
 ## 07_bivariate map
 ## danbeck@ou.edu, carolinecummings@ou.edu, Colin Carlson
-## last update 8/16/2024
+## last update 09/12/2024
 
 #troubleshooting:
-#https://cran.r-project.org/web/packages/terra/terra.pdf 
 #https://rfunctions.blogspot.com/2015/03/bivariate-maps-bivariatemap-function.html 
 
 ## clean environment & plots
@@ -51,7 +50,7 @@ colmat<-function(nquantiles=10, upperleft=rgb(0,150,235, maxColorValue=255),
 #color matrix
 col.matrix<-colmat(nquantiles=10, upperleft="goldenrod1", upperright="deeppink4",
                   bottomleft="#e8e8e8", bottomright="deepskyblue2", 
-                   ylab = "Anthropogenic footprint", xlab = "bat host richness")
+                   ylab = "anthropogenic footprint", xlab = "bat host richness")
 }
 
 #2 Generate the bivariate map (nquantiles=10)
@@ -95,7 +94,7 @@ fla<- clade %>%
   filter(host=="mammal", var=="mean", virus=="fla", factor=="2" | factor=="4")
 
 #load in IUCN geographic range data
-iucn <- st_read("~/Desktop/GitHub/phylofatality/data/IUCN/MAMMALS.shp")
+iucn <- st_read("~/Desktop/GitHub/footprint/IUCN/MAMMALS.shp")
 iucn<- iucn %>% filter(order_=="CHIROPTERA")
 iucn$binomial<- gsub(" ", "_", iucn$binomial)
 
@@ -243,7 +242,7 @@ iucn$binomial= plyr::revalue(iucn$binomial,
 miss=setdiff(all$species, iucn$binomial) #45 missing
 
 #create a blank raster and increase the resolution
-setwd("~/Desktop/GitHub/phylofatality/data/alt_2-5m_bil")
+setwd("~/Desktop/GitHub/footprint/alt_2-5m_bil")
 r <- raster("alt.bil")
 r <- disaggregate((r)*0,2)
 
@@ -286,42 +285,36 @@ rm(names, miss)
 }
 
 #5 Create Raster #2: Load in human footprint data and human population density data
-setwd("~/Desktop/GitHub/phylofatality/data/footprint/")
-footprint <-raster('~/Desktop/GitHub/phylofatality/data/footprint/wildareas-v3-2009-human-footprint.tif')
+setwd("~/Desktop/GitHub/footprint/footprint/")
+footprint <-raster('~/Desktop/GitHub/footprint/footprint/wildareas-v3-2009-human-footprint.tif')
 #humpop <-raster('~/Desktop/GitHub/phylofatality/data/footprint/gpw_v4_population_density_rev11_2020_1_deg.tif')
 
 #Make sure the projections are the same
 #Terra package is faster, so first convert both map and footprint RasterLayer --> SpatRaster
 footprint <- rast(footprint)
-#humpop <- rast(humpop)
 map_all <- rast(map_all)
 map_cov <- rast(map_cov)
 map_fla <- rast(map_fla)
 
 
 footprint <- project(footprint, map_all)
-#humpop <- project(humpop, map_all)
 
 #then convert back to RasterLayer
 footprint <- raster(footprint)
-#humpop <- raster(humpop)
 map_all <- raster(map_all)
 map_cov <- raster(map_cov)
 map_fla <- raster(map_fla)
 
 #get rid of outliers and ensure everything is aligned
 footprint[footprint>50] <- NA
-#humpop[humpop<0] <- NA
 
 #check extent, resolution, and projections of rasters (need to be identical)
 {
 print(extent(footprint))
-#print(extent(humpop))
 print(extent(map_all))
 print(extent(map_cov))
 
 print(res(footprint))
-#print(res(humpop))
 print(res(map_all))
 print(res(map_cov))
 
@@ -331,7 +324,6 @@ print(crs(map_all))
 
 ##test out layers
 footprint <- aggregate(footprint, fact=10, fun=mean)
-#humpop <- aggregate(humpop, fact=100, fun=mean)
 map_all <- aggregate(map_all, fact=10, fun=mean)
 map_cov <- aggregate(map_cov, fact=10, fun=mean)
 map_fla <- aggregate(map_fla, fact=10, fun=mean)
@@ -348,15 +340,10 @@ bivmap_fla_foot<-bivariate.map(map_fla, footprint, colormatrix=col.matrix, nquan
 all_foot<- terra:: plot(bivmap_all_foot, frame.plot = TRUE, axes = F, box = T, 
                         add = F, legend = F, col = as.vector(col.matrix), asp = 1)
 
-#Useful for the supplement, could provide target countries for work
-#maps::map(interior = T, add = T)
-
 cov_foot<- terra:: plot(bivmap_cov_foot, frame.plot = TRUE, axes = F, box = T, 
                         add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-#maps:map(interior = T, add = T)
 
 fla_foot<- terra:: plot(bivmap_fla_foot, frame.plot = TRUE, axes = F, box = T, 
                         add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-#maps:map(interior = T, add = T)
 
-##figure out how to programmatically put these three maps + color matrix into one plot
+#export as PDF/JPG

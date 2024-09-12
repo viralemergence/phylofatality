@@ -1,7 +1,7 @@
 ## phylofatality
 ## 04_PS, K and PS plots
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 4/4/2024
+## last update 9/12/2024
 
 ## clean environment & plots
 rm(list=ls()) 

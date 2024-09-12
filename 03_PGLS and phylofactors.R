@@ -1,7 +1,7 @@
 ## phylofatality
 ## 03_pgls and phylofactors
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 9/10/204
+## last update 09/12/204
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -10,7 +10,7 @@ graphics.off()
 ## packages
 library(ape)
 library(caper)
-#library(plyr)
+library(plyr)
 library(ggtree)
 library(ggplot2)
 library(data.table)
@@ -67,45 +67,45 @@ mod_mx=pgls(maxCFR_all.viruses~1,data=cdata,lambda="ML")
 mod_ot=pgls(on.frac_all.viruses~1,data=cdata2,lambda="ML")
 
 ## we can also implement these tests using phylosig
-psl_me=phylosig(cdata$phy,cdata$data$meanCFR_all.viruses,method="lambda",test=T)
-psl_mx=phylosig(cdata$phy,cdata$data$maxCFR_all.viruses,method="lambda",test=T)
-psl_ot=phylosig(cdata2$phy,cdata2$data$on.frac_all.viruses,method="lambda",test=T)
+#psl_me=phylosig(cdata$phy,cdata$data$meanCFR_all.viruses,method="lambda",test=T)
+#psl_mx=phylosig(cdata$phy,cdata$data$maxCFR_all.viruses,method="lambda",test=T)
+#psl_ot=phylosig(cdata2$phy,cdata2$data$on.frac_all.viruses,method="lambda",test=T)
 
 ## compare that values are equivalent
-round(mod_me$param["lambda"],3)==round(psl_me$lambda,3)
-round(mod_mx$param["lambda"],3)==round(psl_mx$lambda,3)
-round(mod_ot$param["lambda"],3)==round(psl_ot$lambda,3)
+#round(mod_me$param["lambda"],3)==round(psl_me$lambda,3)
+#round(mod_mx$param["lambda"],3)==round(psl_mx$lambda,3)
+#round(mod_ot$param["lambda"],3)==round(psl_ot$lambda,3)
 
 ## we can also use phylosig to estimate Bloomberg's K
-psk_me=phylosig(cdata$phy,cdata$data$meanCFR_all.viruses,method="K",test=T)
-psk_mx=phylosig(cdata$phy,cdata$data$maxCFR_all.viruses,method="K",test=T)
-psk_ot=phylosig(cdata2$phy,cdata2$data$on.frac_all.viruses,method="K",test=T)
+#psk_me=phylosig(cdata$phy,cdata$data$meanCFR_all.viruses,method="K",test=T)
+#psk_mx=phylosig(cdata$phy,cdata$data$maxCFR_all.viruses,method="K",test=T)
+#psk_ot=phylosig(cdata2$phy,cdata2$data$on.frac_all.viruses,method="K",test=T)
 
 ## Moran's I will use inverse distances
-d=1/cophenetic(cdata$phy)
-diag(d)=0
+#d=1/cophenetic(cdata$phy)
+#diag(d)=0
 
 ## reduced dataset
-d2=1/cophenetic(cdata2$phy)
-diag(d2)=0
+#d2=1/cophenetic(cdata2$phy)
+#diag(d2)=0
 
 ## Moran's I
-Moran.I(cdata$data$meanCFR_all.viruses,d)
-Moran.I(cdata$data$maxCFR_all.viruses,d)
-Moran.I(cdata2$data$on.frac_all.viruses,d2)
+#Moran.I(cdata$data$meanCFR_all.viruses,d)
+#Moran.I(cdata$data$maxCFR_all.viruses,d)
+#Moran.I(cdata2$data$on.frac_all.viruses,d2)
 
 ## correlograms
-form=meanCFR_all.viruses+maxCFR_all.viruses~ord/fam/gen
-form2=on.frac_all.viruses~ord/fam/gen
+#form=meanCFR_all.viruses+maxCFR_all.viruses~ord/fam/gen
+#form2=on.frac_all.viruses~ord/fam/gen
 
 ## run
-plot(correlogram.formula(form,data=cdata$data))
-plot(correlogram.formula(form2,data=cdata2$data))
+#plot(correlogram.formula(form,data=cdata$data))
+#plot(correlogram.formula(form2,data=cdata2$data))
 
 ## similar in ade4
-gearymoran(d,data.frame(cdata$data$meanCFR_all.viruses,
-                        cdata$data$maxCFR_all.viruses),alter="two-sided")
-gearymoran(d2,cdata2$data$on.frac_all.viruses,alter="two-sided")
+#gearymoran(d,data.frame(cdata$data$meanCFR_all.viruses,
+#                       cdata$data$maxCFR_all.viruses),alter="two-sided")
+#gearymoran(d2,cdata2$data$on.frac_all.viruses,alter="two-sided")
 
 ## subset to bats
 bdata=cdata[cdata$data$ord=="CHIROPTERA",]
@@ -255,7 +255,7 @@ pfsum=function(pf){
     em=data.frame(emmeans(mod,"phylo",type="response"))
     
     ## add category
-    em$cat=revalue(em$phylo,
+    em$cat=plyr::revalue(em$phylo,
                    c("R"="factor",
                      "S"="other"))
     
