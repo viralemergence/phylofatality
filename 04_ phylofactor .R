@@ -1095,5 +1095,5 @@ plot(plot)
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-ggsave("fig2.jpg",  plot, device = "jpeg", width = 8, height = 8, units = "in")
+#ggsave("fig2.jpg",  plot, device = "jpeg", width = 8, height = 8, units = "in")
 
