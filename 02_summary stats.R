@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 02_summary statistics
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update: 09/10/2024
+## last update: 09/19/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -225,6 +225,6 @@ ss2<- length(bdata$`maxCFR_all viruses`)
 ss3<- length(bdata$`on.frac_all viruses`)
 
 # se
-se1 <- sd1/sqrt(ss1) #0.03
+se1 <- sd1/sqrt(ss1) #0.027
 se2 <- sd2/sqrt(ss2) #0.024
 se3 <- sd3/sqrt(ss3) #0.029
