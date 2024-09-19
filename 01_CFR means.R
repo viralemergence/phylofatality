@@ -197,6 +197,7 @@ table(vdata$evidence)
 vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
                         vdata$DetectionMethod_PCR.Sequencing==1,1,0)
 table(vdata$evidence)
+
 # 1459 are detected by viral isolation and/or pcr
 # 441 are viral isolation AND pcr
 # 1459/2915 > 50%
