@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 02_summary statistics
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update: 09/19/2024
+## last update: 09/20/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -187,7 +187,7 @@ setwd("~/Desktop/GitHub/phylofatality/csv files")
 vdata<- read_csv("CFRBySpecies.csv")
 
 #mean
-mean(vdata$`meanCFR_all viruses`, na.rm=T) #0.2425706
+mean(vdata$`meanCFR_all viruses`, na.rm=T) #0.2425732
 mean(vdata$`maxCFR_all viruses`, na.rm=T) #0.3939759
 mean(vdata$`on.frac_all viruses`, na.rm=T) #0.3529295
 
@@ -227,4 +227,4 @@ ss3<- length(bdata$`on.frac_all viruses`)
 # se
 se1 <- sd1/sqrt(ss1) #0.027
 se2 <- sd2/sqrt(ss2) #0.024
-se3 <- sd3/sqrt(ss3) #0.029
+se3 <- sd3/sqrt(ss3) #0.028
