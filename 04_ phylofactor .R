@@ -1,7 +1,7 @@
 ## phylofatality
 ## 04_phylofactor
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 09/13/2024
+## last update 09/22/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -28,7 +28,6 @@ library(treeio)
 ## load in virulence data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 data=read.csv("CFRbySpecies.csv")
-
 
 ## load Upham phylogeny
 setwd("~/Desktop/GitHub/phylofatality/phylo")
