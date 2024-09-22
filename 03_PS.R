@@ -1,7 +1,7 @@
 ## phylofatality
 ## 03_PS
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 09/13/2024
+## last update 09/22/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -25,7 +25,6 @@ library(egg)
 library(devtools)
 library(stringr)
 library(ggpubfigs)
-
 
 
 ## load in virulence data
