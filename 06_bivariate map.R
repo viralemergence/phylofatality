@@ -242,6 +242,7 @@ iucn$binomial= plyr::revalue(iucn$binomial,
 miss=setdiff(all$species, iucn$binomial) #45 missing
 
 #create a blank raster and increase the resolution
+#data downloaded from here: https://geodata.ucdavis.edu/climate/worldclim/1_4/grid/cur/
 setwd("~/Desktop/GitHub/footprint/alt_2-5m_bil")
 r <- raster("alt.bil")
 r <- disaggregate((r)*0,2)
@@ -285,6 +286,7 @@ rm(names, miss)
 }
 
 #5 Create Raster #2: Load in human footprint data and human population density data
+#footprint data downloaded from here: https://sedac.ciesin.columbia.edu/data/set/wildareas-v3-2009-human-footprint 
 setwd("~/Desktop/GitHub/footprint/footprint/")
 footprint <-raster('~/Desktop/GitHub/footprint/footprint/wildareas-v3-2009-human-footprint.tif')
 
