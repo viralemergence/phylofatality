@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu 
-## last update 09/20/2024
+## last update 12/12/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -376,6 +376,36 @@ vset=vlist %>% purrr::reduce(full_join,by="species")
 
 ## merge
 vdata=merge(vdata,vset,by="species",all=T)
+
+## pubmed citations
+library(easyPubMed)
+
+## function
+counter=function(name){
+  as.numeric(as.character(get_pubmed_ids(gsub('_','-',name))$Count))
+}
+citations=c()
+
+## loop through
+for(i in 1:length(vdata$species)) {
+  citations[i]=counter(vdata$species[i])
+  print(i)
+}
+
+## add virus-related citations per species
+## add virus citations counts
+
+
+## compile
+cites=data.frame(species=vdata$species,
+                 cites=citations)
+
+## merge
+data=merge(data,cites,by='species')
+
+## clean
+rm(cites,citations,i,counter)
+
 
 ## export
 ## save for 02_summary statistics script

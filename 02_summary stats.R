@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 02_summary statistics
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update: 09/20/2024
+## last update: 12/12/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -33,7 +33,6 @@ vdata %<>%
   distinct() %>% drop_na()
 
 ## load in host taxonomy
-#setwd("~/Desktop/phylofatality/phylo")
 setwd("~/Desktop/GitHub/phylofatality/phylo")
 taxa=read.csv('taxonomy_mamPhy_5911species.csv',header=T)
 taxa$tip=taxa$Species_Name
@@ -228,3 +227,4 @@ ss3<- length(bdata$`on.frac_all viruses`)
 se1 <- sd1/sqrt(ss1) #0.027
 se2 <- sd2/sqrt(ss2) #0.024
 se3 <- sd3/sqrt(ss3) #0.028
+
