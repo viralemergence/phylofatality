@@ -1,7 +1,7 @@
 ## phylofatality
 ## 04_phylofactor
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 12/12/2024
+## last update 12/24/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -225,7 +225,7 @@ HolmProcedure(cmean_pf) #4
 ##1.5 all viruses, citation count
 set.seed(1)
 cites_pf=gpf(Data=cdata$data,tree=cdata$phy,
-             frmla.phylo=cites~phylo+virusesWithCFR_all.viruses,
+             frmla.phylo=cites~phylo,
              family=poisson,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cites_pf) #5
 cites_pf_results=pfsum(cites_pf)$results ## super different

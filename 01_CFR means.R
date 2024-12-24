@@ -401,11 +401,10 @@ cites=data.frame(species=vdata$species,
                  cites=citations)
 
 ## merge
-data=merge(data,cites,by='species')
+vdata=merge(vdata,cites,by='species')
 
 ## clean
 rm(cites,citations,i,counter)
-
 
 ## export
 ## save for 02_summary statistics script
