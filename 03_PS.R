@@ -26,7 +26,6 @@ library(devtools)
 library(stringr)
 library(ggpubfigs)
 
-
 ## load in virulence data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 data=read.csv("CFRbySpecies.csv")

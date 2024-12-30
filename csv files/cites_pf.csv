@@ -1,0 +1,130 @@
+"","ID","factor","taxa","tips","node","clade","other"
+"1","cites",1,"Rattus",11,1718,331907.363636376,11013.804582515
+"2","cites",2,"CUNICULIDAE, DASYPROCTIDAE, CAVIIDAE, ERETHIZONTIDAE, CHINCHILLIDAE, ECHIMYIDAE, MYOCASTORIDAE",18,1676,211894.222222174,7223.60796656587
+"3","cites",3,"Mus, Hylomyscus, Praomys, Mastomys, Stenocephalemys",16,1742,127598.375000009,5170.30703624794
+"4","cites",4,"Bos, Bison, Bubalus, Syncerus",11,1068,110815.090909055,3916.70118662284
+"5","cites",5,"Ovis, Hemitragus, Capra, Budorcas, Oreamnos, Rupicapra, Ammotragus",16,1112,44668.250000002,3200.97706445706
+"6","cites",6,"RHINOPOMATIDAE, MEGADERMATIDAE, RHINOLOPHIDAE, HIPPOSIDERIDAE, PTEROPODIDAE, NOCTILIONIDAE, MORMOOPIDAE, PHYLLOSTOMIDAE, NATALIDAE, MOLOSSIDAE, VESPERTILIONIDAE, NYCTERIDAE, EMBALLONURIDAE",220,1251,125.70909090918,4180.07815412756
+"7","cites",7,"OCHOTONIDAE, LEPORIDAE",11,1907,33617.7272727253,3703.88088449693
+"8","cites",8,"FELIDAE",21,1155,22695.7142857159,3098.67830804847
+"9","cites",9,"Lycaon, Chrysocyon, Canis, Pseudalopex, Speothos, Cerdocyon",11,1187,32978.0909090905,2591.46605033369
+"10","cites",10,"Muntiacus, Elaphodus, Dama, Elaphurus, Cervus, Rusa, Rucervus, Axis",10,1047,27748.299999997,2197.1583073085
+"11","cites",11,"Macaca, Lophocebus, Papio, Theropithecus, Mandrillus, Cercocebus, Cercopithecus, Erythrocebus, Chlorocebus, Miopithecus, Allenopithecus",64,1548,9561.71875000084,1376.02265147636
+"12","cites",12,"Dicrostonyx, Ondatra, Lemmus, Arvicola, Lagurus, Chionomys, Microtus, Myodes, Alticola, Eothenomys, Cricetulus, Tscherskia, Mesocricetus, Phodopus",39,1769,11861.8461606536,611.635543769378
+"13","cites",13,"Arvicola, Lagurus, Chionomys, Microtus, Myodes, Alticola, Eothenomys",29,1774,4797.03448692458,32349.7999999996
+"14","cites",14,"MANIDAE, CANIDAE, PHOCIDAE, ODOBENIDAE, OTARIIDAE, MEPHITIDAE, PROCYONIDAE, MUSTELIDAE, AILURIDAE, URSIDAE, HYAENIDAE, HERPESTIDAE, VIVERRIDAE, EQUIDAE, TAPIRIDAE, RHINOCEROTIDAE, CAMELIDAE, TAYASSUIDAE, SUIDAE, HIPPOPOTAMIDAE, PHYSETERIDAE, INIIDAE, PHOCOENIDAE, MONODONTIDAE, DELPHINIDAE, ESCHRICHTIIDAE, BALAENOPTERIDAE, BALAENIDAE, TRAGULIDAE, GIRAFFIDAE, ANTILOCAPRIDAE, CERVIDAE, BOVIDAE",179,1004,1368.79888414676,230.926966292437
+"15","cites",15,"Cercopithecus lomamiensis, Cercopithecus lhoesti, Cercopithecus preussi, Cercopithecus cephus, Cercopithecus erythrotis, Cercopithecus ascanius, Cercopithecus petaurista, Cercopithecus erythrogaster, Cercopithecus mitis, Cercopithecus nictitans",10,1599,29.4000000000074,11326.9629629629
+"16","cites",16,"Lophocebus, Papio, Theropithecus, Mandrillus, Cercocebus",14,1571,1288.28573150913,14840.5000833794
+"17","cites",17,"Microtus gregalis, Microtus ilaeus, Microtus levis, Microtus arvalis, Microtus socialis, Microtus guentheri, Microtus dogramacii, Microtus subterraneus, Microtus agrestis, Microtus pennsylvanicus, Microtus montanus, Microtus ochrogaster, Microtus californicus, Microtus richardsoni",14,1778,9806.21428571427,121.799999999998
+"18","cites",18,"Macaca sinica, Macaca nigrescens, Macaca tonkeana, Macaca hecki, Macaca maura, Macaca ochreata, Macaca silenus, Macaca pagensis, Macaca nemestrina, Macaca leonina, Macaca munzala, Macaca radiata, Macaca assamensis, Macaca thibetana, Macaca mulatta, Macaca fuscata, Macaca nigra, Macaca cyclopis, Macaca arctoides, Macaca leucogenys, Macaca fascicularis",21,1551,7615.76190476322,22825.7368421053
+"19","cites",19,"TRAGULIDAE, GIRAFFIDAE, ANTILOCAPRIDAE, CERVIDAE, BOVIDAE",60,1041,160.316666666666,1978.11764708948
+"20","cites",20,"EQUIDAE, TAPIRIDAE, RHINOCEROTIDAE, CAMELIDAE, TAYASSUIDAE, SUIDAE, HIPPOPOTAMIDAE, PHYSETERIDAE, INIIDAE, PHOCOENIDAE, MONODONTIDAE, DELPHINIDAE, ESCHRICHTIIDAE, BALAENOPTERIDAE, BALAENIDAE",36,1005,4389.52777778312,932.204819277097
+"21","cites_cov",1,"CALLITRICHIDAE, CEBIDAE, HYLOBATIDAE, HOMINIDAE, CERCOPITHECIDAE, LEPORIDAE, SCIURIDAE, DIPODIDAE, CRICETIDAE, MURIDAE",23,174,113560.565821752,4759.38670015861
+"22","cites_cov",2,"HYLOBATIDAE, HOMINIDAE, CERCOPITHECIDAE",12,177,14131.3333333334,222028.818182549
+"23","cites_cov",3,"MANIDAE, CANIDAE, PHOCIDAE, OTARIIDAE, MUSTELIDAE, URSIDAE, VIVERRIDAE, FELIDAE, EQUIDAE, RHINOCEROTIDAE, CAMELIDAE, SUIDAE, INIIDAE, PHOCOENIDAE, MONODONTIDAE, DELPHINIDAE, BOVIDAE",39,102,9081.23076923156,77.3888888888881
+"24","cites_cov",4,"CANIDAE, PHOCIDAE, OTARIIDAE, MUSTELIDAE, URSIDAE",14,127,2879.00000000002,12554.4800000007
+"25","cites_cov",5,"CAMELIDAE, SUIDAE, INIIDAE, PHOCOENIDAE, MONODONTIDAE, DELPHINIDAE, BOVIDAE",13,106,3963.69230769232,21861.1666666667
+"26","cites_cov",6,"RHINOLOPHIDAE, HIPPOSIDERIDAE",16,158,37.6875,109.15000000001
+"27","cites_cov",7,"Pipistrellus, Nyctalus, Vespertilio, Neoromicia",10,147,60.9000000002922,157.4
+"28","cites_cov",8,"HYLOBATIDAE, HOMINIDAE",4,178,3749,19322.5
+"29","cites_cov",9,"HYLOBATIDAE",1,77,43.9999999999995,4984.00000017207
+"30","cites_cov",10,"Pongo",1,78,272.000000000001,7340.00000573575
+"31","cites_cov",11,"Pan",1,79,11085,3595.00000000001
+"32","cites_cov",12,"CANIDAE",3,128,3486.33333333334,2713.36365547181
+"33","cites_cov",13,"Vulpes",1,2,6131,2164
+"34","cites_cov",14,"Nyctereutes",1,3,841.999999999998,3486
+"35","cites_cov",15,"CALLITRICHIDAE, CEBIDAE",2,176,2717.5000000001,270764.666666681
+"36","cites_cov",16,"CALLITRICHIDAE",1,75,5267.99999999999,167.000000000003
+"37","cites_fla",1,"Rattus, Mus, Praomys, Mastomys, Apodemus, Aethomys, Thallomys, Arvicanthis, Dasymys, Golunda, Millardia, Vandeleuria",19,684,299685.578947338,9702.13536249078
+"38","cites_fla",2,"Tragelaphus, Bos, Bison, Bubalus, Syncerus",13,431,93759.4615384611,6571.06017758143
+"39","cites_fla",3,"Ovis, Capra, Oreamnos, Rupicapra, Ammotragus",10,454,55492.9000000018,5127.93805383739
+"40","cites_fla",4,"MEGADERMATIDAE, RHINOLOPHIDAE, HIPPOSIDERIDAE, PTEROPODIDAE, NOCTILIONIDAE, MORMOOPIDAE, PHYLLOSTOMIDAE, NATALIDAE, MOLOSSIDAE, VESPERTILIONIDAE, EMBALLONURIDAE",75,496,69.9466666666734,6564.86742425765
+"41","cites_fla",5,"PITHECIIDAE, CALLITRICHIDAE, CEBIDAE, AOTIDAE, ATELIDAE",30,583,539.299999999979,7337.3760683799
+"42","cites_fla",6,"BOVIDAE",20,429,53.6999999999777,8018.09345794479
+"43","cites_fla",7,"GLIRIDAE, SCIURIDAE",22,644,435.500000000015,8886.93229166677
+"44","cites_fla",8,"TALPIDAE, SORICIDAE, ERINACEIDAE, CANIDAE, PHOCIDAE, MEPHITIDAE, PROCYONIDAE, MUSTELIDAE, AILURIDAE, URSIDAE, HERPESTIDAE, FELIDAE, EQUIDAE, RHINOCEROTIDAE, CAMELIDAE, TAYASSUIDAE, SUIDAE, DELPHINIDAE, TRAGULIDAE, GIRAFFIDAE, ANTILOCAPRIDAE, CERVIDAE, GALAGIDAE, LORISIDAE, INDRIIDAE, LEMURIDAE, LEPILEMURIDAE, HYLOBATIDAE, HOMINIDAE, CERCOPITHECIDAE, OCHOTONIDAE, LEPORIDAE, CTENODACTYLIDAE, HYSTRICIDAE, DASYPROCTIDAE, CAVIIDAE, ERETHIZONTIDAE, ECHIMYIDAE, DIPODIDAE, CRICETIDAE, MURIDAE, HETEROMYIDAE, GEOMYIDAE",172,384,9876.83720930243,373.750000000012
+"45","cites_fla",9,"Arvicola, Microtus, Myodes, Alticola",14,706,206.571428571403,10733.6964307108
+"46","cites_fla",10,"CANIDAE, PHOCIDAE, MEPHITIDAE, PROCYONIDAE, MUSTELIDAE, AILURIDAE, URSIDAE",19,478,1310.89473684212,12021.7051543758
+"47","cites_fla",11,"Neotoma, Reithrodontomys, Onychomys, Peromyscus, Sigmodon, Akodon, Hylaeamys, Oligoryzomys, Oryzomys, Calomys",13,721,508.69230769231,13209.5555979249
+"48","cites_fla",12,"OCHOTONIDAE, LEPORIDAE, CTENODACTYLIDAE, HYSTRICIDAE, DASYPROCTIDAE, CAVIIDAE, ERETHIZONTIDAE, ECHIMYIDAE, DIPODIDAE, CRICETIDAE, Tatera, Gerbillus, Sekeetamys, Meriones, Lophuromys, Acomys, HETEROMYIDAE, GEOMYIDAE",36,641,22493.9166819623,9495.81111997402
+"49","cites_fla",13,"HERPESTIDAE, FELIDAE, EQUIDAE, RHINOCEROTIDAE, CAMELIDAE, TAYASSUIDAE, SUIDAE, DELPHINIDAE, TRAGULIDAE, GIRAFFIDAE, ANTILOCAPRIDAE, CERVIDAE",39,396,15266.1282068543,5083.21568650092
+"50","cites_fla",14,"Macaca, Papio, Mandrillus, Cercocebus, Lophocebus, Cercopithecus, Erythrocebus, Chlorocebus",21,621,11568.1428571428,543.766666671506
+"51","cites_fla",15,"DIPODIDAE, CRICETIDAE, MURIDAE, HETEROMYIDAE, GEOMYIDAE",18,673,16312.8888889713,28674.9445282303
+"52","cites_fla",16,"CAMELIDAE, TAYASSUIDAE, SUIDAE, DELPHINIDAE, TRAGULIDAE, GIRAFFIDAE, ANTILOCAPRIDAE, CERVIDAE",27,402,12270.6666666666,22005.9166666666
+"53","cites_fla",17,"CERVIDAE",14,416,20240.9289512046,3687.30769230768
+"54","cites_fla",18,"CALLITRICHIDAE, CEBIDAE, AOTIDAE",18,586,820.611111438528,117.333333333334
+"55","cites_fla",19,"GALAGIDAE, LORISIDAE, INDRIIDAE, LEMURIDAE, LEPILEMURIDAE",11,572,117.545454545455,790.526315790109
+"56","cites_fla",20,"ELEPHANTIDAE, DASYPODIDAE, MYRMECOPHAGIDAE, CYCLOPEDIDAE, MEGALONYCHIDAE, BRADYPODIDAE",10,744,515.000000144553,232.500000000889
+"57","cites_rha",1,"LEPORIDAE, SCIURIDAE, CUNICULIDAE, DASYPROCTIDAE, CAVIIDAE, ERETHIZONTIDAE, ECHIMYIDAE, MYOCASTORIDAE, CRICETIDAE, MURIDAE, HETEROMYIDAE, CASTORIDAE",38,548,208752.184210521,7694.62312106885
+"58","cites_rha",2,"SCIURIDAE",10,551,215.000000000096,283229.750073882
+"59","cites_rha",3,"CANIDAE, MEPHITIDAE, PROCYONIDAE, MUSTELIDAE, URSIDAE, HYAENIDAE, HERPESTIDAE, VIVERRIDAE, FELIDAE, EQUIDAE, CAMELIDAE, TAYASSUIDAE, SUIDAE, ANTILOCAPRIDAE, CERVIDAE, BOVIDAE",108,303,18274.7870370367,177.138157894732
+"60","cites_rha",4,"CERVIDAE, BOVIDAE",24,313,46171.2916666663,10304.3571428571
+"61","cites_rha",5,"Lycaon, Chrysocyon, Canis, Pseudalopex, Speothos, Cerdocyon",11,375,32978.0909886124,6887.76714921316
+"62","cites_rha",6,"Puma, Acinonyx, Lynx, Leopardus, Otocolobus, Felis",10,352,31311.1999999993,3011.03174612628
+"63","cites_rha",7,"CRICETIDAE, MURIDAE, HETEROMYIDAE, Castor",17,566,229069.588274289,366931.818238741
+"64","cites_rha",8,"CERVIDAE",10,314,28152.9000060634,59041.5714286597
+"65","cites_rha",9,"CANIDAE, MEPHITIDAE, PROCYONIDAE, MUSTELIDAE, URSIDAE",37,363,1314.27027027027,5425.65384620753
+"66","cites_rha",10,"HYAENIDAE, HERPESTIDAE, VIVERRIDAE",12,338,93.083333333335,9996.42859946501
+"67","cites_rha",11,"RHINOLOPHIDAE, HIPPOSIDERIDAE, PTEROPODIDAE, MORMOOPIDAE, PHYLLOSTOMIDAE, MOLOSSIDAE, VESPERTILIONIDAE, NYCTERIDAE, EMBALLONURIDAE",130,410,95.9000000000038,657.181818181833
+"68","cites_rha",12,"MUSTELIDAE",11,397,2665.9090909187,742.423076980656
+"69","cites_rha",13,"MEPHITIDAE, PROCYONIDAE",10,390,402.300000000004,955.000000073019
+"70","cites_rha",14,"Micronycteris, Lonchorhina, Glossophaga, Leptonycteris, Anoura, Lonchophylla, Artibeus, Dermanura, Vampyrodes, Platyrrhinus, Uroderma, Sturnira, Carollia, Trachops, Phyllostomus, Lophostoma, Chrotopterus",26,496,40.230769230769,109.817307692311
+"71","cites_rha",15,"MOLOSSIDAE, VESPERTILIONIDAE",75,418,73.8266666666666,202.896551724277
+"72","cites_rha",16,"MORMOOPIDAE, PHYLLOSTOMIDAE, NYCTERIDAE, EMBALLONURIDAE",13,411,357.153846155591,77.5625000000002
+"73","cites_rha",17,"Nyctinomops, Molossops, Cynomops, Molossus, Eumops",12,422,28.0833333504412,82.5396825580733
+"74","cites_rha",18,"Myotis riparius, Myotis grisescens, Myotis austroriparius, Myotis yumanensis, Myotis velifer, Myotis albescens, Myotis chiloensis, Myotis nigricans, Myotis levis, Myotis volans, Myotis septentrionalis, Myotis ciliolabrum, Myotis leibii, Myotis californicus, Myotis lucifugus, Myotis keenii, Myotis evotis, Myotis thysanodes",18,470,38.6666666769811,100.088888893556
+"75","cites_rha",19,"Nycticeius, Scotophilus, Corynorhinus, Euderma, Plecotus, Barbastella, Antrozous, Lasiurus, Parastrellus, Pipistrellus, Nyctalus, Vespertilio, Philetor, Eptesicus, Histiotus, Lasionycteris",34,435,70.5882352941316,191.272727283071
+"76","cites_rha",20,"Artibeus, Dermanura, Vampyrodes, Platyrrhinus, Uroderma, Sturnira, Carollia",11,505,66.0909090909091,21.2666666666667
+"77","cites_tog",1,"Rattus, Hydromys, Pseudomys, Mus, Mastomys, Apodemus",10,272,569208.299999986,5895.1383649875
+"78","cites_tog",2,"CANIDAE, PHOCIDAE, MEPHITIDAE, PROCYONIDAE, URSIDAE, FELIDAE, EQUIDAE, TAPIRIDAE, CAMELIDAE, TAYASSUIDAE, SUIDAE, CERVIDAE, BOVIDAE",24,174,29432.8333335138,1710.65932104025
+"79","cites_tog",3,"HOMINIDAE, CERCOPITHECIDAE",13,238,14306.7692307691,368.45082189412
+"80","cites_tog",4,"CAMELIDAE, TAYASSUIDAE, SUIDAE, CERVIDAE, BOVIDAE",10,179,45471.1000000336,17976.9285714386
+"81","cites_tog",5,"CRICETIDAE",18,281,1664.88888889778,144.067307692308
+"82","cites_tog",6,"DIDELPHIDAE, THYLACOMYIDAE, PERAMELIDAE, DASYURIDAE, PHASCOLARCTIDAE, VOMBATIDAE, PHALANGERIDAE, MACROPODIDAE, POTOROIDAE, PSEUDOCHEIRIDAE, PETAURIDAE",32,307,229.093750004669,106.277777777782
+"83","cites_tog",7,"SCIURIDAE",12,253,186.416666672606,90.2499999999994
+"84","cites_tog",8,"CUNICULIDAE, DASYPROCTIDAE, ERETHIZONTIDAE, ECHIMYIDAE, HETEROMYIDAE, GEOMYIDAE",11,251,20.9090925727455,105.816326679244
+"85","cites_tog",9,"Glossophaga, Artibeus, Dermanura, Platyrrhinus, Uroderma, Sturnira, Carollia, Trachops, Phyllostomus",18,210,59.8333333737466,132.516129065611
+"86","cites_tog",10,"PHASCOLARCTIDAE, VOMBATIDAE, PHALANGERIDAE, MACROPODIDAE, POTOROIDAE, PSEUDOCHEIRIDAE, PETAURIDAE",20,319,250.650000002292,193.166666678869
+"87","cites_tog",11,"PHYLLOSTOMIDAE, MOLOSSIDAE, VESPERTILIONIDAE, EMBALLONURIDAE",12,198,160.166666666666,115.052631578947
+"88","cites_tog",12,"Rattus",4,273,912633.000000001,340258.500000119
+"89","cites_tog",13,"Rattus rattus",1,127,1825418,608371.333341349
+"90","cites_tog",14,"Rattus norvegicus",1,126,1825096,9.00000000061857
+"91","cites_par",1,"RHINOLOPHIDAE, HIPPOSIDERIDAE, PTEROPODIDAE, VESPERTILIONIDAE",35,56,419.285714287397,252386.636363637
+"92","cites_par",2,"Pteropus vampyrus, Pteropus rodricensis, Pteropus giganteus, Pteropus lylei, Pteropus rufus, Pteropus pumilus, Pteropus poliocephalus, Pteropus hypomelanus, Pteropus conspicillatus, Pteropus alecto, Pteropus admiralitatum, Pteropus neohibernicus, Pteropus capistratus",13,72,1039.23077443671,52.9545454545455
+"93","bcites",1,"Pteropus vampyrus, Pteropus rodricensis, Pteropus giganteus, Pteropus lylei, Pteropus rufus, Pteropus pumilus, Pteropus poliocephalus, Pteropus hypomelanus, Pteropus conspicillatus, Pteropus alecto, Pteropus admiralitatum, Pteropus neohibernicus, Pteropus capistratus",13,415,1039.23077443672,68.3381642512251
+"94","bcites",2,"NATALIDAE, MOLOSSIDAE, VESPERTILIONIDAE, NYCTERIDAE, EMBALLONURIDAE",109,223,91.5596330306579,42.510204081633
+"95","bcites",3,"MOLOSSIDAE, VESPERTILIONIDAE",99,233,60.7575757575762,396.500000222293
+"96","bcites",4,"Myotis dasycneme, Myotis nattereri, Myotis myotis, Myotis blythii, Myotis macrodactylus, Myotis pilosus, Myotis daubentonii, Myotis capaccinii, Myotis flavus, Myotis formosus",10,320,176.300003085524,47.7752808993759
+"97","bcites",5,"Eptesicus, Histiotus, Lasionycteris, Ia",11,274,92.5454545456925,41.4615384616783
+"98","bcites",6,"Rhinolophus hipposideros, Rhinolophus pearsonii, Rhinolophus affinis, Rhinolophus rouxii, Rhinolophus thomasi, Rhinolophus sinicus, Rhinolophus pusillus, Rhinolophus rex, Rhinolophus macrotis, Rhinolophus simulator, Rhinolophus blasii, Rhinolophus euryale, Rhinolophus mehelyi, Rhinolophus eloquens, Rhinolophus ferrumequinum",15,382,74.0000000000012,36.8192771084535
+"99","bcites",7,"RHINOPOMATIDAE, MEGADERMATIDAE, RHINOLOPHIDAE, HIPPOSIDERIDAE",15,378,16.4666666666666,41.3088235294377
+"100","bcites",8,"Micronycteris, Lonchorhina, Glossophaga, Leptonycteris, Anoura, Lonchophylla, Artibeus, Dermanura, Vampyrodes, Platyrrhinus, Uroderma, Sturnira, Rhinophylla, Carollia, Trachops, Phyllostomus, Tonatia, Lophostoma, Chrotopterus",39,336,31.7435897435941,54.1724137931235
+"101","bcites",9,"Eonycteris, Rousettus, Epomops, Epomophorus, Micropteropus, Hypsignathus, Myonycteris, Dobsonia, Eidolon, Pteropus, Acerodon",19,408,36.9473684210679,86.9000000000002
+"102","bcites",10,"Rhogeessa, Antrozous, Lasiurus, Parastrellus, Pipistrellus subflavus",11,289,65.7272727272725,37.4776119405684
+"103","bcites",11,"Artibeus, Dermanura, Vampyrodes, Platyrrhinus, Uroderma, Sturnira, Rhinophylla, Carollia",21,347,38.333333333353,24.0555555555556
+"104","bcites",12,"Pipistrellus, Nyctalus, Vespertilio, Philetor, Vespadelus, Neoromicia, Nyctophilus",16,258,47.5625000008197,34.3137254903114
+"105","bcites",13,"Tadarida brasiliensis, Nyctinomops, Molossops, Cynomops, Molossus molossus, Molossus rufus, Eumops",13,240,42.2307692329795,31.6052631579136
+"106","bcites",14,"Myotis",19,302,38.7894736868042,24.421052631579
+"107","bcites",15,"Pteropus hypomelanus, Pteropus conspicillatus, Pteropus alecto, Pteropus admiralitatum, Pteropus neohibernicus, Pteropus capistratus",6,416,2193.5000000001,49.8571428571428
+"108","bcites",16,"Pteropus hypomelanus, Pteropus conspicillatus, Pteropus alecto, Pteropus admiralitatum, Pteropus neohibernicus",5,417,2632.00000000001,0.999999999999986
+"109","bcites",17,"Pteropus hypomelanus, Pteropus conspicillatus, Pteropus alecto, Pteropus admiralitatum",4,418,3289.25000244062,3.00000000000002
+"110","bcites",18,"Pteropus admiralitatum",1,61,12967.0000000001,63.3333333766556
+"111","bcites",19,"Pteropus alecto",1,60,110,40
+"112","bcites_cov",1,"RHINOLOPHIDAE, HIPPOSIDERIDAE",16,54,37.6875,78.6315789473688
+"113","bcites_fla",1,"MEGADERMATIDAE, RHINOLOPHIDAE, HIPPOSIDERIDAE",12,129,41.6666666666666,75.3333333333335
+"114","bcites_fla",2,"Artibeus, Dermanura, Platyrrhinus, Sturnira, Rhinophylla",10,117,42.7000000000004,81.490566037736
+"115","bcites_fla",3,"MORMOOPIDAE, PHYLLOSTOMIDAE",10,109,123.6,71.6976744186056
+"116","bcites_fla",4,"MOLOSSIDAE, VESPERTILIONIDAE",28,81,76.8214285714706,62.1333333333334
+"117","bcites_rha",1,"Micronycteris, Lonchorhina, Glossophaga, Leptonycteris, Anoura, Lonchophylla, Artibeus, Dermanura, Vampyrodes, Platyrrhinus, Uroderma, Sturnira, Carollia, Trachops, Phyllostomus, Lophostoma, Chrotopterus",26,217,40.230769230769,109.817307692311
+"118","bcites_rha",2,"MOLOSSIDAE, VESPERTILIONIDAE",75,139,73.8266666666666,202.896551724277
+"119","bcites_rha",3,"MORMOOPIDAE, PHYLLOSTOMIDAE, NYCTERIDAE, EMBALLONURIDAE",13,132,357.153846155591,77.5625000000002
+"120","bcites_rha",4,"Nyctinomops, Molossops, Cynomops, Molossus, Eumops",12,143,28.0833333504412,82.5396825580733
+"121","bcites_rha",5,"Myotis riparius, Myotis grisescens, Myotis austroriparius, Myotis yumanensis, Myotis velifer, Myotis albescens, Myotis chiloensis, Myotis nigricans, Myotis levis, Myotis volans, Myotis septentrionalis, Myotis ciliolabrum, Myotis leibii, Myotis californicus, Myotis lucifugus, Myotis keenii, Myotis evotis, Myotis thysanodes",18,191,38.6666666769811,100.088888893556
+"122","bcites_rha",6,"Nycticeius, Scotophilus, Corynorhinus, Euderma, Plecotus, Barbastella, Antrozous, Lasiurus, Parastrellus, Pipistrellus, Nyctalus, Vespertilio, Philetor, Eptesicus, Histiotus, Lasionycteris",34,156,70.5882352941316,191.272727283071
+"123","bcites_rha",7,"Artibeus, Dermanura, Vampyrodes, Platyrrhinus, Uroderma, Sturnira, Carollia",11,226,66.0909090909091,21.2666666666667
+"124","bcites_rha",8,"Pipistrellus nathusii, Pipistrellus pipistrellus, Pipistrellus kuhlii, Nyctalus, Vespertilio, Philetor, Pipistrellus savii, Eptesicus, Histiotus, Lasionycteris",17,159,87.5294117648299,53.6470588235293
+"125","bcites_rha",9,"Carollia",1,43,256,47.1000001006981
+"126","bcites_rha",10,"Artibeus, Dermanura, Vampyrodes, Platyrrhinus, Uroderma",9,228,44.3333333333334,72
+"127","bcites_rha",11,"Vampyrodes, Platyrrhinus, Uroderma",3,229,15.000000000002,59.0000001190134
+"128","bcites_tog",1,"Glossophaga, Artibeus, Dermanura, Platyrrhinus, Uroderma, Sturnira, Carollia, Trachops, Phyllostomus",18,50,59.8333333737467,139.611112321245
+"129","bcites_par",1,"Pteropus vampyrus, Pteropus rodricensis, Pteropus giganteus, Pteropus lylei, Pteropus rufus, Pteropus pumilus, Pteropus poliocephalus, Pteropus hypomelanus, Pteropus conspicillatus, Pteropus alecto, Pteropus admiralitatum, Pteropus neohibernicus, Pteropus capistratus",13,52,1039.23077443671,52.9545454545455
