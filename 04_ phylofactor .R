@@ -1,7 +1,7 @@
 ## phylofatality
 ## 04_phylofactor
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 12/30/2024
+## last update 1/10/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -739,11 +739,30 @@ results_cites<- do.call("rbind", list(cites_pf_results, cites_pf_results_cov,
                                 bcites_pf_results_tog, bcites_pf_results_par))
 
 
-results <- results %>% select("ID", everything())
+results_cites <- results_cites %>% select("ID", everything())
+
+## save raw
+cites_v1<- results_cites
 
 ## setwd
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 write.csv(results_cites, "cites_pf.csv")
+
+## clean up for table
+results_cites$node=NULL
+results_cites$clade <- round(results_cites$clade,2)
+results_cites$other <- round(results_cites$other,2)
+
+## dum column
+results_cites$dum <- NA
+results_cites$dum=ifelse(results_cites$factor>5, "cut","keep")
+
+## cut factors that come after 5
+results_cites <- subset(results_cites, dum != "cut")
+
+## setwd
+setwd("~/Desktop/GitHub/phylofatality/csv files")
+write.csv(results_cites, "cites5_pf.csv")
 
 ####Plotting
 
