@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 02_summary statistics
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update: 12/12/2024
+## last update: 1/14/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -137,7 +137,7 @@ setwd("~/Desktop/GitHub/phylofatality/data")
 cfr<- read_csv("cfr.csv")
 
 ## fix with virion naming
-cfr %<>% dplyr::rename(Virus = SppName_ICTV_MSL2018b, CFR = CFR_avg, onward=human.trans)
+cfr %<>% dplyr::rename(Virus = SppName_ICTV_MSL2018b, CFR = CFR_avg, onward=human.trans, db=death_burden_since_1950)
 cfr %<>% mutate(Virus = str_to_lower(Virus))
 
 ## check name matching

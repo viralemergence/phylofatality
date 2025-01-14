@@ -24,7 +24,7 @@ library(phytools)
 library(egg)
 library(devtools)
 library(stringr)
-library(ggpubfigs)
+#library(ggpubfigs)
 
 ## load in virulence data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
@@ -169,7 +169,7 @@ psk_ot_fla=phylosig(cdata2_fla$phy,cdata2_fla$data$on.frac,method="K",test=T)
 ## rhabdoviridae
 psk_me_rha=phylosig(cdata_rha$phy,cdata_rha$data$meanCFR,method="K",test=T)
 psk_mx_rha=phylosig(cdata_rha$phy,cdata_rha$data$maxCFR,method="K",test=T)
-psk_ot_rha=phylosig(cdata2_rha$phy,cdata2_rha$data$on.frac,method="K",test=T) #see histogram
+#psk_ot_rha=phylosig(cdata2_rha$phy,cdata2_rha$data$on.frac,method="K",test=T) #see histogram
 ## togaviridae
 psk_me_tog=phylosig(cdata_tog$phy,cdata_tog$data$meanCFR,method="K",test=T)
 psk_mx_tog=phylosig(cdata_tog$phy,cdata_tog$data$maxCFR,method="K",test=T)
@@ -261,7 +261,7 @@ bpsk_ot_fla=phylosig(bdata2_fla$phy,bdata2_fla$data$on.frac,method="K",test=T)
 ##rhabdoviridae
 bpsk_me_rha=phylosig(bdata_rha$phy,bdata_rha$data$meanCFR,method="K",test=T)
 bpsk_mx_rha=phylosig(bdata_rha$phy,bdata_rha$data$maxCFR,method="K",test=T)
-bpsk_ot_rha=phylosig(bdata2_rha$phy,bdata2_rha$data$on.frac,method="K",test=T) #see histogram
+#bpsk_ot_rha=phylosig(bdata2_rha$phy,bdata2_rha$data$on.frac,method="K",test=T) #see histogram
 ## togaviridae
 bpsk_me_tog=phylosig(bdata_tog$phy,bdata_tog$data$meanCFR,method="K",test=T)
 bpsk_mx_tog=phylosig(bdata_tog$phy,bdata_tog$data$maxCFR,method="K",test=T)
@@ -346,7 +346,7 @@ pdata_par$variable=factor(pdata_par$variable,levels=c("meanCFR","maxCFR","on.fra
 #save
 pagel<- rbind(pdata,pdata_cor, pdata_fla, pdata_rha, pdata_tog, pdata_par)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-#write.csv(pagel,"PS_data.csv")
+write.csv(pagel,"PS_data.csv")
 
 ## summarize bloomberg's K
 klist=list(psk_me,psk_mx,psk_ot,bpsk_me,bpsk_mx,bpsk_ot)
@@ -405,7 +405,7 @@ kdata_par$variable=factor(kdata_tog$variable,levels=c("meanCFR","maxCFR","on.fra
 ## save
 bloombergk<- rbind(kdata,kdata_cor, kdata_fla, kdata_rha, kdata_tog, kdata_par)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-write.csv(bloombergk,"K_data.csv")
+#write.csv(bloombergk,"K_data.csv")
 
 #plotting (can start here and reload in data)
 #don't forget to reload in packages

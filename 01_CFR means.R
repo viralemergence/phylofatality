@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu 
-## last update 12/12/2024
+## last update 1/14/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -39,8 +39,8 @@ setwd("~/Desktop/GitHub/phylofatality/data")
 #write_csv(cfr, "cfr.csv")
 
 ## rename based on CFR average
-cfr %<>% dplyr::select(SppName_ICTV_MSL2018b, CFR_avg, human.trans) %>%
-  dplyr::rename(Virus = SppName_ICTV_MSL2018b, CFR = CFR_avg, onward=human.trans)
+cfr %<>% dplyr::select(SppName_ICTV_MSL2018b, CFR_avg, human.trans, death_burden_since_1950) %>%
+  dplyr::rename(Virus = SppName_ICTV_MSL2018b, CFR = CFR_avg, onward=human.trans, db=death_burden_since_1950)
 
 ## fix with virion naming
 cfr %<>% mutate(Virus = str_to_lower(Virus))
@@ -274,7 +274,7 @@ vdata$species=revalue(vdata$species,
                        "Zygodontomys cherriei"="Zygodontomys brevicauda"))
 
 ## rematch
-mis=setdiff(vdata$species,taxa$species)
+miss=setdiff(vdata$species,taxa$species)
 
 ## remove missing species
 vdata=vdata[!vdata$species%in%miss,]
@@ -293,6 +293,7 @@ vdata %<>% left_join(cfr) %>%
   group_by(species) %>% 
   dplyr::summarize(meanCFR = mean(CFR),
                    maxCFR = max(CFR),
+                   meanDB=mean(db),
                    virusesWithCFR = n())
 
 ## fix tmp names
@@ -392,14 +393,9 @@ for(i in 1:length(vdata$species)) {
   print(i)
 }
 
-## add virus-related citations per species
-## add virus citations counts
-
-
 ## compile
 cites=data.frame(species=vdata$species,
                  cites=citations)
-
 ## merge
 vdata=merge(vdata,cites,by='species')
 
