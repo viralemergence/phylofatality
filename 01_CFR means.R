@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu 
-## last update 1/14/2025
+## last update 1/17/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -280,7 +280,7 @@ miss=setdiff(vdata$species,taxa$species)
 vdata=vdata[!vdata$species%in%miss,]
 
 ## save data
-vraw=vdata
+vraw=vdata #2912 observations
 
 ## for each host species, fraction of all viruses that can infect humans
 tmp=merge(cfr,vdata,by="Virus")
@@ -356,6 +356,7 @@ vfam_out=function(x){
     group_by(species) %>% 
     dplyr::summarize(meanCFR = mean(CFR),
                      maxCFR = max(CFR),
+                     meanDB=mean(db),
                      virusesWithCFR = n())
   
   ## merge fraction zoonotic

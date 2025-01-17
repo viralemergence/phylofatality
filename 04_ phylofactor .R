@@ -1,7 +1,7 @@
 ## phylofatality
 ## 04_phylofactor
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 1/14/2025
+## last update 1/17/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -763,6 +763,20 @@ results_samp <- subset(results_samp, dum != "cut")
 ## setwd
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 write.csv(results_samp, "samp5_pf.csv")
+
+
+## check death burden
+
+## all mammals
+## 1 all viruses, citation count
+set.seed(1)
+sampeff_pf=gpf(Data=cdata$data,tree=cdata$phy,
+               frmla.phylo=virusesWithCFR_all.viruses~phylo,
+               family=poisson,algorithm='phylo',nfactors=20,min.group.size=10)
+HolmProcedure(sampeff_pf)
+sampeff_pf_results=pfsum(sampeff_pf)$results
+
+
 
 ####Plotting
 
