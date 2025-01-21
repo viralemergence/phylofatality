@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 02_summary statistics
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update: 1/14/2025
+## last update: 1/21/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -24,8 +24,8 @@ vir=vroom("virion.csv.gz")
 vir %<>% dplyr::filter(HostClass == 'mammalia')
 
 #load in vdata
-setwd("~/Desktop/GitHub/phylofatality/data")
-vdata<- read_csv("vdata.csv")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
+vdata<- read_csv("01_vdata.csv")
 
 ## filter virion
 vdata %<>%
@@ -133,8 +133,8 @@ bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %
 #host-virus associations, what happens when we cut out vector-borne?
 
 #load in cfr data
-setwd("~/Desktop/GitHub/phylofatality/data")
-cfr<- read_csv("cfr.csv")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
+cfr<- read_csv("01_cfr.csv")
 
 ## fix with virion naming
 cfr %<>% dplyr::rename(Virus = SppName_ICTV_MSL2018b, CFR = CFR_avg, onward=human.trans, db=death_burden_since_1950)
@@ -183,7 +183,7 @@ bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %
 
 #load in complete vdata from 01_CFR Mean and replace vdata
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-vdata<- read_csv("CFRBySpecies.csv")
+vdata<- read_csv("01_CFRBySpecies.csv")
 
 #mean
 mean(vdata$`meanCFR_all viruses`, na.rm=T) #0.2425732
@@ -201,7 +201,7 @@ ss2<- length(vdata$`maxCFR_all viruses`)
 ss3<- length(vdata$`on.frac_all viruses`)
 
 # se
-se1 <- sd1/sqrt(ss1) #0.0103
+se1 <- sd1/sqrt(ss1) #0.010
 se2 <- sd2/sqrt(ss2) #0.013
 se3 <- sd3/sqrt(ss3) #0.013
 

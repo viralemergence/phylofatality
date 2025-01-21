@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
-## danbeck@ou.edu 
-## last update 1/17/2025
+## danbeck@ou.edu, carolinecummings@ou.edu 
+## last update 1/21/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -35,8 +35,8 @@ cfr=bind_rows(cfr1, cfr2)
 rm(cfr1,cfr2)
 
 #save to use in 02_summary stats script
-setwd("~/Desktop/GitHub/phylofatality/data")
-#write_csv(cfr, "cfr.csv")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
+write_csv(cfr, "01_cfr.csv")
 
 ## rename based on CFR average
 cfr %<>% dplyr::select(SppName_ICTV_MSL2018b, CFR_avg, human.trans, death_burden_since_1950) %>%
@@ -44,6 +44,10 @@ cfr %<>% dplyr::select(SppName_ICTV_MSL2018b, CFR_avg, human.trans, death_burden
 
 ## fix with virion naming
 cfr %<>% mutate(Virus = str_to_lower(Virus))
+
+## fix NAs
+## rotavirus A is odd... low data availability
+cfr$db[is.na(cfr$db)] <- 0
 
 ## check name matching
 setdiff(cfr$Virus,vir$Virus)
@@ -91,35 +95,16 @@ vdata=vdata[vdata$Virus%in%cfr$Virus,]
 ## remove missing host
 vdata=vdata[!is.na(vdata$Host),]
 
-#fix dataset
-{
-#10 rows have the incorrect virus genus
-temp<- vdata
-temp$num <- seq_len(nrow(temp))
-
-temp %>% filter(Host=="bos taurus", Virus=="pestivirus a", VirusGenus=="flavivirus")%>%
-  select(num) %>% print()
-
-vdata[6222, "VirusGenus"] <- "pestivirus"
-vdata[6223, "VirusGenus"] <- "pestivirus"
-vdata[6224, "VirusGenus"] <- "pestivirus"
-vdata[6225, "VirusGenus"] <- "pestivirus"
-vdata[6226, "VirusGenus"] <- "pestivirus"
-vdata[6227, "VirusGenus"] <- "pestivirus"
-vdata[6228, "VirusGenus"] <- "pestivirus"
-vdata[6229, "VirusGenus"] <- "pestivirus"
-vdata[6230, "VirusGenus"] <- "pestivirus"
-vdata[6231, "VirusGenus"] <- "pestivirus"
+#fix VIRION 
+vdata$VirusGenus <- ifelse(vdata$Host=="bos taurus" & vdata$Virus=="pestivirus a" &
+         vdata$VirusGenus=="flavivirus", "pestivirus", vdata$VirusGenus)
 
 #check
 vdata %>% filter(Host=="bos taurus", Virus=="pestivirus a", VirusGenus=="flavivirus") %>% print()
-vdata %>% filter(Host=="bos taurus", Virus=="pestivirus a", VirusGenus=="pestivirus") %>% print()
-
-}
 
 #save for 02_summary statistics script
-setwd("~/Desktop/GitHub/phylofatality/data")
-#write_csv(vdata, "vdata.csv")
+setwd("~/Desktop/GitHub/phylofatality/csv files")
+#write_csv(vdata, "01_vdata.csv")
 
 ## summarize detection method
 table(vdata$DetectionMethod)
@@ -214,7 +199,7 @@ taxa$species=sapply(strsplit(taxa$tip,'_'),function(x) paste(x[1],x[2],sep=' '))
 vdata$species=capitalize(vdata$Host)
 
 ## match
-miss=setdiff(vdata$species,taxa$species)
+miss=setdiff(vdata$species,taxa$species) #79
 
 ## flag
 vdata$flag=ifelse(vdata$species%in%miss,1,0)
@@ -274,13 +259,13 @@ vdata$species=revalue(vdata$species,
                        "Zygodontomys cherriei"="Zygodontomys brevicauda"))
 
 ## rematch
-miss=setdiff(vdata$species,taxa$species)
+miss=setdiff(vdata$species,taxa$species) #1
 
 ## remove missing species
-vdata=vdata[!vdata$species%in%miss,]
+vdata=vdata[!vdata$species%in%miss,] 
 
 ## save data
-vraw=vdata #2912 observations
+vraw=vdata #2912 unique host-virus observations
 
 ## for each host species, fraction of all viruses that can infect humans
 tmp=merge(cfr,vdata,by="Virus")
@@ -377,7 +362,7 @@ vlist=lapply(vfam_hosts$VirusFamily,vfam_out)
 vset=vlist %>% purrr::reduce(full_join,by="species")
 
 ## merge
-vdata=merge(vdata,vset,by="species",all=T)
+vdata=merge(vdata,vset,by="species",all=T) #983 obs (unique species)
 
 ## pubmed citations
 library(easyPubMed)
@@ -397,6 +382,11 @@ for(i in 1:length(vdata$species)) {
 ## compile
 cites=data.frame(species=vdata$species,
                  cites=citations)
+
+## save 
+setwd("~/Desktop/GitHub/phylofatality/csv files")
+write_csv(cites,"01_cites.csv")
+
 ## merge
 vdata=merge(vdata,cites,by='species')
 
@@ -406,4 +396,4 @@ rm(cites,citations,i,counter)
 ## export
 ## save for 02_summary statistics script
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-#write_csv(vdata,"CFRBySpecies.csv")
+#write_csv(vdata,"01_CFRBySpecies.csv")

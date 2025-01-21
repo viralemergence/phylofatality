@@ -213,7 +213,7 @@ pfsum=function(pf){
 ## NOTE THAT gpf() WON'T WORK UNDER R 4.2 OR HIGHER DUE TO THE FOLLOWING CHANGE:
 ## https://stackoverflow.com/questions/72848442/r-warning-lengthx-2-1-in-coercion-to-logical1/72848495#72848495
 
-###Run Phylofactor
+###Run Phylofactor on VEP vars
 {
 ## all mammals
 ## 1 all viruses meanCFR mammals
@@ -223,12 +223,26 @@ cmean_pf=gpf(Data=cdata$data,tree=cdata$phy,
              family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmean_pf) #4
 
+set.seed(1)
+db_pf=gpf(Data=cdata$data,tree=cdata$phy,
+             frmla.phylo=meanDB_all.viruses~phylo,
+             family=gaussian,algorithm='phylo',nfactors=20,min.group.size=10)
+HolmProcedure(db_pf) #9
+
 ## 2 coronaviridae meanCFR mammals
 set.seed(1)
 cmean_pf_cov=gpf(Data=cdata_cov$data,tree=cdata_cov$phy,
                  frmla.phylo=meanCFR_coronaviridae~phylo+virusesWithCFR_coronaviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmean_pf_cov) #2
+
+set.seed(1)
+dbcov_pf=gpf(Data=cdata_cov$data,tree=cdata_cov$phy,
+                 frmla.phylo=meanDB_coronaviridae~phylo+virusesWithCFR_coronaviridae,
+                 family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
+HolmProcedure(dbcov_pf) #2
+dbcov_pf_results=pfsum(dbcov_pf)$results
+
 
 ## 3 flaviviridae meanCFR mammals
 set.seed(1)
@@ -610,7 +624,7 @@ dtree_par=treeio::full_join(as.treedata(cdata_par$phy),cdata_par$data,by="label"
 
 
 ## check heavily sampled species
-
+{
 ## all mammals
 ## 1 all viruses, citation count
 set.seed(1)
@@ -763,18 +777,17 @@ results_samp <- subset(results_samp, dum != "cut")
 ## setwd
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 write.csv(results_samp, "samp5_pf.csv")
-
+}
 
 ## check death burden
 
 ## all mammals
 ## 1 all viruses, citation count
 set.seed(1)
-sampeff_pf=gpf(Data=cdata$data,tree=cdata$phy,
-               frmla.phylo=virusesWithCFR_all.viruses~phylo,
-               family=poisson,algorithm='phylo',nfactors=20,min.group.size=10)
-HolmProcedure(sampeff_pf)
-sampeff_pf_results=pfsum(sampeff_pf)$results
+dbmean_pf=gpf(Data=cdata$data,tree=cdata$phy,
+             frmla.phylo=meanDB_all.viruses~phylo,
+             family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
+HolmProcedure(dbmean_pf) #4
 
 
 
