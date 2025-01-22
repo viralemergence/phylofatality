@@ -1,7 +1,7 @@
 ## phylofatality
 ## 03_PS
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 12/24/2024
+## last update 1/21/2024
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -28,7 +28,7 @@ library(stringr)
 
 ## load in virulence data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-data=read.csv("CFRbySpecies.csv")
+data=read.csv("01_CFRbySpecies.csv")
 
 ## load Upham phylogeny
 setwd("~/Desktop/GitHub/phylofatality/phylo")

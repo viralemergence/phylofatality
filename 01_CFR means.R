@@ -23,7 +23,7 @@ setwd("~/Desktop/GitHub/virion/Virion")
 vir=vroom("virion.csv.gz")
 vir %<>% filter(HostClass == 'mammalia')
 
-## load cfr
+## load cfr data
 setwd("~/Desktop/GitHub/phylofatality/data")
 cfr1=read_csv("loose_data.csv.txt")
 cfr2=read_csv("stringent_data.csv.txt")
@@ -34,19 +34,20 @@ cfr2$cat="stringent"
 cfr=bind_rows(cfr1, cfr2)
 rm(cfr1,cfr2)
 
-#save to use in 02_summary stats script
+## save to use in 02_summary stats script
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-write_csv(cfr, "01_cfr.csv")
+#write_csv(cfr, "01_cfr.csv")
 
 ## rename based on CFR average
+## human.trans is on scale 1-4 from 0 ---> endemic
 cfr %<>% dplyr::select(SppName_ICTV_MSL2018b, CFR_avg, human.trans, death_burden_since_1950) %>%
   dplyr::rename(Virus = SppName_ICTV_MSL2018b, CFR = CFR_avg, onward=human.trans, db=death_burden_since_1950)
 
 ## fix with virion naming
 cfr %<>% mutate(Virus = str_to_lower(Virus))
 
-## fix NAs
-## rotavirus A is odd... low data availability
+## fix NAs for DB
+## rotavirus A is odd, low data availability
 cfr$db[is.na(cfr$db)] <- 0
 
 ## check name matching
@@ -60,6 +61,7 @@ cfr$Virus[str_detect(cfr$Virus,'middle')] <- "middle east respiratory syndrome-r
 
 ## recheck
 setdiff(cfr$Virus,vir$Virus)
+rm(rec)
 
 ## as data frame
 cfr=data.frame(cfr)
@@ -79,7 +81,7 @@ rm(cmeans,honward)
 ## recode
 cfr$type=ifelse(is.na(cfr$onward),"loose","stringent")
 
-## human.trans
+## human.trans--> make binary (causes human-human transmission y/n)
 cfr$htrans=ifelse(cfr$onward==1,0,1)
 
 ## trim virion to NCBI resolved
@@ -92,14 +94,14 @@ vdata=vdata[!vdata$Host=="homo sapiens",]
 ## simplify vdata to cfr viruses
 vdata=vdata[vdata$Virus%in%cfr$Virus,]
 
-## remove missing host
+## remove missing hosts
 vdata=vdata[!is.na(vdata$Host),]
 
 #fix VIRION 
 vdata$VirusGenus <- ifelse(vdata$Host=="bos taurus" & vdata$Virus=="pestivirus a" &
          vdata$VirusGenus=="flavivirus", "pestivirus", vdata$VirusGenus)
 
-#check
+#check (should be zero)
 vdata %>% filter(Host=="bos taurus", Virus=="pestivirus a", VirusGenus=="flavivirus") %>% print()
 
 #save for 02_summary statistics script
@@ -265,13 +267,13 @@ miss=setdiff(vdata$species,taxa$species) #1
 vdata=vdata[!vdata$species%in%miss,] 
 
 ## save data
-vraw=vdata #2912 unique host-virus observations
+vraw=vdata #2912 unique host-virus obs
 
 ## for each host species, fraction of all viruses that can infect humans
 tmp=merge(cfr,vdata,by="Virus")
 tmp$vir=1
-tmp=aggregate(cbind(vir,htrans)~species,tmp,sum,na.rm=T)
-tmp$on.frac=tmp$htrans/tmp$vir
+tmp=aggregate(cbind(vir,htrans)~species,tmp,sum,na.rm=T) #number total viruses and number of viruses with human-human transmission per host
+tmp$on.frac=tmp$htrans/tmp$vir ## percent of viruses a host has that exhibit human-human transmission 
 
 ## mean/max across all viruses per host
 vdata %<>% left_join(cfr) %>%
@@ -281,7 +283,7 @@ vdata %<>% left_join(cfr) %>%
                    meanDB=mean(db),
                    virusesWithCFR = n())
 
-## fix tmp names
+## fix tmp names (get total viruses wit OT/host)
 tmp$virusesWithOT=tmp$vir
 tmp$vir=NULL
 
