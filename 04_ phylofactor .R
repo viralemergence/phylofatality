@@ -239,7 +239,6 @@ dbcites_pf=gpf(Data=cdata$data,tree=cdata$phy,
           family=gaussian,algorithm='phylo',nfactors=4,min.group.size=10)
 HolmProcedure(dbcites_pf) #3
 
-
 ## 2. coronaviridae: meanCFR mammals + meanDB mammals + 2 control methods
 set.seed(1) # virus number controlled
 cmean_pf_cov=gpf(Data=cdata_cov$data,tree=cdata_cov$phy,
@@ -478,7 +477,7 @@ cmaxcites_pf_par=gpf(Data=cdata_par$data,tree=cdata_par$phy,
 HolmProcedure(cmaxcites_pf_par) #0 
 
 ## summarize Max CFR: all viruses + 5 virus families
-# control virus number
+# mammals: control virus number
 cmax_pf_results=pfsum(cmax_pf)$results 
 cmax_pf_results_cov=pfsum(cmax_pf_cov)$results 
 cmax_pf_results_fla=pfsum(cmax_pf_fla)$results 
@@ -486,7 +485,7 @@ cmax_pf_results_rha=pfsum(cmax_pf_rha)$results
 cmax_pf_results_tog=pfsum(cmax_pf_tog)$results 
 #cmax_pf_results_par=pfsum(cmean_pf_par)$results #0 factors
 
-# control citations
+# mammals: control citations
 cmaxcites_pf_results=pfsum(cmaxcites_pf)$results 
 cmaxcites_pf_results_cov=pfsum(cmaxcites_pf_cov)$results 
 cmaxcites_pf_results_fla=pfsum(cmaxcites_pf_fla)$results 
@@ -553,7 +552,7 @@ HolmProcedure(cot_pf_rha) #0
 cdata2_rha_ot$data$on.frac_rhabdoviridae
 # no variance, 0 is correct, rhabdoviridae don't have onward transmission
 
-## 5. togaviridae: ot mammals
+## 5. togaviridae: ot mammals 
 set.seed(1)
 cot_pf_tog=gpf(Data=cdata2_tog_ot$data,tree=cdata2_tog_ot$phy,
                frmla.phylo=cbind(htrans_togaviridae,ntrans_togaviridae)~phylo+virusesWithCFR_all.viruses,
@@ -585,6 +584,7 @@ cotcites_pf_results_tog=pfsum(cotcites_pf_tog)$results
 #cot_pf_results_par=pfsum(cot_pf_par)$results #0
 
 ## bat-specific analyses
+{
 ## 1. all viruses: meanCFR bats + meanDB bats
 set.seed(1)
 bmean_pf=gpf(Data=bdata$data,tree=bdata$phy,
@@ -684,7 +684,6 @@ bdbfla_pf_results=pfsum(bdbfla_pf)$results
 bdbrha_pf_results=pfsum(bdbrha_pf)$results
 bdbtog_pf_results=pfsum(bdbtog_pf)$results
 #bdbpar_pf_results=pfsum(bdbpar_pf)$results #0 factors
-
 
 ## 1. all viruses: maxCFR bats
 set.seed(1)
@@ -796,7 +795,7 @@ bot_pf_results=pfsum(bot_pf)$results #2
 #bot_pf_results_rha=pfsum(bot_pf_rha)$results #0
 #bot_pf_results_tog=pfsum(bot_pf_tog)$results #0
 #bot_pf_results_par=pfsum(bot_pf_par)$results #0
-
+}
 
 #make a dataframe
 #add an ID variable 
@@ -949,6 +948,7 @@ citespar_pf=gpf(Data=cdata_par$data,tree=cdata_par$phy,
 HolmProcedure(citespar_pf) #1
 
 ## bats
+{
 ## 1 all viruses, citation count
 set.seed(1)
 bsamp_pf=gpf(Data=bdata$data,tree=bdata$phy,
@@ -990,7 +990,7 @@ bsamppar_pf=gpf(Data=bdata_par$data,tree=bdata_par$phy,
                  frmla.phylo=virusesWithCFR_paramyxoviridae~phylo,
                  family=poisson,algorithm='phylo',nfactors=20,min.group.size=10)
 HolmProcedure(bsamppar_pf)
-
+}
 
 ## summarize clades
 ## mammals: virus #
