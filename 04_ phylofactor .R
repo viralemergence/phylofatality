@@ -853,7 +853,7 @@ results<- do.call("rbind", list(cmean_pf_results,cmean_pf_results_cov,cmean_pf_r
 
 #save for data mining script 
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-#write.csv(results,"pf_allclades.csv")
+#write.csv(results,"04_pf_allclades.csv") ### CC HERE!!!!
 
 ## save trees
 dtree=treeio::full_join(as.treedata(cdata$phy),cdata$data,by="label")
