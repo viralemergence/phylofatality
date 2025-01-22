@@ -1,7 +1,7 @@
 ## phylofatality
 ## 03_PS
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 1/21/2024
+## last update 1/22/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -346,7 +346,7 @@ pdata_par$variable=factor(pdata_par$variable,levels=c("meanCFR","maxCFR","on.fra
 #save
 pagel<- rbind(pdata,pdata_cor, pdata_fla, pdata_rha, pdata_tog, pdata_par)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-write.csv(pagel,"PS_data.csv")
+write.csv(pagel,"03_PS data.csv")
 
 ## summarize bloomberg's K
 klist=list(psk_me,psk_mx,psk_ot,bpsk_me,bpsk_mx,bpsk_ot)
@@ -405,7 +405,7 @@ kdata_par$variable=factor(kdata_tog$variable,levels=c("meanCFR","maxCFR","on.fra
 ## save
 bloombergk<- rbind(kdata,kdata_cor, kdata_fla, kdata_rha, kdata_tog, kdata_par)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-#write.csv(bloombergk,"K_data.csv")
+write.csv(bloombergk,"03_K data.csv")
 
 #plotting (can start here and reload in data)
 #don't forget to reload in packages
