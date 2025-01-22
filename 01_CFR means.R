@@ -49,6 +49,7 @@ cfr %<>% mutate(Virus = str_to_lower(Virus))
 ## fix NAs for DB
 ## rotavirus A is odd, low data availability
 cfr$db[is.na(cfr$db)] <- 0
+cfr$db<- ifelse(cfr$Virus=="rotavirus a", NA, cfr$db )
 
 ## check name matching
 setdiff(cfr$Virus,vir$Virus)
@@ -283,7 +284,7 @@ vdata %<>% left_join(cfr) %>%
                    meanDB=mean(db),
                    virusesWithCFR = n())
 
-## fix tmp names (get total viruses wit OT/host)
+## fix tmp names (get total viruses with OT/host)
 tmp$virusesWithOT=tmp$vir
 tmp$vir=NULL
 
@@ -387,7 +388,8 @@ cites=data.frame(species=vdata$species,
 
 ## save 
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-write_csv(cites,"01_cites.csv")
+#write_csv(cites,"01_cites.csv")
+cites <-read_csv("01_cites.csv")
 
 ## merge
 vdata=merge(vdata,cites,by='species')
