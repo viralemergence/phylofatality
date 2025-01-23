@@ -410,7 +410,7 @@ write.csv(bloombergk,"03_K data.csv")
 #plotting (can start here and reload in data)
 #don't forget to reload in packages
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-ps=read.csv("PS_data.csv")
+ps=read.csv("03_PS_data.csv")
 
 #fix up variable names
 ps$vfamily <- str_to_title(ps$vfamily)
