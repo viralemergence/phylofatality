@@ -61,6 +61,15 @@ tree=keep.tip(tree,data$species)
 data$label=data$species
 data$Species=data$species
 
+## check for collinearity
+cor(cdata$data$meanCFR_all.viruses, sqrt(cdata$data$meanDB_all.viruses), use = "complete.obs") ## 0.225
+cor(cdata$data$meanCFR_coronaviridae, sqrt(cdata$data$meanDB_coronaviridae), use = "complete.obs") # -0.998
+cor(cdata$data$meanCFR_flaviviridae, sqrt(cdata$data$meanDB_flaviviridae), use = "complete.obs") # 0.484
+cor(cdata$data$meanCFR_rhabdoviridae, sqrt(cdata$data$meanDB_rhabdoviridae), use = "complete.obs") # 0.666
+cor(cdata$data$meanCFR_togaviridae, sqrt(cdata$data$meanDB_togaviridae), use = "complete.obs") # -0.198
+cor(cdata$data$meanCFR_paramyxoviridae, sqrt(cdata$data$meanDB_paramyxoviridae), use = "complete.obs") # 0.745
+
+
 ## [2] Add columns and dataframes
 ## in "Data": define non-onward viruses (adding 6 columns)
 ## this will be included in the comparative dataframe (cdata)
@@ -135,12 +144,16 @@ bdata_par<-bdata[!is.na(bdata$data$meanCFR_paramyxoviridae),]
 ## [2] create dataframes for 5 virus families for OT
 bdata2_cov<-bdata[!is.na(bdata$data$htrans_coronaviridae),]
 bdata2_cov<-bdata2_cov[!is.na(bdata2_cov$data$ntrans_coronaviridae),]
+
 bdata2_fla<-bdata[!is.na(bdata$data$htrans_flaviviridae),]
 bdata2_fla<-bdata2_fla[!is.na(bdata2_fla$data$ntrans_flaviviridae),]
+
 bdata2_rha<-bdata[!is.na(bdata$data$htrans_rhabdoviridae),]
 bdata2_rha<-bdata2_rha[!is.na(bdata2_rha$data$ntrans_rhabdoviridae),]
+
 bdata2_tog<-bdata[!is.na(bdata$data$htrans_togaviridae),]
 bdata2_tog<-bdata2_tog[!is.na(bdata2_tog$data$ntrans_togaviridae),]
+
 bdata2_par<-bdata[!is.na(bdata$data$htrans_paramyxoviridae),]
 bdata2_par<-bdata2_par[!is.na(bdata2_par$data$ntrans_paramyxoviridae),]
 
@@ -383,13 +396,13 @@ cmeancites_pf_tog=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
                  family=gaussian,algorithm='phylo',nfactors=2,min.group.size=10)
 HolmProcedure(cmeancites_pf_tog) #1
 
-set.seed(1)
+set.seed(1) ## DB + virus # controlled
 dbtog_pf=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
                  frmla.phylo=sqrt(meanDB_togaviridae)~phylo+virusesWithCFR_togaviridae,
                  family=gaussian,algorithm='phylo',nfactors=2,min.group.size=10)
 HolmProcedure(dbtog_pf) #1
 
-set.seed(1)
+set.seed(1) ## DB + citations controlled
 dbtogcites_pf=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
              frmla.phylo=sqrt(meanDB_togaviridae)~phylo+sqrt(cites),
              family=gaussian,algorithm='phylo',nfactors=2,min.group.size=10)
@@ -409,7 +422,7 @@ cmeancites_pf_par=gpf(Data=cdata_par$data,tree=cdata_par$phy,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cmeancites_pf_par) #0 
 
-set.seed(1)
+set.seed(1) ## DB + virus # controlled
 dbpar_pf=gpf(Data=cdata_par$data,tree=cdata_par$phy,
                  frmla.phylo=sqrt(meanDB_paramyxoviridae)~phylo+virusesWithCFR_paramyxoviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
@@ -429,7 +442,6 @@ cmean_pf_results_cov=pfsum(cmean_pf_cov)$results
 cmean_pf_results_fla=pfsum(cmean_pf_fla)$results
 cmean_pf_results_rha=pfsum(cmean_pf_rha)$results
 cmean_pf_results_tog=pfsum(cmean_pf_tog)$results
-#cmean_pf_results_par=pfsum(cmean_pf_par)$results #0 factors
 
 ## meanCFR + cites  controlled
 cmeancites_pf_results=pfsum(cmeancites_pf)$results
@@ -437,7 +449,6 @@ cmeancites_pf_results_cov=pfsum(cmeancites_pf_cov)$results
 cmeancites_pf_results_fla=pfsum(cmeancites_pf_fla)$results
 cmeancites_pf_results_rha=pfsum(cmeancites_pf_rha)$results
 cmeancites_pf_results_tog=pfsum(cmeancites_pf_tog)$results
-#cmean_pf_results_par=pfsum(cmean_pf_par)$results #0 factors
 
 ## DB + virus number controlled
 db_pf_results=pfsum(db_pf)$results
@@ -445,7 +456,6 @@ dbcov_pf_results=pfsum(dbcov_pf)$results
 dbfla_pf_results=pfsum(dbfla_pf)$results
 dbrha_pf_results=pfsum(dbrha_pf)$results
 dbtog_pf_results=pfsum(dbtog_pf)$results
-#dbpar_pf_results=pfsum(dbpar_pf)$results #0 factors
 
 ## DB + cites controlled
 db_pf_results=pfsum(db_pf)$results
@@ -453,7 +463,6 @@ dbcov_pf_results=pfsum(dbcov_pf)$results
 dbfla_pf_results=pfsum(dbfla_pf)$results
 dbrha_pf_results=pfsum(dbrha_pf)$results
 dbtog_pf_results=pfsum(dbtog_pf)$results
-#dbpar_pf_results=pfsum(dbpar_pf)$results #0 factors
 
 ## [4] MaxCFR
 ## 1. all viruses: MaxCFR mammals + 2 control methods
@@ -643,7 +652,7 @@ cotcites_pf_results_tog=pfsum(cotcites_pf_tog)$results
 ## [5] Phylofactor: bat-specific analyses
 ##
 {
-## 1. all viruses: meanCFR bats + meanDB bats
+## 1. all viruses: MeanCFR bats + meanDB bats
 set.seed(1)
 bmean_pf=gpf(Data=bdata$data,tree=bdata$phy,
              frmla.phylo=meanCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
@@ -689,7 +698,7 @@ bmean_pf_rha=gpf(Data=bdata_rha$data,tree=bdata_rha$phy,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(bmean_pf_rha) #2
 
-set.seed(1)
+set.seed(1) ## DB
 bdbrha_pf=gpf(Data=bdata_rha$data,tree=bdata_rha$phy,
                  frmla.phylo=sqrt(meanDB_rhabdoviridae)~phylo+virusesWithCFR_rhabdoviridae,
                  family=gaussian,algorithm='phylo',nfactors=1,min.group.size=10)
@@ -730,13 +739,9 @@ bmean_pf_results_cov=pfsum(bmean_pf_cov)$results #1
 bmean_pf_results_fla=pfsum(bmean_pf_fla)$results #2
 bmean_pf_results_rha=pfsum(bmean_pf_rha)$results #2
 
-
 ## DB + bats
 bdb_pf_results=pfsum(bdb_pf)$results
 bdbcov_pf_results=pfsum(bdbcov_pf)$results
-bdbfla_pf_results=pfsum(bdbfla_pf)$results
-bdbrha_pf_results=pfsum(bdbrha_pf)$results
-bdbtog_pf_results=pfsum(bdbtog_pf)$results
 
 ## [5] MaxCFR + bats
 ##
@@ -853,7 +858,6 @@ db_pf_results$ID<- "dbmean"
 dbcov_pf_results$ID<-"dbmean_cov"
 dbfla_pf_results$ID<- "dbmean_fla"
 dbrha_pf_results$ID<-"dbmean_rha"
-dbpar_pf_results$ID<-"dbmean_par"
 
 ## MaxCFR + all mammals + virus # controlled
 cmax_pf_results$ID<-"cmax"
@@ -876,9 +880,6 @@ bmean_pf_results_rha$ID<-"bmean_rha"
 ## Death burden + bats only + virus # controlled
 bdb_pf_results$ID<- "bdbmean"
 bdbcov_pf_results$ID<-"bdbmean_cov"
-bdbfla_pf_results$ID<- "bdbmean_fla"
-bdbrha_pf_results$ID<-"bdbmean_rha"
-bdbtog_pf_results$ID<-"bdbmean_tog"
 
 ## MaxCFR + bats only + virus # controlled
 bmax_pf_results$ID<-"bmax"
@@ -901,6 +902,14 @@ results<- do.call("rbind", list(cmean_pf_results,cmean_pf_results_cov,cmean_pf_r
 #save for data mining script 
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(results,"04_pf_allclades.csv") ### CC HERE!!!!
+
+#bind DB together
+results_DB<- do.call("rbind", list(db_pf_results, dbcov_pf_results, dbfla_pf_results,
+                                dbrha_pf_results,bdb_pf_results, bdbcov_pf_results))
+## save DB for data mining script
+setwd("~/Desktop/GitHub/phylofatality/csv files")
+#write.csv(results_DB,"04_pf_DB allclades.csv") 
+
 
 ## save trees
 dtree=treeio::full_join(as.treedata(cdata$phy),cdata$data,by="label")
