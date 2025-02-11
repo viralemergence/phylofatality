@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 02_summary statistics
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update: 1/21/2025
+## last update: 2/11/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -189,21 +189,29 @@ vdata<- read_csv("01_CFRBySpecies.csv")
 mean(vdata$`meanCFR_all viruses`, na.rm=T) #0.2425732
 mean(vdata$`maxCFR_all viruses`, na.rm=T) #0.3939759
 mean(vdata$`on.frac_all viruses`, na.rm=T) #0.3529295
+mean(vdata$`meanDB_all viruses`, na.rm=T) ## 124,114.3
+
+## median death buden because of skew
+hist(vdata$`meanDB_all viruses`)
+median(vdata$`meanDB_all viruses`, na.rm=T) ## 1,633
 
 #sd
 sd1 <- sd(vdata$`meanCFR_all viruses`, na.rm=T)
 sd2 <- sd(vdata$`maxCFR_all viruses`, na.rm=T)
 sd3 <- sd(vdata$`on.frac_all viruses`, na.rm=T)
+sd4 <- sd(vdata$`meanDB_all viruses`, na.rm=T)
 
 #sample size
 ss1<- length(vdata$`meanCFR_all viruses`)
 ss2<- length(vdata$`maxCFR_all viruses`)
 ss3<- length(vdata$`on.frac_all viruses`)
+ss4<- length(vdata$`meanDB_all viruses`)
 
 # se
 se1 <- sd1/sqrt(ss1) #0.010
 se2 <- sd2/sqrt(ss2) #0.013
 se3 <- sd3/sqrt(ss3) #0.013
+se4 <- sd4/sqrt(ss4) #12,928.56 ... look into doing CI
 
 #summary stats bats
 bdata=vdata[vdata$species%in%bats$species,]
@@ -212,19 +220,25 @@ bdata=vdata[vdata$species%in%bats$species,]
 mean(bdata$`meanCFR_all viruses`, na.rm=T) #0.600
 mean(bdata$`maxCFR_all viruses`, na.rm=T) #0.806
 mean(bdata$`on.frac_all viruses`, na.rm=T) #0.315
+mean(bdata$`meanDB_all viruses`, na.rm=T) # 257,653.2
+
+## median because of skew
+median(bdata$`meanDB_all viruses`, na.rm=T) # 91,642.75
 
 #sd
 sd1 <- sd(bdata$`meanCFR_all viruses`, na.rm=T)
 sd2 <- sd(bdata$`maxCFR_all viruses`, na.rm=T)
 sd3 <- sd(bdata$`on.frac_all viruses`, na.rm=T)
+sd4 <- sd(bdata$`meanDB_all viruses`, na.rm=T)
 
 #sample size
 ss1<- length(bdata$`meanCFR_all viruses`)
 ss2<- length(bdata$`maxCFR_all viruses`)
 ss3<- length(bdata$`on.frac_all viruses`)
+ss4<- length(bdata$`meanDB_all viruses`)
 
 # se
 se1 <- sd1/sqrt(ss1) #0.027
 se2 <- sd2/sqrt(ss2) #0.024
 se3 <- sd3/sqrt(ss3) #0.028
-
+se4 <- sd4/sqrt(ss4) # 42,037.29

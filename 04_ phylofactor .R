@@ -61,14 +61,6 @@ tree=keep.tip(tree,data$species)
 data$label=data$species
 data$Species=data$species
 
-## check for collinearity
-cor(cdata$data$meanCFR_all.viruses, sqrt(cdata$data$meanDB_all.viruses), use = "complete.obs") ## 0.225
-cor(cdata$data$meanCFR_coronaviridae, sqrt(cdata$data$meanDB_coronaviridae), use = "complete.obs") # -0.998
-cor(cdata$data$meanCFR_flaviviridae, sqrt(cdata$data$meanDB_flaviviridae), use = "complete.obs") # 0.484
-cor(cdata$data$meanCFR_rhabdoviridae, sqrt(cdata$data$meanDB_rhabdoviridae), use = "complete.obs") # 0.666
-cor(cdata$data$meanCFR_togaviridae, sqrt(cdata$data$meanDB_togaviridae), use = "complete.obs") # -0.198
-cor(cdata$data$meanCFR_paramyxoviridae, sqrt(cdata$data$meanDB_paramyxoviridae), use = "complete.obs") # 0.745
-
 
 ## [2] Add columns and dataframes
 ## in "Data": define non-onward viruses (adding 6 columns)
@@ -128,6 +120,30 @@ cdata2_tog<-cdata2_tog[!is.na(cdata2_tog$data$ntrans_togaviridae),]
 
 cdata2_par<-cdata2[!is.na(cdata2$data$htrans_paramyxoviridae),]
 cdata2_par<-cdata2_par[!is.na(cdata2_par$data$ntrans_paramyxoviridae),]
+
+## [2] check for collinearity in main response
+cor(cdata$data$meanCFR_all.viruses, sqrt(cdata$data$meanDB_all.viruses), use = "complete.obs") ## 0.225
+cor(cdata$data$meanCFR_coronaviridae, sqrt(cdata$data$meanDB_coronaviridae), use = "complete.obs") # -0.998
+cor(cdata$data$meanCFR_flaviviridae, sqrt(cdata$data$meanDB_flaviviridae), use = "complete.obs") # 0.484
+cor(cdata$data$meanCFR_rhabdoviridae, sqrt(cdata$data$meanDB_rhabdoviridae), use = "complete.obs") # 0.666
+cor(cdata$data$meanCFR_togaviridae, sqrt(cdata$data$meanDB_togaviridae), use = "complete.obs") # -0.198
+cor(cdata$data$meanCFR_paramyxoviridae, sqrt(cdata$data$meanDB_paramyxoviridae), use = "complete.obs") # 0.745
+
+cor.test(cdata$data$meanCFR_all.viruses,sqrt(cdata$data$meanDB_all.viruses),method="spearman") ##0.58
+cor.test(cdata$data$meanCFR_coronaviridae,sqrt(cdata$data$meanDB_coronaviridae),method="spearman") ## -1
+cor.test(cdata$data$meanCFR_flaviviridae,sqrt(cdata$data$meanDB_flaviviridae),method="spearman") ##0.50
+cor.test(cdata$data$meanCFR_rhabdoviridae,sqrt(cdata$data$meanDB_rhabdoviridae),method="spearman") ##0.77
+cor.test(cdata$data$meanCFR_togaviridae,sqrt(cdata$data$meanDB_togaviridae),method="spearman") ##0.25
+cor.test(cdata$data$meanCFR_paramyxoviridae,sqrt(cdata$data$meanDB_paramyxoviridae),method="spearman") ##0.97
+
+## [2] check for collinearity in sampling effort variables
+cor(cdata$data$virusesWithCFR_all.viruses, sqrt(cdata$data$cites), use="complete.obs") #0.38
+
+ggplot(cdata$data,aes(virusesWithCFR_all.viruses,cites))+geom_point()+
+  scale_y_sqrt()+scale_x_sqrt()+geom_smooth(method="glm",se=F,method.args=list(family="poisson"))
+
+cor.test(cdata$data$virusesWithCFR_all.viruses,cdata$data$cites,method="spearman") ##0.53
+
 
 ## [2] subset to bats
 ## separate dataframes for bat analyses (bdata, and bdata2)
@@ -906,9 +922,15 @@ setwd("~/Desktop/GitHub/phylofatality/csv files")
 #bind DB together
 results_DB<- do.call("rbind", list(db_pf_results, dbcov_pf_results, dbfla_pf_results,
                                 dbrha_pf_results,bdb_pf_results, bdbcov_pf_results))
+
+results_DB <- results_DB %>% select(ID, everything())
+results_DB$node=NULL
+results_DB$clade<- round(results_DB$clade,2)
+results_DB$other<- round(results_DB$other,2)
+
 ## save DB for data mining script
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-#write.csv(results_DB,"04_pf_DB allclades.csv") 
+write.csv(results_DB,"04_pf_DB allclades.csv") 
 
 
 ## save trees
