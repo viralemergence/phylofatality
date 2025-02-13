@@ -11,9 +11,11 @@ graphics.off()
 #library(ade4)
 library(ape)
 library(caper)
+library(corrplot)
 library(data.table)
 library(dplyr)
 library(emmeans)
+library(ggcorrplot)
 library(ggtree)
 library(ggplot2)
 #library(ggpubr)
@@ -61,7 +63,6 @@ tree=keep.tip(tree,data$species)
 data$label=data$species
 data$Species=data$species
 
-
 ## [2] Add columns and dataframes
 ## in "Data": define non-onward viruses (adding 6 columns)
 ## this will be included in the comparative dataframe (cdata)
@@ -86,7 +87,7 @@ taxonomy=taxonomy[c("Species","taxonomy")]
 taxonomy$taxonomy=as.character(taxonomy$taxonomy)
 
 ## [2] Save dataframes for each virus family for meanCFR and maxCFR
-## Datasets for MeanCFR, MaxCFR, an DC are "cdata"
+## Datasets for MeanCFR, MaxCFR, an DB are "cdata"
 cdata_cov<-cdata[!is.na(cdata$data$meanCFR_coronaviridae),]
 cdata_fla<-cdata[!is.na(cdata$data$meanCFR_flaviviridae),]
 cdata_rha<-cdata[!is.na(cdata$data$meanCFR_rhabdoviridae),]
@@ -122,19 +123,45 @@ cdata2_par<-cdata2[!is.na(cdata2$data$htrans_paramyxoviridae),]
 cdata2_par<-cdata2_par[!is.na(cdata2_par$data$ntrans_paramyxoviridae),]
 
 ## [2] check for collinearity in main response
-cor(cdata$data$meanCFR_all.viruses, sqrt(cdata$data$meanDB_all.viruses), use = "complete.obs") ## 0.225
-cor(cdata$data$meanCFR_coronaviridae, sqrt(cdata$data$meanDB_coronaviridae), use = "complete.obs") # -0.998
-cor(cdata$data$meanCFR_flaviviridae, sqrt(cdata$data$meanDB_flaviviridae), use = "complete.obs") # 0.484
-cor(cdata$data$meanCFR_rhabdoviridae, sqrt(cdata$data$meanDB_rhabdoviridae), use = "complete.obs") # 0.666
-cor(cdata$data$meanCFR_togaviridae, sqrt(cdata$data$meanDB_togaviridae), use = "complete.obs") # -0.198
-cor(cdata$data$meanCFR_paramyxoviridae, sqrt(cdata$data$meanDB_paramyxoviridae), use = "complete.obs") # 0.745
+cor.test(cdata$data$meanCFR_all.viruses,
+         sqrt(cdata$data$meanDB_all.viruses),method="spearman") ##0.58
 
-cor.test(cdata$data$meanCFR_all.viruses,sqrt(cdata$data$meanDB_all.viruses),method="spearman") ##0.58
-cor.test(cdata$data$meanCFR_coronaviridae,sqrt(cdata$data$meanDB_coronaviridae),method="spearman") ## -1
-cor.test(cdata$data$meanCFR_flaviviridae,sqrt(cdata$data$meanDB_flaviviridae),method="spearman") ##0.50
-cor.test(cdata$data$meanCFR_rhabdoviridae,sqrt(cdata$data$meanDB_rhabdoviridae),method="spearman") ##0.77
-cor.test(cdata$data$meanCFR_togaviridae,sqrt(cdata$data$meanDB_togaviridae),method="spearman") ##0.25
-cor.test(cdata$data$meanCFR_paramyxoviridae,sqrt(cdata$data$meanDB_paramyxoviridae),method="spearman") ##0.97
+## quick dataframe
+correlation <- data.frame(
+  meanCFR = cdata$data$meanCFR_all.viruses,
+  maxCFR = cdata$data$maxCFR_all.viruses,
+  on.frac = cdata$data$on.frac_all.viruses,
+  meanDB = sqrt(cdata$data$meanDB_all.viruses) 
+)
+
+# Compute the Spearman correlation matrix
+cmat <- cor(correlation, method = "spearman", use="complete.obs")
+cmat <- round(cmat,2)
+
+colnames(cmat) <- c("mean CFR", "maximum CFR", "% onward transmission",
+                    "mean death burden")
+rownames(cmat) <- c("mean CFR", "maximum CFR", "% onward transmission",
+                    "mean death burden")
+
+  
+ggcorrplot(cmat,
+           type="lower",
+           show.diag = NULL,
+           hc.order = TRUE,
+           method="square",
+           lab=TRUE,
+           ggtheme=ggplot2::theme_minimal(),
+           colors = c("blue3", "#6322a3", "red3"),
+           lab_size=4,
+           lab_col="white")
+
+plot2<- plot+ theme(axis.text.x = element_text(size=11, color="black", angle=0, hjust=0.5, vjust=1),
+  axis.text.y = element_text(size=11, color="black", angle=90, vjust=1, hjust=0.5))+ guides(fill=guide_legend(title=NULL))
+
+## save
+setwd("~/Desktop/GitHub/phylofatality/figs")
+#ggsave("corrplot.jpg",  plot2, device = "jpeg", width = 8, height = 8, units = "in")
+
 
 ## [2] check for collinearity in sampling effort variables
 cor(cdata$data$virusesWithCFR_all.viruses, sqrt(cdata$data$cites), use="complete.obs") #0.38
@@ -143,7 +170,6 @@ ggplot(cdata$data,aes(virusesWithCFR_all.viruses,cites))+geom_point()+
   scale_y_sqrt()+scale_x_sqrt()+geom_smooth(method="glm",se=F,method.args=list(family="poisson"))
 
 cor.test(cdata$data$virusesWithCFR_all.viruses,cdata$data$cites,method="spearman") ##0.53
-
 
 ## [2] subset to bats
 ## separate dataframes for bat analyses (bdata, and bdata2)

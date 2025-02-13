@@ -1,7 +1,7 @@
 ## phylofatality
 ## 05_data mining (species extraction from risky clades)
 ## danbeck@ou.edu, carolinecummings2018@gmail.com, Cole Brookson
-## last update 9/22/2024
+## last update 2/12/2025
 
 ## clean environment & plots
 rm(list=ls()) 
