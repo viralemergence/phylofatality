@@ -15,7 +15,7 @@ library(tidyverse)
 
 ## load in clade virulence data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-data=read.csv("pf_allclades.csv")
+data=read.csv("04_pf_allclades.csv")
 
 ## load in host taxonomy
 setwd("~/Desktop/GitHub/phylofatality/phylo")
@@ -40,12 +40,17 @@ data[is.na(data)]<- "all"
 data=data %>% separate(var, c('host', 'var'), sep=1)
 
 #rename hosts
-data$host=ifelse(data$host=="c", "mammal", "bat")
+data$host=ifelse(data$host=="c", "mammal", data$host)
+data$host=ifelse(data$host=="d", "mammal", data$host)
+data$host=ifelse(data$host=="b", "bat", data$host)
+
 
 #reorder and clean up table
 data=data %>% dplyr::select(virus, host, var, everything())
 #data$var=revalue(data$var,c("means"= "mean"))
 data[which(data$var == "means"), "var"] <- "mean"
+data[which(data$var == "bmean"), "var"] <- "db"
+data[which(data$var == "dbmean"), "var"] <- "db"
 
 #save data of risky clades
 rawdata_risk<-data
@@ -55,7 +60,7 @@ data$species=data$taxa
 data=data %>% dplyr::select(species, everything())
 data=data %>% separate_rows(species, sep = ", ")
 
-#Cole helped match the fams and gens to species
+## Cole helped match the fams and gens to species
 `%notin%` <- Negate(`%in%`)
 data_fam <- data %>% 
   # pick out the family one by only keeping the ones that are all uppercase
@@ -111,6 +116,6 @@ species$clade.y=NULL
 species=species %>% dplyr::select(species, virus, host, var, factor, tips, node,
                            clade, other, taxa)
 #sanity check and save
-species %>% n_distinct() #17885
+species %>% n_distinct() #23206
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-#write.csv(species,"pf_riskyspecies.csv")
+#write.csv(species,"05_pf_riskyspecies.csv")

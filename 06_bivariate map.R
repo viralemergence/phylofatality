@@ -1,7 +1,7 @@
 ## phylofatality
 ## 06_bivariate map
 ## danbeck@ou.edu, carolinecummings@ou.edu, Colin Carlson
-## last update 09/12/2024
+## last update 2/14/2025
 
 #troubleshooting:
 #https://rfunctions.blogspot.com/2015/03/bivariate-maps-bivariatemap-function.html 
