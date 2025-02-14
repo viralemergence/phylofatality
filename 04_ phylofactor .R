@@ -1239,27 +1239,27 @@ pcols=afun(2)
 plus=1
 pplus=plus+1
 
-#fix labels for the plot below (drawn attention to the bat subclades)
+#fix labels for the plot below (draw attention to the bat subclades)
 {
-#cmean_pf_results$factor[1]="atop(1:~subclade~of~italic(Emballonuroidea), and~italic(Vespertilionoidea))"
-# cmean_pf_results$factor[1]="1*'*'"
-# cmean_pf_results$factor[3]="3*'*'"
-# cmean_pf_results_cov$factor[1]="1*'*'"
-# cmean_pf_results_fla$factor[2]="2*'*'"
-# cmean_pf_results_fla$factor[4]="4*'*'"
-# 
-# 
-# cmax_pf_results$factor[4]="4*'*'"
-# cmax_pf_results_cov$factor[1]="1*'*'"
-# cmax_pf_results_fla$factor[2]="2*'*'"
-# 
-# cot_pf_results$factor[2]="2*'*'"
-# cot_pf_results_fla$factor[2]="2*'*'"
-# 
-# db_pf_results$factor[1]<- "1*'*'"
-# dbcov_pf_results$factor[1]<- "1*'*'"
-# dbfla_pf_results$factor[2]<- "2*'*'"
-# dbrha_pf_results$factor[3]<- "3*'*'"
+cmean_pf_results$factor[1]="atop(1:~subclade~of~italic(Emballonuroidea), and~italic(Vespertilionoidea))"
+ cmean_pf_results$factor[1]="1*'*'"
+ cmean_pf_results$factor[3]="3*'*'"
+ cmean_pf_results_cov$factor[1]="1*'*'"
+ cmean_pf_results_fla$factor[2]="2*'*'"
+ cmean_pf_results_fla$factor[4]="4*'*'"
+ 
+
+ cmax_pf_results$factor[4]="4*'*'"
+ cmax_pf_results_cov$factor[1]="1*'*'"
+ cmax_pf_results_fla$factor[2]="2*'*'"
+ 
+ cot_pf_results$factor[2]="2*'*'"
+ cot_pf_results_fla$factor[2]="2*'*'"
+ 
+ db_pf_results$factor[1]<- "1*'*'"
+ dbcov_pf_results$factor[1]<- "1*'*'"
+ dbfla_pf_results$factor[2]<- "2*'*'"
+ dbrha_pf_results$factor[3]<- "3*'*'"
 
 }
 
@@ -1961,7 +1961,7 @@ plot(gg_db)
   gg = gg+
     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
     labs(x = expression(italic(Rhabdoviridae)))+
-    ggtitle("MeanCFR")+ 
+    ggtitle("mean CFR")+ 
     theme(axis.title.y = element_text(size = 15, margin = margin(r = -15)))+
     theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
   #plot(gg)
@@ -2005,8 +2005,7 @@ plot(plot)
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-ggsave("fig2.jpg",  plot, device = "jpeg", width = 8, height = 8, units = "in")
-
+#ggsave("fig2.jpg",  plot, device = "jpeg", width = 8, height = 8, units = "in")
 
 ## rhabdoviridae
 rhabdo<- ggpubr::ggarrange(gg_cmean_rha, gg_db_rha,
@@ -2023,5 +2022,4 @@ plot(rhabdo)
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-ggsave("rhabdo.jpg",  thabdo, device = "jpeg", width = 8, height = 8, units = "in")
-
+#ggsave("rhabdo.jpg",  rhabdo, device = "jpeg", width = 8, height = 8, units = "in")
