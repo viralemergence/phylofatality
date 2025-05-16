@@ -1,7 +1,7 @@
 ## phylofatality
 ## 04_phylofactor
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 2/14/2025
+## last update 2/17/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -1205,24 +1205,24 @@ setwd("~/Desktop/GitHub/phylofatality/csv files")
 ####Plotting
 
 # #clean environment before plotting
-# {
-# rm(bdata, bdata_cov, bdata_fla, bdata_par, bdata_rha, bdata_tog, 
-#    bdata2, bdata2_cov, bdata2_fla, bdata2_par, bdata2_rha, bdata2_tog,
-#    bmax_pf, bmax_pf_cov, bmax_pf_fla, bmax_pf_par, bmax_pf_tog, bmax_pf_rha,
-#    bmean_pf, bmean_pf_cov, bmean_pf_fla, bmean_pf_par, bmean_pf_tog, bmean_pf_rha,
-#    bot_pf, bot_pf_cov, bot_pf_fla, bot_pf_par, bot_pf_tog, bot_pf_rha,
-#    cdata, cdata_cov, cdata_fla, cdata_par, cdata_rha, cdata_tog, 
-#    cdata2, cdata2_cov, cdata2_fla, cdata2_par, cdata2_rha, cdata2_tog,
-#    cmax_pf, cmax_pf_cov, cmax_pf_fla, cmax_pf_par, cmax_pf_tog, cmax_pf_rha,
-#    cmean_pf, cmean_pf_cov, cmean_pf_fla, cmean_pf_par, cmean_pf_tog, cmean_pf_rha,
-#    cot_pf, cot_pf_cov, cot_pf_fla, cot_pf_par, cot_pf_tog, cot_pf_rha,
-#    results, taxonomy, data, bcites_pf, bcites_pf, bcitesfla_pf, bcitespar_pf,
-#    bcitesrha_pf, bcites_tog, bdb_pf, bdbcov_pf, bdbfla_pf, bdbpar_pf, bdbrha_pf,
-#    bdbtog_pf, bsamp_pf, bsampcov_pf, bsampfla_pf, bsamppar_pf, bsamprha_pf, bsamptog_pf,
-#    cites_pf, citescov_pf, citesfla_pf, citespar_pf, citesrha_pf, citestog_pf, db_pf, dbcov_pf,
-#    dbpar_pf, dbtog_pf, dbrha_pf, samp_pf, sampcov_pf, sampfla_pf, samprha_pf, samptog_pf,
-#    samppar_pf, dbfla_pf, bcitescov_pf, bcitestog_pf, results_samp)
-# }
+ {
+ rm(bdata, bdata_cov, bdata_fla, bdata_par, bdata_rha, bdata_tog, 
+    bdata2, bdata2_cov, bdata2_fla, bdata2_par, bdata2_rha, bdata2_tog,
+    bmax_pf, bmax_pf_cov, bmax_pf_fla, bmax_pf_par, bmax_pf_tog, bmax_pf_rha,
+    bmean_pf, bmean_pf_cov, bmean_pf_fla, bmean_pf_par, bmean_pf_tog, bmean_pf_rha,
+    bot_pf, bot_pf_cov, bot_pf_fla, bot_pf_par, bot_pf_tog, bot_pf_rha,
+    cdata, cdata_cov, cdata_fla, cdata_par, cdata_rha, cdata_tog, 
+    cdata2, cdata2_cov, cdata2_fla, cdata2_par, cdata2_rha, cdata2_tog,
+    cmax_pf, cmax_pf_cov, cmax_pf_fla, cmax_pf_par, cmax_pf_tog, cmax_pf_rha,
+    cmean_pf, cmean_pf_cov, cmean_pf_fla, cmean_pf_par, cmean_pf_tog, cmean_pf_rha,
+    cot_pf, cot_pf_cov, cot_pf_fla, cot_pf_par, cot_pf_tog, cot_pf_rha,
+    results, taxonomy, data, bcites_pf, bcites_pf, bcitesfla_pf, bcitespar_pf,
+    bcitesrha_pf, bcites_tog, bdb_pf, bdbcov_pf, bdbfla_pf, bdbpar_pf, bdbrha_pf,
+    bdbtog_pf, bsamp_pf, bsampcov_pf, bsampfla_pf, bsamppar_pf, bsamprha_pf, bsamptog_pf,
+    cites_pf, citescov_pf, citesfla_pf, citespar_pf, citesrha_pf, citestog_pf, db_pf, dbcov_pf,
+    dbpar_pf, dbtog_pf, dbrha_pf, samp_pf, sampcov_pf, sampfla_pf, samprha_pf, samptog_pf,
+    samppar_pf, dbfla_pf, bcitescov_pf, bcitestog_pf, results_samp)
+ }
 
 ## fix palette
 AlberPalettes <- c("YlGnBu","Reds","BuPu", "PiYG")
@@ -2012,8 +2012,8 @@ rhabdo<- ggpubr::ggarrange(gg_cmean_rha, gg_db_rha,
                          labels = c("A","B"),
                          align='hv',
                          font.label = list(size = 12),
-                         hjust=-20,
-                         vjust=18,
+                         hjust=-2,
+                         vjust=15,
                          #widths=c(1,1),
                          #heights=c(1,1),
                          #ncol = 3, nrow = 1,
@@ -2022,4 +2022,4 @@ plot(rhabdo)
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-#ggsave("rhabdo.jpg",  rhabdo, device = "jpeg", width = 8, height = 8, units = "in")
+ggsave("rhabdo.jpg",  rhabdo, device = "jpeg", width = 8, height = 8, units = "in")

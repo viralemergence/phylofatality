@@ -190,6 +190,8 @@ mean(vdata$`meanCFR_all viruses`, na.rm=T) #0.2425732
 mean(vdata$`maxCFR_all viruses`, na.rm=T) #0.3939759
 mean(vdata$`on.frac_all viruses`, na.rm=T) #0.3529295
 mean(vdata$`meanDB_all viruses`, na.rm=T) ## 124,114.3
+min(vdata$`meanDB_all viruses`, na.rm=T)
+max(vdata$`meanDB_all viruses`, na.rm=T)
 
 ## median death buden because of skew
 hist(vdata$`meanDB_all viruses`)
@@ -221,6 +223,8 @@ mean(bdata$`meanCFR_all viruses`, na.rm=T) #0.600
 mean(bdata$`maxCFR_all viruses`, na.rm=T) #0.806
 mean(bdata$`on.frac_all viruses`, na.rm=T) #0.315
 mean(bdata$`meanDB_all viruses`, na.rm=T) # 257,653.2
+min(bdata$`meanDB_all viruses`, na.rm=T)
+max(bdata$`meanDB_all viruses`, na.rm=T)
 
 ## median because of skew
 median(bdata$`meanDB_all viruses`, na.rm=T) # 91,642.75

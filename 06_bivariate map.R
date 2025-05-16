@@ -1,7 +1,7 @@
 ## phylofatality
 ## 06_bivariate map
 ## danbeck@ou.edu, carolinecummings@ou.edu, Colin Carlson
-## last update 2/14/2025
+## last update 3/30/2025
 
 #troubleshooting:
 #https://rfunctions.blogspot.com/2015/03/bivariate-maps-bivariatemap-function.html 
@@ -9,6 +9,7 @@
 ## clean environment & plots
 rm(list=ls()) 
 graphics.off()
+gc()
 
 #load packages
 library(classInt)
@@ -17,12 +18,12 @@ library(fasterize)
 library(ggpubr)
 library(maps)
 library(raster)
-library(rgdal)
+library(rgdal) ##
 library(sp)
 library(sf)
 library(terra)
 library(tidyverse)
-library(XML)
+library(XML) 
 
 #1 Create a color matrix (nquantiles=10)
 {
@@ -39,7 +40,8 @@ colmat<-function(nquantiles=10, upperleft=rgb(0,150,235, maxColorValue=255),
     my.col<-c(paste(my.pal.1[i]),paste(my.pal.2[i]))
     col.matrix[102-i,]<-findColours(my.class,my.col)}
   plot(c(1,1),pch=19,col=my.pal.1, cex=0.5,xlim=c(0,1),ylim=c(0,1),frame.plot=F, 
-       xlab=xlab, ylab=ylab,cex.lab=1.3)
+       xlab=xlab, ylab=ylab,cex.lab=1.3, xaxt="n", yaxt="n")
+  par(mgp = c(1, 0.5, 0)) 
   for(i in 1:101){
     col.temp<-col.matrix[i-1,]
     points(my.data,rep((i-1)/100,101),pch=15,col=col.temp, cex=1)}
@@ -56,7 +58,7 @@ col.matrix<-colmat(nquantiles=10, upperleft="goldenrod1", upperright="deeppink4"
 #2 Generate the bivariate map (nquantiles=10)
 {
 bivariate.map<-function(rasterx, rastery, colormatrix=col.matrix, nquantiles=10){
-  quanmean<-getValues(rasterx)
+  quanmean<- getValues(rasterx)
   temp<-data.frame(quanmean, quantile=rep(NA, length(quanmean)))
   brks<-with(temp, quantile(unique(temp),na.rm=TRUE, probs = c(seq(0,1,1/nquantiles))))
   r1<-within(temp, quantile <- cut(quanmean, breaks = brks, labels = 2:length(brks),include.lowest = TRUE))
@@ -84,14 +86,24 @@ bivariate.map<-function(rasterx, rastery, colormatrix=col.matrix, nquantiles=10)
 #3 Create raster #1: geographic ranges of bats (CoV risky clade)
 #first, load in risky species name data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-clade <- read_csv("pf_riskyspecies.csv")
+clade <- read_csv("05_pf_riskyspecies.csv")
 
-#subset data to All viruses-MeanCFR and CoV-MeanCFR
+#subset data to All viruses-MeanCFR and CoV-MeanCFR, etc.
 all<-clade %>% 
   filter(host=="mammal", var=="mean", virus=="all", factor=="1" | factor=="3")
 cov<-clade %>% filter(host=="mammal", var=="mean", virus=="cov", factor=="1")
 fla<- clade %>% 
   filter(host=="mammal", var=="mean", virus=="fla", factor=="2" | factor=="4")
+
+## others
+ot_all<- clade %>%
+  filter(host=="mammal", var=="ot", virus=="all", factor=="2")
+ot_fla<- clade %>%
+  filter(host=="mammal", var=="ot", virus=="fla", factor=="2")
+db_all<- clade %>%
+  filter(host=="mammal", var=="db", virus=="all", factor=="1")
+db_fla<- clade %>%
+  filter(host=="mammal", var=="db", virus=="fla", factor=="2")
 
 #load in IUCN geographic range data
 iucn <- st_read("~/Desktop/GitHub/footprint/IUCN/MAMMALS.shp")
@@ -247,7 +259,7 @@ setwd("~/Desktop/GitHub/footprint/alt_2-5m_bil")
 r <- raster("alt.bil")
 r <- disaggregate((r)*0,2)
 
-#subset geographic range data to CoV risky species and create a RasterLayer
+#subset geographic range data to CoV risky species, etc. and create a RasterLayer
 iucn_all<- iucn[iucn$binomial %in% all$species,]
 iucn_cov<- iucn[iucn$binomial %in% cov$species,] 
 iucn_fla <- iucn[iucn$binomial %in% fla$species,] 
@@ -256,6 +268,16 @@ map_all <- fasterize(iucn_all, r, fun="sum")
 map_cov <- fasterize(iucn_cov, r, fun="sum")
 map_fla <- fasterize(iucn_fla, r, fun="sum")
 
+## repeat for supplementary 
+iucn_OtAll <- iucn[iucn$binomial %in% ot_all$species,]
+iucn_OtFla <- iucn[iucn$binomial %in% ot_fla$species,]
+iucn_DbAll <- iucn[iucn$binomial %in% db_all$species,]
+iucn_DbFla <- iucn[iucn$binomial %in% db_fla$species,]
+
+map_OtAll <- fasterize(iucn_OtAll, r, fun="sum")
+map_OtFla <- fasterize(iucn_OtFla, r, fun="sum")
+map_DbAll <- fasterize(iucn_DbAll, r, fun="sum")
+map_DbFla<- fasterize(iucn_DbFla, r, fun="sum")
 
 # This adds zeros for the continental area so they aren't invisible
 fix <- function(x) {sum(x,r,na.rm=TRUE)+r} 
@@ -263,6 +285,10 @@ map_all<- fix(map_all)
 map_cov<- fix(map_cov)
 map_fla<- fix(map_fla)
 
+map_OtAll<- fix(map_OtAll)
+map_OtFla<- fix(map_OtFla)
+map_DbAll<- fix(map_DbAll)
+map_DbFla<- fix(map_DbFla)
 
 #clean up environment
 rm(names, miss)
@@ -297,14 +323,24 @@ map_all <- rast(map_all)
 map_cov <- rast(map_cov)
 map_fla <- rast(map_fla)
 
+map_OtAll<- rast(map_OtAll)
+map_OtFla<- rast(map_OtFla)
+map_DbAll<- rast(map_DbAll)
+map_DbFla<- rast(map_DbFla)
 
 footprint <- project(footprint, map_all)
+#footprint <- project(footprint, map_OtAll)
 
 #then convert back to RasterLayer
 footprint <- raster(footprint)
 map_all <- raster(map_all)
 map_cov <- raster(map_cov)
 map_fla <- raster(map_fla)
+
+map_OtAll<- raster(map_OtAll)
+map_OtFla<- raster(map_OtFla)
+map_DbAll<- raster(map_DbAll)
+map_DbFla<- raster(map_DbFla)
 
 #get rid of outliers and ensure everything is aligned
 footprint[footprint>50] <- NA
@@ -329,13 +365,28 @@ map_all <- aggregate(map_all, fact=10, fun=mean)
 map_cov <- aggregate(map_cov, fact=10, fun=mean)
 map_fla <- aggregate(map_fla, fact=10, fun=mean)
 
+map_OtAll <- aggregate(map_OtAll, fact=10, fun=mean)
+map_OtFla <- aggregate(map_OtFla, fact=10, fun=mean)
+map_DbAll <- aggregate(map_DbAll, fact=10, fun=mean)
+map_DbFla <- aggregate(map_DbFla, fact=10, fun=mean)
+
 #can check raster layers individually
 #my.colors = colorRampPalette(c("#be64ac","lightblue", "yellow","orangered", "red"))
 #plot(map_all,frame.plot=F,axes=F,box=F,add=F,legend.width=1,legend.shrink=1,col=my.colors(255)) 
 
 #6 Map the bivariate map
+
+## convert back to raster if needed
+# map_all <- raster(map_all) 
+# footprint <- raster(footprint) 
+# map_OtAll<- raster(map_OtAll)
+# map_OtFla<- raster(map_OtFla)
+# map_DbAll<- raster(map_DbAll)
+# map_DbFla<- raster(map_DbFla)
+
+## bivar map
 bivmap_all_foot<-bivariate.map(map_all, footprint, colormatrix=col.matrix, nquantiles=10)
-bivmap_cov_foot<-bivariate.map( map_cov, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_cov_foot<-bivariate.map(map_cov, footprint, colormatrix=col.matrix, nquantiles=10)
 bivmap_fla_foot<-bivariate.map(map_fla, footprint, colormatrix=col.matrix, nquantiles=10)
 
 all_foot<- terra:: plot(bivmap_all_foot, frame.plot = TRUE, axes = F, box = T, 
@@ -348,3 +399,19 @@ fla_foot<- terra:: plot(bivmap_fla_foot, frame.plot = TRUE, axes = F, box = T,
                         add = F, legend = F, col = as.vector(col.matrix), asp = 1)
 
 #export as PDF/JPG
+
+## supp material
+bivmap_all_ot<-bivariate.map(map_OtAll, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_fla_ot<-bivariate.map(map_OtFla, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_all_db<-bivariate.map(map_DbAll, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_fla_db<-bivariate.map(map_DbFla, footprint, colormatrix=col.matrix, nquantiles=10)
+
+allot<- terra:: plot(bivmap_all_ot, frame.plot = TRUE, axes = F, box = T, 
+                        add = F, legend = F, col = as.vector(col.matrix), asp = 1)
+flaot<- terra:: plot(bivmap_fla_ot, frame.plot = TRUE, axes = F, box = T, 
+                     add = F, legend = F, col = as.vector(col.matrix), asp = 1)
+alldb<- terra:: plot(bivmap_all_db, frame.plot = TRUE, axes = F, box = T, 
+                     add = F, legend = F, col = as.vector(col.matrix), asp = 1)
+fladb<- terra:: plot(bivmap_fla_db, frame.plot = TRUE, axes = F, box = T, 
+                     add = F, legend = F, col = as.vector(col.matrix), asp = 1)
+

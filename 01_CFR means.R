@@ -19,6 +19,7 @@ library(Hmisc)
 library(fastDummies)
 
 ## load virion
+## https://github.com/viralemergence/virion/blob/main/Virion/Virion.csv.gz
 setwd("~/Desktop/GitHub/virion/Virion")
 vir=vroom("virion.csv.gz")
 vir %<>% filter(HostClass == 'mammalia')
@@ -270,8 +271,45 @@ vdata=vdata[!vdata$species%in%miss,]
 ## save data
 vraw=vdata #2912 unique host-virus obs
 
-## for each host species, fraction of all viruses that can infect humans
+# merge and look at db data
 tmp=merge(cfr,vdata,by="Virus")
+db <- tmp %>% select(species, Virus, db)
+db=merge(db,taxa, by="species")
+db <- db %>% select(species, Virus, db, ord,fam,gen) %>% arrange(desc(db))
+db2=aggregate(db~fam,db,mean,na.rm=T) 
+
+## look at covs
+cov <- tmp %>% select(species, Virus, CFR, VirusFamily)
+cov <- cov %>% filter(VirusFamily=="coronaviridae") %>% arrange(desc(CFR))
+
+## look at flavis
+fla<- tmp %>% select(species, Virus, CFR, VirusFamily)  %>% filter(VirusFamily=="flaviviridae") %>% arrange(desc(CFR))
+fla$Host <- fla$species %>% str_to_lower()
+fla$species=NULL
+
+fla2 <- vir %>% filter(HostFamily=="vespertilionidae") %>% select(Host, HostFamily)
+fla2 <- merge(fla, fla2, by="Host") %>% unique()
+nrow(fla2) #25
+sum(fla2$Virus=="japanese encephalitis virus") #10 
+sum(fla2$Virus=="west nile virus") #6
+
+fla3<- vir %>% filter(Virus=="japanese encephalitis virus" & HostFamily=="vespertilionidae") %>% unique() %>% select(Host, Virus, DetectionMethod, everything())
+nrow(fla3) #52
+sum(fla3$DetectionMethod=="Antibodies") #12
+fla3$combo<- paste0(fla3$DetectionMethod, "_", fla3$Host)
+fla4<- unique(fla3$combo) %>% as.data.frame()
+nrow(fla4) #27, and 7 out of 27 are antibodies; 4/ 27 are PCR
+
+
+fla <- vir %>% filter(Virus=="japanese encephalitis virus" & HostFamily=="vespertilionidae")
+fla<- vir %>% filter(Virus=="japanese encephalitis virus" & HostOrder=="chiroptera") %>% select(Host, Virus, HostFamily) %>% unique()
+fla<- vir %>% filter(Virus=="yellow fever virus" & HostOrder=="chiroptera") %>% select(Host, Virus, HostFamily) %>% unique()
+
+fla$num <- 1
+
+aggregate(num ~ HostFamily, data = fla, sum) %>% print()
+
+## for each host species, fraction of all viruses that can infect humans
 tmp$vir=1
 tmp=aggregate(cbind(vir,htrans)~species,tmp,sum,na.rm=T) #number total viruses and number of viruses with human-human transmission per host
 tmp$on.frac=tmp$htrans/tmp$vir ## percent of viruses a host has that exhibit human-human transmission 
