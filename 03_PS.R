@@ -1,11 +1,12 @@
 ## phylofatality
 ## 03_PS
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 2/12/2025
+## last update 5/20/2025
 
 ## clean environment & plots
 rm(list=ls()) 
 graphics.off()
+gc()
 
 ## packages
 library(ape)
@@ -154,11 +155,11 @@ mod_db_rha=pgls(meanDB_rhabdoviridae~1,data=cdata_rha,lambda="ML")
 #togaviridae
 mod_me_tog=pgls(meanCFR_togaviridae~1,data=cdata_tog,lambda="ML")
 mod_mx_tog=pgls(maxCFR_togaviridae~1,data=cdata_tog,lambda="ML")
-mod_ot_tog=pgls(on.frac_togaviridae~1,data=cdata2_tog,lambda="ML")
+#mod_ot_tog=pgls(on.frac_togaviridae~1,data=cdata2_tog,lambda="ML")
 mod_db_tog=pgls(meanDB_togaviridae~1,data=cdata_tog,lambda="ML")
 
 #paramyxoviridae
-mod_me_par=pgls(meanCFR_paramyxoviridae~1,data=cdata_par,lambda="ML")
+#mod_me_par=pgls(meanCFR_paramyxoviridae~1,data=cdata_par,lambda="ML")
 mod_mx_par=pgls(maxCFR_paramyxoviridae~1,data=cdata_par,lambda="ML")
 mod_ot_par=pgls(on.frac_paramyxoviridae~1,data=cdata2_par,lambda="ML")
 mod_db_par=pgls(meanDB_paramyxoviridae~1,data=cdata_par,lambda="ML")
@@ -255,7 +256,7 @@ bmod_db_cor=pgls(meanDB_coronaviridae~1,data=bdata_cor,lambda="ML")
 #flaviviridae
 bmod_me_fla=pgls(meanCFR_flaviviridae~1,data=bdata_fla,lambda="ML")
 bmod_mx_fla=pgls(maxCFR_flaviviridae~1,data=bdata_fla,lambda="ML")
-bmod_ot_fla=pgls(on.frac_flaviviridae~1,data=bdata2_fla,lambda="ML")
+#bmod_ot_fla=pgls(on.frac_flaviviridae~1,data=bdata2_fla,lambda="ML")
 bmod_db_fla=pgls(meanDB_flaviviridae~1,data=bdata_fla,lambda="ML")
 
 #rhabdoviridae
@@ -292,7 +293,7 @@ bpsk_db_cor=phylosig(bdata_cor$phy,bdata_cor$data$meanDB_coronaviridae,method="K
 ## flaviviridae
 bpsk_me_fla=phylosig(bdata_fla$phy,bdata_fla$data$meanCFR_flaviviridae,method="K",test=T)
 bpsk_mx_fla=phylosig(bdata_fla$phy,bdata_fla$data$maxCFR_flaviviridae,method="K",test=T)
-bpsk_ot_fla=phylosig(bdata2_fla$phy,bdata2_fla$data$on.frac_flaviviridae,method="K",test=T)
+#bpsk_ot_fla=phylosig(bdata2_fla$phy,bdata2_fla$data$on.frac_flaviviridae,method="K",test=T)
 bpsk_db_fla=phylosig(bdata_fla$phy,bdata_fla$data$meanDB_flaviviridae,method="K",test=T)
 
 ##rhabdoviridae
@@ -338,10 +339,10 @@ pdata_cor=data.frame(vfamily=rep("coronaviridae",6),
 pdata_cor$variable=factor(pdata_cor$variable,levels=c("meanCFR","maxCFR","meanDB"))
 
 #flaviviridae
-mlist_fla=list(mod_me_fla,mod_mx_fla,mod_ot_fla,mod_db_fla,bmod_me_fla,bmod_mx_fla,bmod_ot_fla,bmod_db_fla)
-pdata_fla=data.frame(vfamily=rep("flaviviridae",8),
-                     dataset=c(rep("all mammals",4),rep("bats only",4)),
-                     variable=c(rep(c("meanCFR","maxCFR","on.frac","meanDB"),2)),
+mlist_fla=list(mod_me_fla,mod_mx_fla,mod_ot_fla,mod_db_fla,bmod_me_fla,bmod_mx_fla,bmod_db_fla)
+pdata_fla=data.frame(vfamily=rep("flaviviridae",7),
+                     dataset=c(rep("all mammals",4),rep("bats only",3)),
+                     variable=c(rep(c("meanCFR","maxCFR","on.frac","meanDB","meanCFR","maxCFR","meanDB"))),
                      lambda=sapply(mlist_fla,function(x) x$param["lambda"]),
                      lambda_lower=sapply(mlist_fla,function(x) x$param.CI$lambda$ci.val[1]),
                      lambda_lower_p=sapply(mlist_fla,function(x) x$param.CI$lambda$bounds.p[1]),
@@ -362,10 +363,10 @@ pdata_rha=data.frame(vfamily=rep("rhabdoviridae",6),
 pdata_rha$variable=factor(pdata_rha$variable,levels=c("meanCFR","maxCFR","meanDB"))
 
 #togaviridae
-mlist_tog=list(mod_me_tog,mod_mx_tog,mod_ot_tog,mod_db_tog,bmod_me_tog,bmod_mx_tog,bmod_ot_tog,bmod_db_tog)
-pdata_tog=data.frame(vfamily=rep("togaviridae",8),
-                     dataset=c(rep("all mammals",4),rep("bats only",4)),
-                     variable=c(rep(c("meanCFR","maxCFR","on.frac","meanDB"),2)),
+mlist_tog=list(mod_me_tog,mod_mx_tog,mod_db_tog,bmod_me_tog,bmod_mx_tog,bmod_ot_tog,bmod_db_tog)
+pdata_tog=data.frame(vfamily=rep("togaviridae",7),
+                     dataset=c(rep("all mammals",3),rep("bats only",4)),
+                     variable=c(rep(c("meanCFR","maxCFR","meanDB","meanCFR","maxCFR","on.frac","meanDB"))),
                      lambda=sapply(mlist_tog,function(x) x$param["lambda"]),
                      lambda_lower=sapply(mlist_tog,function(x) x$param.CI$lambda$ci.val[1]),
                      lambda_lower_p=sapply(mlist_tog,function(x) x$param.CI$lambda$bounds.p[1]),
@@ -374,10 +375,10 @@ pdata_tog=data.frame(vfamily=rep("togaviridae",8),
 pdata_tog$variable=factor(pdata_tog$variable,levels=c("meanCFR","maxCFR","on.frac","meanDB"))
 
 #paramyxoviridae
-mlist_par=list(mod_me_par,mod_mx_par,mod_ot_par,mod_db_par,bmod_me_par,bmod_mx_par,bmod_ot_par,bmod_db_par)
-pdata_par=data.frame(vfamily=rep("paramyxoviridae",8),
-                     dataset=c(rep("all mammals",4),rep("bats only",4)),
-                     variable=c(rep(c("meanCFR","maxCFR","on.frac","meanDB"),2)),
+mlist_par=list(mod_mx_par,mod_ot_par,mod_db_par,bmod_me_par,bmod_mx_par,bmod_ot_par,bmod_db_par)
+pdata_par=data.frame(vfamily=rep("paramyxoviridae",7),
+                     dataset=c(rep("all mammals",3),rep("bats only",4)),
+                     variable=c(rep(c("maxCFR","on.frac","meanDB","meanCFR","maxCFR","on.frac","meanDB"))),
                      lambda=sapply(mlist_par,function(x) x$param["lambda"]),
                      lambda_lower=sapply(mlist_par,function(x) x$param.CI$lambda$ci.val[1]),
                      lambda_lower_p=sapply(mlist_par,function(x) x$param.CI$lambda$bounds.p[1]),
@@ -388,7 +389,9 @@ pdata_par$variable=factor(pdata_par$variable,levels=c("meanCFR","maxCFR","on.fra
 #save
 pagel<- rbind(pdata,pdata_cor, pdata_fla, pdata_rha, pdata_tog, pdata_par)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-write.csv(pagel,"03_PS data.csv")
+#write.csv(pagel,"03_PS data.csv")
+write.csv(pagel,"03_PS data_20250520.csv")
+
 
 ## summarize bloomberg's K
 klist=list(psk_me,psk_mx,psk_ot,psk_db,bpsk_me,bpsk_mx,bpsk_ot, bpsk_db)
@@ -409,10 +412,10 @@ kdata_cor=data.frame(vfamily=rep("coronaviridae",8),
 kdata_cor$variable=factor(kdata_cor$variable,levels=c("meanCFR","maxCFR","on.frac","meanDB"))
 
 ## flaviviridae
-klist=list(psk_me_fla,psk_mx_fla,psk_ot_fla,psk_db_fla,bpsk_me_fla,bpsk_mx_fla,bpsk_ot_fla,bpsk_db_fla)
-kdata_fla=data.frame(vfamily=rep("flaviviridae",8),
-                     dataset=c(rep("all mammals",4), rep("bats only", 4)),
-                     variable=c(rep(c("meanCFR", "maxCFR", "on.frac","meanDB"), 2)),
+klist=list(psk_me_fla,psk_mx_fla,psk_ot_fla,psk_db_fla,bpsk_me_fla,bpsk_mx_fla,bpsk_db_fla)
+kdata_fla=data.frame(vfamily=rep("flaviviridae",7),
+                     dataset=c(rep("all mammals",4), rep("bats only", 3)),
+                     variable=c(rep(c("meanCFR", "maxCFR", "on.frac","meanDB","meanCFR", "maxCFR", "meanDB"))),
                      K=sapply(klist,function(x) x$"K"),
                      P=sapply(klist,function(x) x$"P"))
 kdata_fla$variable=factor(kdata_fla$variable,levels=c("meanCFR","maxCFR","on.frac","meanDB"))
@@ -447,12 +450,16 @@ kdata_par$variable=factor(kdata_tog$variable,levels=c("meanCFR","maxCFR","on.fra
 ## save
 bloombergk<- rbind(kdata,kdata_cor, kdata_fla, kdata_rha, kdata_tog, kdata_par)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-write.csv(bloombergk,"03_K data.csv")
+#write.csv(bloombergk,"03_K data.csv")
+write.csv(bloombergk,"03_K data_20250520.csv")
+
 
 #plotting (can start here and reload in data)
 #don't forget to reload in packages
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-ps=read.csv("03_PS data.csv")
+#ps=read.csv("03_PS data.csv")
+ps=read.csv("03_PS data_20250520.csv")
+
 ps$X=NULL
 
 #fix up variable names
@@ -508,4 +515,4 @@ plot(plot)
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-ggsave("fig1.jpg", plot, device = "jpeg", width = 7, height =10, units = "in")
+ggsave("fig1_20250520.jpg", plot, device = "jpeg", width = 7, height =10, units = "in")

@@ -1,11 +1,12 @@
 ## phylofatality
 ## 04_phylofactor
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 2/17/2025
+## last update 5/20/2025
 
 ## clean environment & plots
 rm(list=ls()) 
 graphics.off()
+gc()
 
 ## packages
 library(ade4)
