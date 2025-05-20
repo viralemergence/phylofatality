@@ -126,10 +126,10 @@ cdata2_par<-cdata2_par[!is.na(cdata2_par$data$ntrans_paramyxoviridae),]
 
 ## [2] check for collinearity in main response
 cor.test(cdata$data$meanCFR_all.viruses,
-         sqrt(cdata$data$meanDB_all.viruses),method="spearman") ##0.58
+         sqrt(cdata$data$meanDB_all.viruses),method="spearman") ##0.58 ## 0.73
 
 cor.test(cdata$data$meanCFR_all.viruses,
-         cdata$data$maxCFR_all.viruses,method="spearman") ##0.93
+         cdata$data$maxCFR_all.viruses,method="spearman") ##0.93 ##0.95
 
 ## quick dataframe
 correlation <- data.frame(
@@ -166,6 +166,7 @@ plot2<- plot+ theme(axis.text.x = element_text(size=11, color="black", angle=0, 
 ## save
 setwd("~/Desktop/GitHub/phylofatality/figs")
 #ggsave("corrplot.jpg",  plot2, device = "jpeg", width = 8, height = 8, units = "in")
+#ggsave("corrplot_20250520.jpg",  plot2, device = "jpeg", width = 8, height = 8, units = "in")
 
 ##clean
 rm(plot, plot2, correlation, cmat)
@@ -332,8 +333,8 @@ pfsum=function(pf){
 set.seed(1) # control virus number
 cmean_pf=gpf(Data=cdata$data,tree=cdata$phy,
              frmla.phylo=meanCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
-             family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cmean_pf) #4
+             family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
+HolmProcedure(cmean_pf) #4 ##6
 
 # set.seed(1) # control citation count
 # cmeancites_pf=gpf(Data=cdata$data,tree=cdata$phy,
@@ -359,7 +360,7 @@ set.seed(1) # virus number controlled
 cmean_pf_cov=gpf(Data=cdata_cov$data,tree=cdata_cov$phy,
                  frmla.phylo=meanCFR_coronaviridae~phylo+virusesWithCFR_coronaviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cmean_pf_cov) #2
+HolmProcedure(cmean_pf_cov) #2 ##0
 
 # set.seed(1) # cites controlled
 # cmeancites_pf_cov=gpf(Data=cdata_cov$data,tree=cdata_cov$phy,
@@ -371,7 +372,7 @@ set.seed(1) # mean DB, virus number controlled
 dbcov_pf=gpf(Data=cdata_cov$data,tree=cdata_cov$phy,
                  frmla.phylo=sqrt(meanDB_coronaviridae)~phylo+virusesWithCFR_coronaviridae,
                  family=gaussian,algorithm='phylo',nfactors=3,min.group.size=10)
-HolmProcedure(dbcov_pf) #2
+HolmProcedure(dbcov_pf) #2 ##0
 
 # set.seed(1) # mean DB, cites controlled
 # dbcovcites_pf=gpf(Data=cdata_cov$data,tree=cdata_cov$phy,
@@ -384,8 +385,8 @@ HolmProcedure(dbcov_pf) #2
 set.seed(1) # virus number controlled
 cmean_pf_fla=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
                  frmla.phylo=meanCFR_flaviviridae~phylo+virusesWithCFR_flaviviridae,
-                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cmean_pf_fla) #4
+                 family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
+HolmProcedure(cmean_pf_fla) #4 ##5
 
 # set.seed(1) # cites controlled
 # cmeancites_pf_fla=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
@@ -396,8 +397,8 @@ HolmProcedure(cmean_pf_fla) #4
 set.seed(1) # meanDB, virus number controlled
 dbfla_pf=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
                  frmla.phylo=sqrt(meanDB_flaviviridae)~phylo+virusesWithCFR_flaviviridae,
-                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(dbfla_pf) #4
+                 family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
+HolmProcedure(dbfla_pf) #4 ##5
 
 # set.seed(1) # meanDB, cites controlled
 # dbflacites_pf=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
@@ -411,7 +412,7 @@ set.seed(1) # virus number controlled
 cmean_pf_rha=gpf(Data=cdata_rha$data,tree=cdata_rha$phy,
                  frmla.phylo=meanCFR_rhabdoviridae~phylo+virusesWithCFR_rhabdoviridae,
                  family=gaussian,algorithm='phylo',nfactors=3,min.group.size=10)
-HolmProcedure(cmean_pf_rha) #2
+HolmProcedure(cmean_pf_rha) #2 ##1
 
 # set.seed(1) # cites controlled
 # cmeancites_pf_rha=gpf(Data=cdata_rha$data,tree=cdata_rha$phy,
@@ -423,7 +424,7 @@ set.seed(1) # meanDB, virus number controlled
 dbrha_pf=gpf(Data=cdata_rha$data,tree=cdata_rha$phy,
                  frmla.phylo=sqrt(meanDB_rhabdoviridae)~phylo+virusesWithCFR_rhabdoviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(dbrha_pf) #3
+HolmProcedure(dbrha_pf) #3 ##1
 
 # set.seed(1) # meanDB, cites controlled
 # dbrhacites_pf=gpf(Data=cdata_rha$data,tree=cdata_rha$phy,
@@ -437,7 +438,7 @@ set.seed(1) # virus number controlled
 cmean_pf_tog=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
                  frmla.phylo=meanCFR_togaviridae~phylo+virusesWithCFR_togaviridae,
                  family=gaussian,algorithm='phylo',nfactors=2,min.group.size=10)
-HolmProcedure(cmean_pf_tog) #1
+HolmProcedure(cmean_pf_tog) #1 ##1
 
 # set.seed(1) # cites controlled
 # cmeancites_pf_tog=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
@@ -449,7 +450,7 @@ set.seed(1) ## DB + virus # controlled
 dbtog_pf=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
                  frmla.phylo=sqrt(meanDB_togaviridae)~phylo+virusesWithCFR_togaviridae,
                  family=gaussian,algorithm='phylo',nfactors=2,min.group.size=10)
-HolmProcedure(dbtog_pf) #1
+HolmProcedure(dbtog_pf) #1 ##1
 
 # set.seed(1) ## DB + citations controlled
 # dbtogcites_pf=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
@@ -463,7 +464,7 @@ set.seed(1)
 cmean_pf_par=gpf(Data=cdata_par$data,tree=cdata_par$phy,
                  frmla.phylo=meanCFR_paramyxoviridae~phylo+virusesWithCFR_paramyxoviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cmean_pf_par) #0 
+HolmProcedure(cmean_pf_par) #0  
 
 # set.seed(1)
 # cmeancites_pf_par=gpf(Data=cdata_par$data,tree=cdata_par$phy,
@@ -487,7 +488,7 @@ HolmProcedure(dbpar_pf) #0
 ##
 ## meanCFR + virus number controlled
 cmean_pf_results=pfsum(cmean_pf)$results
-cmean_pf_results_cov=pfsum(cmean_pf_cov)$results
+#cmean_pf_results_cov=pfsum(cmean_pf_cov)$results
 cmean_pf_results_fla=pfsum(cmean_pf_fla)$results
 cmean_pf_results_rha=pfsum(cmean_pf_rha)$results
 cmean_pf_results_tog=pfsum(cmean_pf_tog)$results
@@ -501,7 +502,7 @@ cmean_pf_results_tog=pfsum(cmean_pf_tog)$results
 
 ## DB + virus number controlled
 db_pf_results=pfsum(db_pf)$results
-dbcov_pf_results=pfsum(dbcov_pf)$results
+#dbcov_pf_results=pfsum(dbcov_pf)$results
 dbfla_pf_results=pfsum(dbfla_pf)$results
 dbrha_pf_results=pfsum(dbrha_pf)$results
 dbtog_pf_results=pfsum(dbtog_pf)$results
@@ -519,8 +520,8 @@ dbtog_pf_results=pfsum(dbtog_pf)$results
 set.seed(1) # control virus number
 cmax_pf=gpf(Data=cdata$data,tree=cdata$phy,
             frmla.phylo=maxCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
-            family=gaussian,algorithm='phylo',nfactors=6,min.group.size=10)
-HolmProcedure(cmax_pf) #5
+            family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
+HolmProcedure(cmax_pf) #5 ##6
 
 # set.seed(1) ## control cites + 2 control methods
 # cmaxcites_pf=gpf(Data=cdata$data,tree=cdata$phy,
@@ -534,7 +535,7 @@ set.seed(1) # virus number controlled
 cmax_pf_cov=gpf(Data=cdata_cov$data,tree=cdata_cov$phy,
                 frmla.phylo=maxCFR_coronaviridae~phylo+virusesWithCFR_coronaviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cmax_pf_cov) #2
+HolmProcedure(cmax_pf_cov) #2 ##0
 
 # set.seed(1)
 # cmaxcites_pf_cov=gpf(Data=cdata_cov$data,tree=cdata_cov$phy,
@@ -548,7 +549,7 @@ set.seed(1) ## virus number controlled
 cmax_pf_fla=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
                 frmla.phylo=maxCFR_flaviviridae~phylo+virusesWithCFR_flaviviridae,
                 family=gaussian,algorithm='phylo',nfactors=6,min.group.size=10)
-HolmProcedure(cmax_pf_fla) #5
+HolmProcedure(cmax_pf_fla) #5 ##3
 
 # set.seed(1) ## cites controlled
 # cmaxcites_pf_fla=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
@@ -562,7 +563,7 @@ set.seed(1) # number of viruses controlled
 cmax_pf_rha=gpf(Data=cdata_rha$data,tree=cdata_rha$phy,
                 frmla.phylo=maxCFR_rhabdoviridae~phylo+virusesWithCFR_rhabdoviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cmax_pf_rha) #2
+HolmProcedure(cmax_pf_rha) #2 ##1
 
 # set.seed(1) # cites controlled
 # cmaxcites_pf_rha=gpf(Data=cdata_rha$data,tree=cdata_rha$phy,
@@ -576,7 +577,7 @@ set.seed(1) # number of viruses controlled
 cmax_pf_tog=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
                 frmla.phylo=maxCFR_togaviridae~phylo+virusesWithCFR_togaviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cmax_pf_tog) #1
+HolmProcedure(cmax_pf_tog) #1 ##1
 
 # set.seed(1) # cites controlled
 # cmaxcites_pf_tog=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
@@ -602,7 +603,7 @@ HolmProcedure(cmax_pf_par) #0
 ##
 # mammals: MaxCFR + control virus number
 cmax_pf_results=pfsum(cmax_pf)$results 
-cmax_pf_results_cov=pfsum(cmax_pf_cov)$results 
+#cmax_pf_results_cov=pfsum(cmax_pf_cov)$results 
 cmax_pf_results_fla=pfsum(cmax_pf_fla)$results 
 cmax_pf_results_rha=pfsum(cmax_pf_rha)$results 
 cmax_pf_results_tog=pfsum(cmax_pf_tog)$results 
@@ -621,7 +622,7 @@ set.seed(1)
 cot_pf=gpf(Data=cdata2$data,tree=cdata2$phy,
            frmla.phylo=cbind(htrans_all.viruses,ntrans_all.viruses)~phylo+virusesWithCFR_all.viruses,
            family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cot_pf) #4
+HolmProcedure(cot_pf) #4 ##3
 
 # set.seed(1) # cites controlled
 # cotcites_pf=gpf(Data=cdata2$data,tree=cdata2$phy,
@@ -646,7 +647,7 @@ set.seed(1)
 cot_pf_fla=gpf(Data=cdata2_fla$data,tree=cdata2_fla$phy,
                frmla.phylo=cbind(htrans_flaviviridae,ntrans_flaviviridae)~phylo+virusesWithCFR_all.viruses,
                family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cot_pf_fla) #3
+HolmProcedure(cot_pf_fla) #3 ##0
 
 # set.seed(1)
 # cotcites_pf_fla=gpf(Data=cdata2_fla$data,tree=cdata2_fla$phy,
@@ -660,7 +661,7 @@ set.seed(1)
 cot_pf_rha=gpf(Data=cdata2_rha$data,tree=cdata2_rha$phy,
                frmla.phylo=cbind(htrans_rhabdoviridae,ntrans_rhabdoviridae)~phylo+virusesWithCFR_all.viruses,
                family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cot_pf_rha) #0
+HolmProcedure(cot_pf_rha) #0 ##0
 #sanity check for 0
 cdata2_rha$data$on.frac_rhabdoviridae
 ## No variance, 0 is correct, rhabdoviridae don't have onward transmission ##
@@ -671,7 +672,7 @@ set.seed(1)
 cot_pf_tog=gpf(Data=cdata2_tog$data,tree=cdata2_tog$phy,
                frmla.phylo=cbind(htrans_togaviridae,ntrans_togaviridae)~phylo+virusesWithCFR_all.viruses,
                family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(cot_pf_tog) #1
+HolmProcedure(cot_pf_tog) #1 ##1
 
 # set.seed(1)
 # cotcites_pf_tog=gpf(Data=cdata2_tog$data,tree=cdata2_tog$phy,
@@ -692,7 +693,7 @@ HolmProcedure(cot_pf_par) #0
 cot_pf_results=pfsum(cot_pf)$results #4
 # cotcites_pf_results=pfsum(cotcites_pf)$results
 
-cot_pf_results_fla=pfsum(cot_pf_fla)$results #3
+#cot_pf_results_fla=pfsum(cot_pf_fla)$results #3
 # cotcites_pf_results_fla=pfsum(cotcites_pf_fla)$results
 
 cot_pf_results_tog=pfsum(cot_pf_tog)$results #1
@@ -705,47 +706,47 @@ cot_pf_results_tog=pfsum(cot_pf_tog)$results #1
 set.seed(1)
 bmean_pf=gpf(Data=bdata$data,tree=bdata$phy,
              frmla.phylo=meanCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
-             family=gaussian,algorithm='phylo',nfactors=3,min.group.size=10)
-HolmProcedure(bmean_pf) #2
+             family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
+HolmProcedure(bmean_pf) #2 ##3
 
 set.seed(1)
 bdb_pf=gpf(Data=bdata$data,tree=bdata$phy,
              frmla.phylo=sqrt(meanDB_all.viruses)~phylo+virusesWithCFR_all.viruses,
              family=gaussian,algorithm='phylo',nfactors=3,min.group.size=10)
-HolmProcedure(bdb_pf) #2
+HolmProcedure(bdb_pf) #2 ##1
 
 ## 2. coronaviridae: meanCFR bats + meanDB bats
 set.seed(1)
 bmean_pf_cov=gpf(Data=bdata_cov$data,tree=bdata_cov$phy,
                  frmla.phylo=meanCFR_coronaviridae~phylo+virusesWithCFR_coronaviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(bmean_pf_cov) #1
-
+HolmProcedure(bmean_pf_cov) #1 ##0
+ 
 set.seed(1)
 bdbcov_pf=gpf(Data=bdata_cov$data,tree=bdata_cov$phy,
                  frmla.phylo=sqrt(meanDB_coronaviridae)~phylo+virusesWithCFR_coronaviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(bdbcov_pf) #1
+HolmProcedure(bdbcov_pf) #1 ##0
 
 ## 3. flaviviridae: meanCFR bats + meanDB bats
 set.seed(1)
 bmean_pf_fla=gpf(Data=bdata_fla$data,tree=bdata_fla$phy,
                  frmla.phylo=meanCFR_flaviviridae~phylo+virusesWithCFR_flaviviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(bmean_pf_fla) #2
+HolmProcedure(bmean_pf_fla) #2 ##1
 
 set.seed(1)
 bdbfla_pf=gpf(Data=bdata_fla$data,tree=bdata_fla$phy,
                  frmla.phylo=sqrt(meanDB_flaviviridae)~phylo+virusesWithCFR_flaviviridae,
                  family=gaussian,algorithm='phylo',nfactors=1,min.group.size=10)
-HolmProcedure(bdbfla_pf) #0
+HolmProcedure(bdbfla_pf) #0 ##1
 
 ## 4. rhabdoviridae: meanCFR bats + meanDB bats
 set.seed(1)
 bmean_pf_rha=gpf(Data=bdata_rha$data,tree=bdata_rha$phy,
                  frmla.phylo=meanCFR_rhabdoviridae~phylo+virusesWithCFR_rhabdoviridae,
                  family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(bmean_pf_rha) #2
+HolmProcedure(bmean_pf_rha) #2 ##2
 
 set.seed(1) ## DB
 bdbrha_pf=gpf(Data=bdata_rha$data,tree=bdata_rha$phy,
@@ -783,13 +784,11 @@ HolmProcedure(bdbpar_pf) #0
 ##
 ## summarize MeanCFR bat
 bmean_pf_results=pfsum(bmean_pf)$results #2
-bmean_pf_results_cov=pfsum(bmean_pf_cov)$results #1
 bmean_pf_results_fla=pfsum(bmean_pf_fla)$results #2
 bmean_pf_results_rha=pfsum(bmean_pf_rha)$results #2
 
 ## DB + bats
 bdb_pf_results=pfsum(bdb_pf)$results
-bdbcov_pf_results=pfsum(bdbcov_pf)$results
 
 ## [5] MaxCFR + bats
 ##
@@ -838,7 +837,6 @@ HolmProcedure(bmax_pf_par) #0
 ## [5] Summarize maxCFR bat
 ##
 bmax_pf_results=pfsum(bmax_pf)$results #2
-bmax_pf_results_cov=pfsum(bmax_pf_cov)$results #1
 bmax_pf_results_fla=pfsum(bmax_pf_fla)$results #1
 bmax_pf_results_rha=pfsum(bmax_pf_rha)$results #1
 
@@ -849,7 +847,7 @@ set.seed(1)
 bot_pf=gpf(Data=bdata2$data,tree=bdata2$phy,
            frmla.phylo=cbind(htrans_all.viruses,ntrans_all.viruses)~phylo,
            family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(bot_pf) #2
+HolmProcedure(bot_pf) #2 ##1
 
 ## 2. coronaviridae: ot bats
 set.seed(1)
@@ -897,43 +895,36 @@ bot_pf_results=pfsum(bot_pf)$results #2
 #add an ID variables
 ## MeanCFR + all mammals + virus # controlled
 cmean_pf_results$ID<- "cmean"
-cmean_pf_results_cov$ID<- "cmean_cov"
 cmean_pf_results_fla$ID<- "cmeans_fla"
 cmean_pf_results_rha$ID<-"cmean_rha"
 cmean_pf_results_tog$ID<- "cmean_tog" 
 
 ## Death burden + all mammals + virus # controlled
 db_pf_results$ID<- "dbmean"
-dbcov_pf_results$ID<-"dbmean_cov"
 dbfla_pf_results$ID<- "dbmean_fla"
 dbrha_pf_results$ID<-"dbmean_rha"
 dbtog_pf_results$ID<- "dbmean_tog"
 
 ## MaxCFR + all mammals + virus # controlled
  cmax_pf_results$ID<-"cmax"
- cmax_pf_results_cov$ID<-"cmax_cov"
  cmax_pf_results_fla$ID<-"cmax_fla"
  cmax_pf_results_rha$ID<- "cmax_rha"
  cmax_pf_results_tog$ID<- "cmax_tog"
  
 ## Onward transmission + all mammals + virus # controlled
 cot_pf_results$ID<-"cot"
-cot_pf_results_fla$ID<-"cot_fla"
 cot_pf_results_tog$ID<-"cot_tog"
 
 ## MeanCFR + bats only + virus # controlled
 bmean_pf_results$ID<-"bmean"
-bmean_pf_results_cov$ID<-"bmean_cov"
 bmean_pf_results_fla$ID<-"bmean_fla"
 bmean_pf_results_rha$ID<-"bmean_rha"
 
 ## Death burden + bats only + virus # controlled
 bdb_pf_results$ID<- "bdbmean"
-bdbcov_pf_results$ID<-"bdbmean_cov"
 
 ## MaxCFR + bats only + virus # controlled
 bmax_pf_results$ID<-"bmax"
-bmax_pf_results_cov$ID<-"bmax_cov"
 bmax_pf_results_fla$ID<-"bmax_fla"
 bmax_pf_results_rha$ID<-"bmax_rha"
 
@@ -942,26 +933,26 @@ bot_pf_results$ID<-"bot"
 }
 
 #bind everything together
-results<- do.call("rbind", list(cmean_pf_results,cmean_pf_results_cov,cmean_pf_results_fla,
+results<- do.call("rbind", list(cmean_pf_results,cmean_pf_results_fla,
                                 cmean_pf_results_rha,cmean_pf_results_tog,
                                 
-                                cmax_pf_results,cmax_pf_results_cov,cmax_pf_results_fla,
+                                cmax_pf_results,cmax_pf_results_fla,
                                 cmax_pf_results_rha,cmax_pf_results_tog,
                                 
-                                cot_pf_results,cot_pf_results_fla,cot_pf_results_tog,
+                                cot_pf_results,cot_pf_results_tog,
                                 
-                                db_pf_results, dbcov_pf_results, dbfla_pf_results, 
+                                db_pf_results, dbfla_pf_results, 
                                 dbrha_pf_results, dbtog_pf_results,
                                 
-                                bmean_pf_results,bmean_pf_results_cov,bmean_pf_results_fla,
+                                bmean_pf_results,bmean_pf_results_fla,
                                 bmean_pf_results_rha,
                                 
-                                bmax_pf_results,bmax_pf_results_cov, bmax_pf_results_fla,
+                                bmax_pf_results, bmax_pf_results_fla,
                                 bmax_pf_results_rha,
                                 
                                 bot_pf_results,
                                 
-                                bdb_pf_results,bdbcov_pf_results ))
+                                bdb_pf_results ))
 
 #save for data mining script 
 results <- results %>% select(ID, everything())
@@ -970,6 +961,8 @@ results$other <- round(results$other ,2)
 
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(results,"04_pf_allclades.csv")
+#write.csv(results,"04_pf_allclades_20250520.csv")
+
 
 ## save trees
 dtree=treeio::full_join(as.treedata(cdata$phy),cdata$data,by="label")
@@ -990,13 +983,13 @@ set.seed(1)
 samp_pf=gpf(Data=cdata$data,tree=cdata$phy,
              frmla.phylo=virusesWithCFR_all.viruses~phylo,
              family=poisson,algorithm='phylo',nfactors=15,min.group.size=10)
-HolmProcedure(samp_pf) #13
+HolmProcedure(samp_pf) #13 ##9
 
 set.seed(1)
 cites_pf=gpf(Data=cdata$data,tree=cdata$phy,
             frmla.phylo=sqrt(cites)~phylo,
             family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
-HolmProcedure(cites_pf) #9
+HolmProcedure(cites_pf) #9 ##2
 
 ## 2. coronaviridae mammals: virus # + citation count
 set.seed(1)
@@ -1016,13 +1009,13 @@ set.seed(1)
 sampfla_pf=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
                  frmla.phylo=virusesWithCFR_flaviviridae~phylo,
                  family=poisson,algorithm='phylo',nfactors=3,min.group.size=10)
-HolmProcedure(sampfla_pf) #1
+HolmProcedure(sampfla_pf) #1 ##0
 
 set.seed(1)
 citesfla_pf=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
                frmla.phylo=sqrt(cites)~phylo,
                family=gaussian,algorithm='phylo',nfactors=3,min.group.size=10)
-HolmProcedure(citesfla_pf) #2
+HolmProcedure(citesfla_pf) #2 ##2
 
 ## 4 rhabdoviridae mammals: virus # + citation count
 set.seed(1)
@@ -1034,21 +1027,21 @@ HolmProcedure(samprha_pf) #0
 set.seed(1)
 citesrha_pf=gpf(Data=cdata_rha$data,tree=cdata_rha$phy,
                frmla.phylo=sqrt(cites)~phylo,
-               family=gaussian,algorithm='phylo',nfactors=3,min.group.size=10)
-HolmProcedure(citesrha_pf) #1
+               family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
+HolmProcedure(citesrha_pf) #1 ##3
 
 ## 5 togaviridae mammals: virus # + citation count
 set.seed(1)
 samptog_pf=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
                  frmla.phylo=virusesWithCFR_togaviridae~phylo,
                  family=poisson,algorithm='phylo',nfactors=2,min.group.size=10)
-HolmProcedure(samptog_pf) #1
+HolmProcedure(samptog_pf) #1 ##1
 
 set.seed(1)
 citestog_pf=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
                    frmla.phylo=sqrt(cites)~phylo,
                    family=gaussian,algorithm='phylo',nfactors=4,min.group.size=10)
-HolmProcedure(citestog_pf) #3
+HolmProcedure(citestog_pf) #3 ##0
 
 ## 6 paramyxoviridae mammals: virus # + citation count
 set.seed(1)
@@ -1071,7 +1064,7 @@ set.seed(1)
 bsamp_pf=gpf(Data=bdata$data,tree=bdata$phy,
              frmla.phylo=virusesWithCFR_all.viruses~phylo,
              family=poisson,algorithm='phylo',nfactors=2,min.group.size=10)
-HolmProcedure(bsamp_pf) #1
+HolmProcedure(bsamp_pf) #1 ##1
 
 set.seed(1) # cites count
 bcites_pf=gpf(Data=bdata$data,tree=bdata$phy,
@@ -1148,49 +1141,47 @@ HolmProcedure(bsamppar_pf) #0
 ## [6] summarize clades
 ## mammals: virus #
 samp_pf_results=pfsum(samp_pf)$results
-sampfla_pf_results=pfsum(sampfla_pf)$results
+#sampfla_pf_results=pfsum(sampfla_pf)$results
 samptog_pf_results=pfsum(samptog_pf)$results
 
 ##  mammals: citations
 cites_pf_results=pfsum(cites_pf)$results
 citesfla_pf_results=pfsum(citesfla_pf)$results
 citesrha_pf_results=pfsum(citesrha_pf)$results
-citestog_pf_results=pfsum(citestog_pf)$results
-citespar_pf_results=pfsum(citespar_pf)$results
+#citestog_pf_results=pfsum(citestog_pf)$results
+#citespar_pf_results=pfsum(citespar_pf)$results
 
 ## bats virus #
 bsamp_pf_results=pfsum(bsamp_pf)$results
-bsampfla_pf_results=pfsum(bsampfla_pf)$results
+#bsampfla_pf_results=pfsum(bsampfla_pf)$results
 
 ## bats citation #s
-bcitesrha_pf_results=pfsum(bcitesrha_pf)$results
+#bcitesrha_pf_results=pfsum(bcitesrha_pf)$results
 
 
 ## [6] summarize sampling effort results
 #add an ID variables
 {
   samp_pf_results$ID<- "samp"
-  sampfla_pf_results$ID<- "samp_fla"
-  samptog_pf_results$ID<- "samp_tog"
+  #sampfla_pf_results$ID<- "samp_fla"
+  #samptog_pf_results$ID<- "samp_tog"
   
   cites_pf_results$ID<- "cites"
   citesfla_pf_results$ID<- "cites_fla"
   citesrha_pf_results$ID<- "cites_rha"
-  citestog_pf_results$ID<- "cites_tog"
-  citespar_pf_results$ID<- "cites_par"
+  #citestog_pf_results$ID<- "cites_tog"
+  #citespar_pf_results$ID<- "cites_par"
   
   bsamp_pf_results$ID<- "bsamp"
-  bsampfla_pf_results$ID<- "bsamp_fla"
+  #bsampfla_pf_results$ID<- "bsamp_fla"
   
   bcitesrha_pf_results$ID<- "bcites_rha"
 }
 
 #bind everything together
-results_samp<- do.call("rbind", list(samp_pf_results, sampfla_pf_results,
-                                     samptog_pf_results, cites_pf_results,
+results_samp<- do.call("rbind", list(samp_pf_results, cites_pf_results,
                                      citesfla_pf_results, citesrha_pf_results,
-                                     citestog_pf_results,citespar_pf_results,
-                                     bsamp_pf_results, bsampfla_pf_results,
+                                     bsamp_pf_results,
                                      bcitesrha_pf_results))
 
 
@@ -1201,6 +1192,7 @@ results_samp$other=round(results_samp$other,2)
 ## setwd
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(results_samp, "04_sampling effort_pf.csv")
+#write.csv(results_samp, "04_sampling effort_pf_20250520.csv")
 
 
 ####Plotting
@@ -1245,22 +1237,22 @@ pplus=plus+1
 cmean_pf_results$factor[1]="atop(1:~subclade~of~italic(Emballonuroidea), and~italic(Vespertilionoidea))"
  cmean_pf_results$factor[1]="1*'*'"
  cmean_pf_results$factor[3]="3*'*'"
- cmean_pf_results_cov$factor[1]="1*'*'"
+ #cmean_pf_results_cov$factor[1]="1*'*'"
  cmean_pf_results_fla$factor[2]="2*'*'"
  cmean_pf_results_fla$factor[4]="4*'*'"
  
 
  cmax_pf_results$factor[4]="4*'*'"
- cmax_pf_results_cov$factor[1]="1*'*'"
+ #cmax_pf_results_cov$factor[1]="1*'*'"
  cmax_pf_results_fla$factor[2]="2*'*'"
  
  cot_pf_results$factor[2]="2*'*'"
- cot_pf_results_fla$factor[2]="2*'*'"
+ #cot_pf_results_fla$factor[2]="2*'*'"
  
  db_pf_results$factor[1]<- "1*'*'"
- dbcov_pf_results$factor[1]<- "1*'*'"
+ #dbcov_pf_results$factor[1]<- "1*'*'"
  dbfla_pf_results$factor[2]<- "2*'*'"
- dbrha_pf_results$factor[3]<- "3*'*'"
+ #dbrha_pf_results$factor[3]<- "3*'*'"
 
 }
 
