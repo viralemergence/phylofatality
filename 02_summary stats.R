@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 02_summary statistics
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update: 2/11/2025
+## last update: 5/20/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -19,7 +19,7 @@ library(Hmisc)
 library(dplyr)
 
 ## load virion
-setwd("~/Desktop/GitHub/virion/Virion")
+setwd("~/Desktop/GitHub/")
 vir=vroom("virion.csv.gz")
 vir %<>% dplyr::filter(HostClass == 'mammalia')
 
@@ -44,7 +44,7 @@ taxa$species=sapply(strsplit(taxa$tip,'_'),function(x) paste(x[1],x[2],sep=' '))
 vdata$species=capitalize(vdata$Host)
 
 ## match
-miss=setdiff(vdata$species,taxa$species)
+miss=setdiff(vdata$species,taxa$species) #86
 
 ## flag
 vdata$flag=ifelse(vdata$species%in%miss,1,0)
@@ -72,63 +72,82 @@ vdata$flag=NULL
 vdata$flag=ifelse(is.na(vdata$species),1,0)
 vdata$species=ifelse(vdata$flag==1,capitalize(vdata$Host),vdata$species)
 
+## recheck
+miss=setdiff(vdata$species,taxa$species) #57
+
+## fix genus modifications
+vdata$species=gsub("Neoeptesicus|Cnephaeus","Eptesicus",vdata$species)
+
+## remove sp.
+vdata$drop=ifelse(grepl("sp.",vdata$species),1,0)
+vdata=vdata[!vdata$drop==1,]
+vdata$drop=NULL
+
+## recheck
+miss=setdiff(vdata$species,taxa$species) %>% as.data.frame()
+
 ## manual fix
 vdata$species=revalue(vdata$species,
-                     c("Allochrocebus preussi"="Cercopithecus preussi",
-                       "Apodemus chejuensis"="Apodemus agrarius",
-                       "Bos taurus x bison bison"="Bos taurus",
-                       "Cavia cutleri"="Cavia tschudii",
-                       "Cercopithecus doggetti"="Cercopithecus mitis",
-                       "Cercopithecus kandti"="Cercopithecus mitis",
-                       "Cercopithecus roloway"="Cercopithecus diana",
-                       "Cricetomys ansorgei"="Cricetomys gambianus",
-                       "Cricetulus griseus"="Cricetulus barabensis",
-                       "Dobsonia magna"="Dobsonia moluccensis",
-                       "Eothenomys eleusis"="Eothenomys melanogaster",
-                       "Equus asinus x caballus"="Equus africanus",
-                       "Equus caballus x asinus"="Equus caballus",
-                       "Giraffa giraffa"="Giraffa camelopardalis",
-                       "Hypsugo pulveratus"="Pipistrellus pulveratus",
-                       "Laephotis capensis"="Neoromicia capensis",
-                       "Loxodonta cyclotis"="Loxodonta africana",
-                       "Macaca brunnescens"="Macaca ochreata",
-                       "Macaca speciosa"="Macaca arctoides",
-                       "Macronycteris gigas"="Hipposideros gigas",
-                       "Microtus obscurus"="Microtus arvalis",
-                       "Molossus ater"="Molossus rufus",
-                       "Oligoryzomys utiaritensis"="Oligoryzomys nigripes",
-                       "Oryzomys texensis"="Oryzomys palustris",
-                       "Piliocolobus tholloni"="Procolobus badius",
-                       "Rhabdomys dilectus"="Rhabdomys pumilio",
-                       "Rhinolophus monoceros"="Rhinolophus pusillus",
-                       "Zygodontomys cherriei"="Zygodontomys brevicauda"))
+                      c("Alexandromys fortis"="Microtus fortis",
+                        "Alexandromys maximowiczii"="Microtus maximowiczii",
+                        "Alexandromys oeconomus"="Microtus oeconomus",
+                        "Apodemus chejuensis"="Apodemus agrarius",
+                        "Apodemus ciscaucasicus"="Apodemus uralensis",
+                        "Bubalus kerabau"="Bubalus arnee",
+                        "Cephalophorus callipygus"="Cephalophus callipygus",
+                        "Clethrionomys gapperi"="Myodes gapperi",
+                        "Clethrionomys rutilus"="Myodes rutilus", 
+                        "Cricetulus griseus"="Cricetulus barabensis",
+                        "Dicotyles tajacu"="Pecari tajacu",
+                        "Epomophorus pusillus"="Micropteropus pusillus",
+                        "Glossophaga mutica"="Glossophaga soricina",
+                        "Heteromys salvini"="Liomys salvini",
+                        "Kerivoula furva"="Kerivoula titania",
+                        "Lophostoma silvicola"="Lophostoma silvicolum",
+                        "Microtus obscurus"="Microtus arvalis",
+                        "Microtus rossiaemeridionalis"="Microtus arvalis",
+                        "Molossus nigricans"="Molossus rufus",
+                        "Mops plicatus"="Chaerephon plicatus",
+                        "Mops pumilus"="Chaerephon pumilus",
+                        "Murina feae"="Murina aurata",
+                        "Neogale frenata"="Mustela frenata",
+                        "Neogale vison"="Neovison vison",
+                        "Oligoryzomys costaricensis"="Oligoryzomys fulvescens",
+                        "Pekania pennanti"="Martes pennanti",
+                        "Piliocolobus tholloni"="Procolobus badius",
+                        "Rhinolophus monoceros"="Rhinolophus pusillus",
+                        "Stenocranius gregalis"="Microtus gregalis",
+                        "Urva edwardsii"="Herpestes edwardsii"))
 
 ## rematch
-miss=setdiff(vdata$species,taxa$species)
+miss=setdiff(vdata$species,taxa$species) #0
+
+## remove missing species
+vdata=vdata[!vdata$species%in%miss,] 
 
 ## remove missing species
 vdata=vdata[!vdata$species%in%miss,]
 
 #summmary stats
-n_distinct(vdata$species) #983 unique
+n_distinct(vdata$species) #983 unique ##NEW: 802
 bats<- vdata %>% filter(HostOrder=="chiroptera") 
-n_distinct(bats$species) #220 unique bats
-n_distinct(vdata$Virus) #115
-n_distinct(vdata$VirusFamily) #22
+n_distinct(bats$species) #220 unique bats ##: NEW 190
+n_distinct(vdata$Virus) #115 ##NEW: 110
+n_distinct(vdata$VirusFamily) #22 ##NEW: 25
 
 #how many mammals in each virus family
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #98
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #381
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #298
-vdata%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #169
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #46
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #98 ## new: 60
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #381 ## new: 233
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #298 ## new:297
+vdata%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #169 ## new: 150
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #46 ## new: 20
 
 #how many bats in each virus family
-bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #35
-bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #75
-bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #130
-bats%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #36
-bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #35
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #35 ## new: 23
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #75 ## new: 49
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #130 ## new: 130
+bats%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #36 ## new: 35
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #35 ## new: 18
 
 #host-virus associations, what happens when we cut out vector-borne?
 
@@ -142,15 +161,85 @@ cfr %<>% mutate(Virus = str_to_lower(Virus))
 
 ## check name matching
 setdiff(cfr$Virus,vir$Virus)
-rec <- c("colorado tick fever virus" = "colorado tick fever coltivirus",
-         "ebolavirus" = "zaire ebolavirus",
-         "sealpox virus" = "seal parapoxvirus",
-         "severe acute respiratory syndrome-related coronavirus-2" = "severe acute respiratory syndrome-related coronavirus")
+## check name matching
+miss <- setdiff(cfr$Virus,vir$Virus) %>% as.data.frame() #68
+
+## left is old (CFR) and right is new (match virion)
+rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
+         "kasokero orthonairovirus"="orthonairovirus kasokeroense",
+         "tacaribe mammarenavirus"="mammarenavirus tacaribeense",
+         "rio bravo virus"="orthoflavivirus bravoense",
+         "bagaza virus"="orthoflavivirus bagazaense",
+         "cali mammarenavirus"="mammarenavirus caliense",
+         "carnivore amdoparvovirus 1"="amdoparvovirus carnivoran1",
+         "mobala mammarenavirus"="mammarenavirus praomyidis",
+         "modoc virus"="orthoflavivirus modocense",
+         "pestivirus a"="pestivirus bovis",
+         "simian immunodeficiency virus"="lentivirus simimdef",
+         "thailand orthohantavirus"="orthohantavirus thailandense",
+         "tioman pararubulavirus"="pararubulavirus tiomanense",
+         "dugbe orthonairovirus"="orthonairovirus dugbeense",
+         "colorado tick fever virus" = "colorado tick fever coltivirus",
+         "isfahan vesiculovirus"="vesiculovirus isfahan",
+         "ilheus virus"="orthoflavivirus ilheusense",
+         "japanese encephalitis virus"="orthoflavivirus japonicum",
+         "murray valley encephalitis virus"="orthoflavivirus murrayense",
+         "saint louis encephalitis virus"="orthoflavivirus louisense",
+         "indiana vesiculovirus"="vesiculovirus indiana",
+         "alagoas vesiculovirus"="vesiculovirus alagoas",
+         "new jersey vesiculovirus"="vesiculovirus newjersey",
+         "andes orthohantavirus"="orthohantavirus andesense",
+         "argentinian mammarenavirus"="mammarenavirus juninense",
+         "australian bat lyssavirus"="lyssavirus australis",
+         "banzi virus"= "orthoflavivirus banziense",
+         "bayou orthohantavirus"="orthohantavirus bayoui",
+         "black creek canal orthohantavirus"="orthohantavirus nigrorivense",
+         "brazilian mammarenavirus"="mammarenavirus brazilense",
+         "california encephalitis orthobunyavirus"="orthobunyavirus encephalitidis",
+         "caraparu orthobunyavirus"="orthobunyavirus caraparuense",
+         "chapare mammarenavirus"="mammarenavirus chapareense",
+         "colorado tick fever virus" = "colorado tick fever coltivirus",
+         "dobrava-belgrade orthohantavirus"="orthohantavirus dobravaense",
+         "duvenhage lyssavirus"="lyssavirus duvenhage",
+         "european bat 1 lyssavirus"="lyssavirus hamburg",
+         "european bat 2 lyssavirus"="lyssavirus helsinki",
+         "guanarito mammarenavirus"="mammarenavirus guanaritoense",
+         "hantaan orthohantavirus"="orthohantavirus hantanense",
+         "hendra henipavirus"="henipavirus hendraense",
+         "irkut lyssavirus"="lyssavirus irkut",
+         "kokobera virus"="orthoflavivirus kokoberaorum",
+         "laguna negra orthohantavirus"="orthohantavirus negraense",
+         "louping ill virus"="orthoflavivirus loupingi",
+         "lujo mammarenavirus"="mammarenavirus lujoense",
+         "lymphocytic choriomeningitis mammarenavirus"="mammarenavirus choriomeningitidis",
+         "machupo mammarenavirus"="mammarenavirus machupoense",
+         "mammalian 1 orthobornavirus"="orthobornavirus bornaense",
+         "menangle pararubulavirus"="pararubulavirus menangleense",
+         "omsk hemorrhagic fever virus"="orthoflavivirus omskense",
+         "orthohepevirus a"="paslahepevirus balayani",
+         "powassan virus"="orthoflavivirus powassanense",
+         "puumala orthohantavirus"="orthohantavirus puumalaense",
+         "rabies lyssavirus"="lyssavirus rabies",
+         "rift valley fever phlebovirus"="phlebovirus riftense",
+         "sealpox virus"="grey sealpox virus",
+         "severe acute respiratory syndrome-related coronavirus-2"="betacoronavirus pandemicum",
+         "sin nombre orthohantavirus"="orthohantavirus sinnombreense",
+         "sosuga pararubulavirus"="pararubulavirus sosugaense",
+         "suid alphaherpesvirus 1"="varicellovirus suidalpha1",
+         "tick-borne encephalitis virus"="orthoflavivirus encephalitidis",
+         "tula orthohantavirus"="orthohantavirus tulaense",
+         "whitewater arroyo mammarenavirus"="mammarenavirus whitewaterense",
+         "ebolavirus"="orthoebolavirus zairense",
+         "kyasanur forest disease virus"="orthoflavivirus kyasanurense",
+         "shuni orthobunyavirus"="orthobunyavirus shuniense",
+         "choclo orthohantavirus"="orthohantavirus chocloense")
+
 cfr %<>% mutate(Virus = recode(Virus, !!!rec))
+
 cfr$Virus[str_detect(cfr$Virus,'middle')] <- "middle east respiratory syndrome-related coronavirus"
 
 ## recheck
-setdiff(cfr$Virus,vir$Virus)
+setdiff(cfr$Virus,vir$Virus) #0!
 
 #cut out VB
 {
@@ -186,16 +275,16 @@ setwd("~/Desktop/GitHub/phylofatality/csv files")
 vdata<- read_csv("01_CFRBySpecies.csv")
 
 #mean
-mean(vdata$`meanCFR_all viruses`, na.rm=T) #0.2425732
-mean(vdata$`maxCFR_all viruses`, na.rm=T) #0.3939759
-mean(vdata$`on.frac_all viruses`, na.rm=T) #0.3529295
-mean(vdata$`meanDB_all viruses`, na.rm=T) ## 124,114.3
-min(vdata$`meanDB_all viruses`, na.rm=T)
-max(vdata$`meanDB_all viruses`, na.rm=T)
+mean(vdata$`meanCFR_all viruses`, na.rm=T) #0.2425732 ## new: 0.2667972
+mean(vdata$`maxCFR_all viruses`, na.rm=T) #0.3939759 ## new:  0.418274
+mean(vdata$`on.frac_all viruses`, na.rm=T) #0.3529295 ##new: 0.2271635
+mean(vdata$`meanDB_all viruses`, na.rm=T) ## 124,114.3 ## 112,771.7
+min(vdata$`meanDB_all viruses`, na.rm=T) ## 0
+max(vdata$`meanDB_all viruses`, na.rm=T)  ## new:2 58,1976
 
 ## median death buden because of skew
 hist(vdata$`meanDB_all viruses`)
-median(vdata$`meanDB_all viruses`, na.rm=T) ## 1,633
+median(vdata$`meanDB_all viruses`, na.rm=T) ## 1,633 ## new: 800
 
 #sd
 sd1 <- sd(vdata$`meanCFR_all viruses`, na.rm=T)
