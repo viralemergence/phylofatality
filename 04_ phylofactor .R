@@ -1411,108 +1411,108 @@ plot(gg_cmax)
 }
 
 ##4 CFR mean: mammals_coronaviridae
-{
-  #base of the plot
-  gg=ggtree(dtree_cov,size=0.2,layout="circular")
-  
-  ## save raw data
-  tdata=gg$data
-  
-  ## tips only
-  tdata=tdata[which(tdata$isTip==T),]
-  
-  ## set x max 
-  xmax=max(tdata$x)+18 #tinker with this for each plot
-  
-  ## make data frame for total samples
-  samp=data.frame(x=tdata$x,
-                  y=tdata$y,
-                  yend=tdata$y,
-                  xend=scales::rescale(tdata$meanCFR_coronaviridae,c(max(tdata$x),xmax)),
-                  species=tdata$Species)
-  
-  #plot tree with segments
-  gg = gg+
-    geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    labs(x = expression(italic(Coronaviridae)))+
-    #ggtitle("MeanCFR")+ 
-    theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
-    theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
-  plot(gg)
-  
-  
-  ## Now add clades and numbers
-  for(i in 1:nrow(cmean_pf_results_cov)){ 
-    
-    gg=gg+
-      geom_hilight(node=cmean_pf_results_cov$node[i],
-                   alpha=0.5,
-                   fill=ifelse(cmean_pf_results_cov$clade[i]>
-                                 cmean_pf_results_cov$other[i],pcols[2],pcols[1]))+
-      geom_cladelabel(node=cmean_pf_results_cov$node[i],
-                      label=cmean_pf_results_cov$factor[i],
-                      offset=pplus*10,
-                      hjust=0.75,
-                      offset.text=pplus*10,
-                      parse=T,
-                      fontsize=3,
-                      angle=10)
-  }
-  gg_cmean_cov=gg
-  plot(gg_cmean_cov)
-}
+# {
+#   #base of the plot
+#   gg=ggtree(dtree_cov,size=0.2,layout="circular")
+#   
+#   ## save raw data
+#   tdata=gg$data
+#   
+#   ## tips only
+#   tdata=tdata[which(tdata$isTip==T),]
+#   
+#   ## set x max 
+#   xmax=max(tdata$x)+18 #tinker with this for each plot
+#   
+#   ## make data frame for total samples
+#   samp=data.frame(x=tdata$x,
+#                   y=tdata$y,
+#                   yend=tdata$y,
+#                   xend=scales::rescale(tdata$meanCFR_coronaviridae,c(max(tdata$x),xmax)),
+#                   species=tdata$Species)
+#   
+#   #plot tree with segments
+#   gg = gg+
+#     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+#     labs(x = expression(italic(Coronaviridae)))+
+#     #ggtitle("MeanCFR")+ 
+#     theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
+#     theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
+#   plot(gg)
+#   
+#   
+#   ## Now add clades and numbers
+#   for(i in 1:nrow(cmean_pf_results_cov)){ 
+#     
+#     gg=gg+
+#       geom_hilight(node=cmean_pf_results_cov$node[i],
+#                    alpha=0.5,
+#                    fill=ifelse(cmean_pf_results_cov$clade[i]>
+#                                  cmean_pf_results_cov$other[i],pcols[2],pcols[1]))+
+#       geom_cladelabel(node=cmean_pf_results_cov$node[i],
+#                       label=cmean_pf_results_cov$factor[i],
+#                       offset=pplus*10,
+#                       hjust=0.75,
+#                       offset.text=pplus*10,
+#                       parse=T,
+#                       fontsize=3,
+#                       angle=10)
+#   }
+#   gg_cmean_cov=gg
+#   plot(gg_cmean_cov)
+# }
 
 ##5 CFR max: mammals_coronaviridae
-{
-  #base of the plot
-  gg=ggtree(dtree_cov,size=0.2,layout="circular")
-  
-  ## save raw data
-  tdata=gg$data
-  
-  ## tips only
-  tdata=tdata[which(tdata$isTip==T),]
-  
-  ## set x max 
-  xmax=max(tdata$x)+18 #tinker with this for each plot
-  
-  ## make data frame for total samples
-  samp=data.frame(x=tdata$x,
-                  y=tdata$y,
-                  yend=tdata$y,
-                  xend=scales::rescale(tdata$maxCFR_coronaviridae,c(max(tdata$x),xmax)),
-                  species=tdata$Species)
-  
-  #plot tree with segments
-  gg = gg+
-    geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    #labs(x = expression(italic(Coronaviridae)))+
-    #ggtitle("MaxCFR")+ 
-    theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
-    theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
-  plot(gg)
-  
-  
-  ## Now add clades and numbers
-  for(i in 1:nrow(cmax_pf_results_cov)){ 
-    
-    gg=gg+
-      geom_hilight(node=cmax_pf_results_cov$node[i],
-                   alpha=0.5,
-                   fill=ifelse(cmax_pf_results_cov$clade[i]>
-                                 cmax_pf_results_cov$other[i],pcols[2],pcols[1]))+
-      geom_cladelabel(node=cmax_pf_results_cov$node[i],
-                      label=cmax_pf_results_cov$factor[i],
-                      offset=pplus*10,
-                      hjust=0.75,
-                      offset.text=pplus*10,
-                      parse=T,
-                      fontsize=3,
-                      angle=10)
-  }
-  gg_cmax_cov=gg
-  plot(gg_cmax_cov)
-}
+# {
+#   #base of the plot
+#   gg=ggtree(dtree_cov,size=0.2,layout="circular")
+#   
+#   ## save raw data
+#   tdata=gg$data
+#   
+#   ## tips only
+#   tdata=tdata[which(tdata$isTip==T),]
+#   
+#   ## set x max 
+#   xmax=max(tdata$x)+18 #tinker with this for each plot
+#   
+#   ## make data frame for total samples
+#   samp=data.frame(x=tdata$x,
+#                   y=tdata$y,
+#                   yend=tdata$y,
+#                   xend=scales::rescale(tdata$maxCFR_coronaviridae,c(max(tdata$x),xmax)),
+#                   species=tdata$Species)
+#   
+#   #plot tree with segments
+#   gg = gg+
+#     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+#     #labs(x = expression(italic(Coronaviridae)))+
+#     #ggtitle("MaxCFR")+ 
+#     theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
+#     theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
+#   plot(gg)
+#   
+#   
+#   ## Now add clades and numbers
+#   for(i in 1:nrow(cmax_pf_results_cov)){ 
+#     
+#     gg=gg+
+#       geom_hilight(node=cmax_pf_results_cov$node[i],
+#                    alpha=0.5,
+#                    fill=ifelse(cmax_pf_results_cov$clade[i]>
+#                                  cmax_pf_results_cov$other[i],pcols[2],pcols[1]))+
+#       geom_cladelabel(node=cmax_pf_results_cov$node[i],
+#                       label=cmax_pf_results_cov$factor[i],
+#                       offset=pplus*10,
+#                       hjust=0.75,
+#                       offset.text=pplus*10,
+#                       parse=T,
+#                       fontsize=3,
+#                       angle=10)
+#   }
+#   gg_cmax_cov=gg
+#   plot(gg_cmax_cov)
+# }
 
 ##6 CFR mean: mammals_flaviviridae
 {
@@ -1620,54 +1620,54 @@ plot(gg_cmax_fla)
 
 ##8 OT: mammals_flaviviridae
 {
-#base of the plot
-gg=ggtree(dtree_fla,size=0.2,layout="circular")
-
-## save raw data
-tdata=gg$data
-
-## tips only
-tdata=tdata[which(tdata$isTip==T),]
-
-## set x max 
-xmax=max(tdata$x)+18 #tinker with this for each plot
-
-## make data frame for total samples
-samp=data.frame(x=tdata$x,
-                y=tdata$y,
-                yend=tdata$y,
-                xend=scales::rescale(tdata$on.frac_flaviviridae,c(max(tdata$x),xmax)),
-                species=tdata$Species)
-
-#plot tree with segments
-gg = gg+
-  geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-  #labs(x = expression(italic(Flaviviridae)))+
- # ggtitle("% viruses with Onward Transmission")+ 
-  theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
-  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
-plot(gg)
-
-
-## Now add clades and numbers
-for(i in 1:nrow(cot_pf_results_fla)){ 
-  
-  gg=gg+
-    geom_hilight(node=cot_pf_results_fla$node[i],
-                 alpha=0.5,
-                 fill=ifelse(cot_pf_results_fla$clade[i]>
-                               cot_pf_results_fla$other[i],pcols[2],pcols[1]))+
-    geom_cladelabel(node=cot_pf_results_fla$node[i],
-                    label=cot_pf_results_fla$factor[i],
-                    offset=pplus*10,
-                    hjust=0.75,
-                    offset.text=pplus*10,
-                    parse=T,
-                    fontsize=3,
-                    angle=10)
-}
-gg_ot_fla=gg
-plot(gg_ot_fla)
+# #base of the plot
+# gg=ggtree(dtree_fla,size=0.2,layout="circular")
+# 
+# ## save raw data
+# tdata=gg$data
+# 
+# ## tips only
+# tdata=tdata[which(tdata$isTip==T),]
+# 
+# ## set x max 
+# xmax=max(tdata$x)+18 #tinker with this for each plot
+# 
+# ## make data frame for total samples
+# samp=data.frame(x=tdata$x,
+#                 y=tdata$y,
+#                 yend=tdata$y,
+#                 xend=scales::rescale(tdata$on.frac_flaviviridae,c(max(tdata$x),xmax)),
+#                 species=tdata$Species)
+# 
+# #plot tree with segments
+# gg = gg+
+#   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+#   #labs(x = expression(italic(Flaviviridae)))+
+#  # ggtitle("% viruses with Onward Transmission")+ 
+#   theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
+#   theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
+# plot(gg)
+# 
+# 
+# ## Now add clades and numbers
+# for(i in 1:nrow(cot_pf_results_fla)){ 
+#   
+#   gg=gg+
+#     geom_hilight(node=cot_pf_results_fla$node[i],
+#                  alpha=0.5,
+#                  fill=ifelse(cot_pf_results_fla$clade[i]>
+#                                cot_pf_results_fla$other[i],pcols[2],pcols[1]))+
+#     geom_cladelabel(node=cot_pf_results_fla$node[i],
+#                     label=cot_pf_results_fla$factor[i],
+#                     offset=pplus*10,
+#                     hjust=0.75,
+#                     offset.text=pplus*10,
+#                     parse=T,
+#                     fontsize=3,
+#                     angle=10)
+# }
+# gg_ot_fla=gg
+# plot(gg_ot_fla)
 }
 
 ## additions
@@ -1722,56 +1722,56 @@ plot(gg_db)
 }
 
 ## 10 DB: mammals_coronaviridae
-{
-  #base of the plot
-  gg=ggtree(dtree_cov,size=0.2,layout="circular")
-  
-  ## save raw data
-  tdata=gg$data
-  
-  ## tips only
-  tdata=tdata[which(tdata$isTip==T),]
-  
-  ## set x max 
-  xmax=max(tdata$x)+18 #tinker with this for each plot
-  
-  ## make data frame for total samples
-  samp=data.frame(x=tdata$x,
-                  y=tdata$y,
-                  yend=tdata$y,
-                  xend=scales::rescale(tdata$meanDB_coronaviridae,c(max(tdata$x),xmax)),
-                  species=tdata$Species)
-  
-  #plot tree with segments
-  gg = gg+
-    geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    #labs(x = expression(italic(Coronaviridae)))+
-    #ggtitle("MaxCFR")+ 
-    theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
-    theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
-  plot(gg)
-  
-  
-  ## Now add clades and numbers
-  for(i in 1:nrow(dbcov_pf_results)){ 
-    
-    gg=gg+
-      geom_hilight(node=dbcov_pf_results$node[i],
-                   alpha=0.5,
-                   fill=ifelse(dbcov_pf_results$clade[i]>
-                                 dbcov_pf_results$other[i],pcols[2],pcols[1]))+
-      geom_cladelabel(node=dbcov_pf_results$node[i],
-                      label=dbcov_pf_results$factor[i],
-                      offset=pplus*10,
-                      hjust=0.75,
-                      offset.text=pplus*10,
-                      parse=T,
-                      fontsize=3,
-                      angle=10)
-  }
-  gg_db_cov=gg
-  plot(gg_db_cov)
-}
+# {
+#   #base of the plot
+#   gg=ggtree(dtree_cov,size=0.2,layout="circular")
+#   
+#   ## save raw data
+#   tdata=gg$data
+#   
+#   ## tips only
+#   tdata=tdata[which(tdata$isTip==T),]
+#   
+#   ## set x max 
+#   xmax=max(tdata$x)+18 #tinker with this for each plot
+#   
+#   ## make data frame for total samples
+#   samp=data.frame(x=tdata$x,
+#                   y=tdata$y,
+#                   yend=tdata$y,
+#                   xend=scales::rescale(tdata$meanDB_coronaviridae,c(max(tdata$x),xmax)),
+#                   species=tdata$Species)
+#   
+#   #plot tree with segments
+#   gg = gg+
+#     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+#     #labs(x = expression(italic(Coronaviridae)))+
+#     #ggtitle("MaxCFR")+ 
+#     theme(axis.title.y = element_text(size = 18, margin = margin(r = -20)))+
+#     theme(plot.title = element_text(hjust = 0.5, size=18, margin = margin(b = -35)))
+#   plot(gg)
+#   
+#   
+#   ## Now add clades and numbers
+#   for(i in 1:nrow(dbcov_pf_results)){ 
+#     
+#     gg=gg+
+#       geom_hilight(node=dbcov_pf_results$node[i],
+#                    alpha=0.5,
+#                    fill=ifelse(dbcov_pf_results$clade[i]>
+#                                  dbcov_pf_results$other[i],pcols[2],pcols[1]))+
+#       geom_cladelabel(node=dbcov_pf_results$node[i],
+#                       label=dbcov_pf_results$factor[i],
+#                       offset=pplus*10,
+#                       hjust=0.75,
+#                       offset.text=pplus*10,
+#                       parse=T,
+#                       fontsize=3,
+#                       angle=10)
+#   }
+#   gg_db_cov=gg
+#   plot(gg_db_cov)
+# }
 
 ## 11 DB: mammals_flaviviridae
 {
@@ -1982,10 +1982,10 @@ plot(gg_db)
 }
 
 #combine plots
-plot<- ggpubr::ggarrange(gg_cmean, gg_db, gg_cot, 
-                gg_cmean_cov, gg_db_cov, plot_spacer()+theme_void(),
-                gg_cmean_fla, gg_db_fla, gg_ot_fla,
-                labels = c("A","B","C","D","E","","F","G","H"),
+plot<- ggpubr::ggarrange(gg_cmean, gg_db, 
+                plot_spacer()+theme_void(),
+                gg_cmean_fla, gg_db_fla,
+                labels = c("A","B","C","D","E"),
                 align='hv',
                 font.label = list(size = 12),
                 hjust=-20,
