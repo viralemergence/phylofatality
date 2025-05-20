@@ -299,7 +299,7 @@ ss3<- length(vdata$`on.frac_all viruses`)
 ss4<- length(vdata$`meanDB_all viruses`)
 
 # se
-se1 <- sd1/sqrt(ss1) #0.010
+se1 <- sd1/sqrt(ss1) #0.010 
 se2 <- sd2/sqrt(ss2) #0.013
 se3 <- sd3/sqrt(ss3) #0.013
 se4 <- sd4/sqrt(ss4) #12,928.56 ... look into doing CI
@@ -308,15 +308,15 @@ se4 <- sd4/sqrt(ss4) #12,928.56 ... look into doing CI
 bdata=vdata[vdata$species%in%bats$species,]
 
 #mean
-mean(bdata$`meanCFR_all viruses`, na.rm=T) #0.600
-mean(bdata$`maxCFR_all viruses`, na.rm=T) #0.806
-mean(bdata$`on.frac_all viruses`, na.rm=T) #0.315
-mean(bdata$`meanDB_all viruses`, na.rm=T) # 257,653.2
-min(bdata$`meanDB_all viruses`, na.rm=T)
-max(bdata$`meanDB_all viruses`, na.rm=T)
+mean(bdata$`meanCFR_all viruses`, na.rm=T) #0.600 ##new: 0.66
+mean(bdata$`maxCFR_all viruses`, na.rm=T) #0.806 ## new: 0.85
+mean(bdata$`on.frac_all viruses`, na.rm=T) #0.315 ## new: 0.18
+mean(bdata$`meanDB_all viruses`, na.rm=T) # 257,653.2 ## new: 312,725
+min(bdata$`meanDB_all viruses`, na.rm=T) # 0
+max(bdata$`meanDB_all viruses`, na.rm=T) ## new: 2,581,976
 
 ## median because of skew
-median(bdata$`meanDB_all viruses`, na.rm=T) # 91,642.75
+median(bdata$`meanDB_all viruses`, na.rm=T) # 91,642.75 ## new: 183,285
 
 #sd
 sd1 <- sd(bdata$`meanCFR_all viruses`, na.rm=T)
