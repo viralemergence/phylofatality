@@ -141,6 +141,9 @@ vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>%
 vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #298 ## new:297
 vdata%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #169 ## new: 150
 vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #46 ## new: 20
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="poxviridae") %>% n_distinct() ## 122
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="arenaviridae") %>% n_distinct() ## 87
+
 
 #how many bats in each virus family
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #35 ## new: 23
@@ -148,6 +151,8 @@ bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% 
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #130 ## new: 130
 bats%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #36 ## new: 35
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #35 ## new: 18
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="poxviridae") %>% n_distinct() ## 0
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="arenaviridae") %>% n_distinct() ## 10
 
 #host-virus associations, what happens when we cut out vector-borne?
 

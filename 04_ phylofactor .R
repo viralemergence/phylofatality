@@ -1,7 +1,7 @@
 ## phylofatality
 ## 04_phylofactor
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 5/20/2025
+## last update 5/22/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -385,7 +385,7 @@ HolmProcedure(dbcov_pf) #2 ##0
 set.seed(1) # virus number controlled
 cmean_pf_fla=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
                  frmla.phylo=meanCFR_flaviviridae~phylo+virusesWithCFR_flaviviridae,
-                 family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
+                 family=gaussian,algorithm='phylo',nfactors=6,min.group.size=10)
 HolmProcedure(cmean_pf_fla) #4 ##5
 
 # set.seed(1) # cites controlled
@@ -397,7 +397,7 @@ HolmProcedure(cmean_pf_fla) #4 ##5
 set.seed(1) # meanDB, virus number controlled
 dbfla_pf=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
                  frmla.phylo=sqrt(meanDB_flaviviridae)~phylo+virusesWithCFR_flaviviridae,
-                 family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
+                 family=gaussian,algorithm='phylo',nfactors=6,min.group.size=10)
 HolmProcedure(dbfla_pf) #4 ##5
 
 # set.seed(1) # meanDB, cites controlled
@@ -488,7 +488,7 @@ HolmProcedure(dbpar_pf) #0
 ##
 ## meanCFR + virus number controlled
 cmean_pf_results=pfsum(cmean_pf)$results
-#cmean_pf_results_cov=pfsum(cmean_pf_cov)$results
+#cmean_pf_results_cov=pfsum(cmean_pf_cov)$results ### gone w new VIRION
 cmean_pf_results_fla=pfsum(cmean_pf_fla)$results
 cmean_pf_results_rha=pfsum(cmean_pf_rha)$results
 cmean_pf_results_tog=pfsum(cmean_pf_tog)$results
@@ -502,7 +502,7 @@ cmean_pf_results_tog=pfsum(cmean_pf_tog)$results
 
 ## DB + virus number controlled
 db_pf_results=pfsum(db_pf)$results
-#dbcov_pf_results=pfsum(dbcov_pf)$results
+#dbcov_pf_results=pfsum(dbcov_pf)$results  ### gone w new VIRION
 dbfla_pf_results=pfsum(dbfla_pf)$results
 dbrha_pf_results=pfsum(dbrha_pf)$results
 dbtog_pf_results=pfsum(dbtog_pf)$results
@@ -514,13 +514,17 @@ dbtog_pf_results=pfsum(dbtog_pf)$results
 # dbrha_pf_results=pfsum(dbrha_pf)$results
 # dbtog_pf_results=pfsum(dbtog_pf)$results
 
+## 5-22-2025
+## quick summary: MeanCFR: all, fla, rha, tog .... NONE: cov, par
+##                DB:      all, fla, rha, tog .... NONE: cov, par
+
 ## [4] MaxCFR
 ## 1. all viruses: MaxCFR mammals + 2 control methods
 ##
 set.seed(1) # control virus number
 cmax_pf=gpf(Data=cdata$data,tree=cdata$phy,
             frmla.phylo=maxCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
-            family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
+            family=gaussian,algorithm='phylo',nfactors=7,min.group.size=10)
 HolmProcedure(cmax_pf) #5 ##6
 
 # set.seed(1) ## control cites + 2 control methods
@@ -603,7 +607,7 @@ HolmProcedure(cmax_pf_par) #0
 ##
 # mammals: MaxCFR + control virus number
 cmax_pf_results=pfsum(cmax_pf)$results 
-#cmax_pf_results_cov=pfsum(cmax_pf_cov)$results 
+#cmax_pf_results_cov=pfsum(cmax_pf_cov)$results  ### NONE: for Cov (new), and none for Par (old)
 cmax_pf_results_fla=pfsum(cmax_pf_fla)$results 
 cmax_pf_results_rha=pfsum(cmax_pf_rha)$results 
 cmax_pf_results_tog=pfsum(cmax_pf_tog)$results 
@@ -687,17 +691,20 @@ cot_pf_par=gpf(Data=cdata2_par$data,tree=cdata2_par$phy,
                family=binomial,algorithm='phylo',nfactors=5,min.group.size=10)
 HolmProcedure(cot_pf_par) #0
 
-## [4] Summarize OT results 
+## [4] Summarize OT results (only 2)
 ##
 #summarize OT all viruses + 5 virus families
 cot_pf_results=pfsum(cot_pf)$results #4
 # cotcites_pf_results=pfsum(cotcites_pf)$results
 
-#cot_pf_results_fla=pfsum(cot_pf_fla)$results #3
+#cot_pf_results_fla=pfsum(cot_pf_fla)$results #3 ##0 now
 # cotcites_pf_results_fla=pfsum(cotcites_pf_fla)$results
 
 cot_pf_results_tog=pfsum(cot_pf_tog)$results #1
 # cotcites_pf_results_tog=pfsum(cotcites_pf_tog)$results
+
+## 5-22-2025
+## quick summary: there are only two OT w new VIRION: all, tog ... we lose flavivis 
 
 ## [5] Phylofactor: bat-specific analyses
 ##
@@ -706,7 +713,7 @@ cot_pf_results_tog=pfsum(cot_pf_tog)$results #1
 set.seed(1)
 bmean_pf=gpf(Data=bdata$data,tree=bdata$phy,
              frmla.phylo=meanCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
-             family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
+             family=gaussian,algorithm='phylo',nfactors=4,min.group.size=10)
 HolmProcedure(bmean_pf) #2 ##3
 
 set.seed(1)
@@ -739,7 +746,7 @@ set.seed(1)
 bdbfla_pf=gpf(Data=bdata_fla$data,tree=bdata_fla$phy,
                  frmla.phylo=sqrt(meanDB_flaviviridae)~phylo+virusesWithCFR_flaviviridae,
                  family=gaussian,algorithm='phylo',nfactors=1,min.group.size=10)
-HolmProcedure(bdbfla_pf) #0 ##1
+HolmProcedure(bdbfla_pf) #0 ##1 ## we gain one here! interesting
 
 ## 4. rhabdoviridae: meanCFR bats + meanDB bats
 set.seed(1)
@@ -784,11 +791,14 @@ HolmProcedure(bdbpar_pf) #0
 ##
 ## summarize MeanCFR bat
 bmean_pf_results=pfsum(bmean_pf)$results #2
+## we lose CoVs with new VIRION
 bmean_pf_results_fla=pfsum(bmean_pf_fla)$results #2
 bmean_pf_results_rha=pfsum(bmean_pf_rha)$results #2
 
 ## DB + bats
 bdb_pf_results=pfsum(bdb_pf)$results
+## lose CoVs with new VIRION
+bdbfla_pf_results=pfsum(bdbfla_pf)$results ## new with new VIRION
 
 ## [5] MaxCFR + bats
 ##
@@ -797,28 +807,28 @@ set.seed(1)
 bmax_pf=gpf(Data=bdata$data,tree=bdata$phy,
             frmla.phylo=maxCFR_all.viruses~phylo+virusesWithCFR_all.viruses,
             family=gaussian,algorithm='phylo',nfactors=3,min.group.size=10)
-HolmProcedure(bmax_pf) #2
+HolmProcedure(bmax_pf) #2 ##2
 
 ## 2. coronaviridae: maxCFR bat
 set.seed(1)
 bmax_pf_cov=gpf(Data=bdata_cov$data,tree=bdata_cov$phy,
                 frmla.phylo=maxCFR_coronaviridae~phylo+virusesWithCFR_coronaviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(bmax_pf_cov) #1
+HolmProcedure(bmax_pf_cov) #1 ##0
 
 ## 3. flaviviridae: maxCFR bat
 set.seed(1)
 bmax_pf_fla=gpf(Data=bdata_fla$data,tree=bdata_fla$phy,
                 frmla.phylo=maxCFR_flaviviridae~phylo+virusesWithCFR_flaviviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(bmax_pf_fla) #1
+HolmProcedure(bmax_pf_fla) #1 ##1
 
 ## 4. rhabdoviridae: maxCFR bat
 set.seed(1)
 bmax_pf_rha=gpf(Data=bdata_rha$data,tree=bdata_rha$phy,
                 frmla.phylo=maxCFR_rhabdoviridae~phylo+virusesWithCFR_rhabdoviridae,
                 family=gaussian,algorithm='phylo',nfactors=5,min.group.size=10)
-HolmProcedure(bmax_pf_rha) #1
+HolmProcedure(bmax_pf_rha) #1 ##1
 
 ## 5. togaviridae: maxCFR bat
 set.seed(1)
@@ -837,6 +847,7 @@ HolmProcedure(bmax_pf_par) #0
 ## [5] Summarize maxCFR bat
 ##
 bmax_pf_results=pfsum(bmax_pf)$results #2
+## lose CoVs
 bmax_pf_results_fla=pfsum(bmax_pf_fla)$results #1
 bmax_pf_results_rha=pfsum(bmax_pf_rha)$results #1
 
@@ -895,18 +906,21 @@ bot_pf_results=pfsum(bot_pf)$results #2
 #add an ID variables
 ## MeanCFR + all mammals + virus # controlled
 cmean_pf_results$ID<- "cmean"
+  ## lose CoVs
 cmean_pf_results_fla$ID<- "cmeans_fla"
 cmean_pf_results_rha$ID<-"cmean_rha"
 cmean_pf_results_tog$ID<- "cmean_tog" 
 
 ## Death burden + all mammals + virus # controlled
 db_pf_results$ID<- "dbmean"
+## lose CoVs
 dbfla_pf_results$ID<- "dbmean_fla"
 dbrha_pf_results$ID<-"dbmean_rha"
 dbtog_pf_results$ID<- "dbmean_tog"
 
 ## MaxCFR + all mammals + virus # controlled
  cmax_pf_results$ID<-"cmax"
+ ## lose CoVs
  cmax_pf_results_fla$ID<-"cmax_fla"
  cmax_pf_results_rha$ID<- "cmax_rha"
  cmax_pf_results_tog$ID<- "cmax_tog"
@@ -922,6 +936,7 @@ bmean_pf_results_rha$ID<-"bmean_rha"
 
 ## Death burden + bats only + virus # controlled
 bdb_pf_results$ID<- "bdbmean"
+bdbfla_pf_results$ID<- "bdbmean_fla" ## gained
 
 ## MaxCFR + bats only + virus # controlled
 bmax_pf_results$ID<-"bmax"
@@ -933,26 +948,36 @@ bot_pf_results$ID<-"bot"
 }
 
 #bind everything together
-results<- do.call("rbind", list(cmean_pf_results,cmean_pf_results_fla,
-                                cmean_pf_results_rha,cmean_pf_results_tog,
+results<- do.call("rbind", list(cmean_pf_results,
+                                cmean_pf_results_fla,
+                                cmean_pf_results_rha,
+                                cmean_pf_results_tog,
                                 
-                                cmax_pf_results,cmax_pf_results_fla,
-                                cmax_pf_results_rha,cmax_pf_results_tog,
+                                cmax_pf_results,
+                                cmax_pf_results_fla,
+                                cmax_pf_results_rha,
+                                cmax_pf_results_tog,
                                 
-                                cot_pf_results,cot_pf_results_tog,
+                                cot_pf_results,
+                                cot_pf_results_tog,
                                 
-                                db_pf_results, dbfla_pf_results, 
-                                dbrha_pf_results, dbtog_pf_results,
+                                db_pf_results, 
+                                dbfla_pf_results, 
+                                dbrha_pf_results, 
+                                dbtog_pf_results,
                                 
-                                bmean_pf_results,bmean_pf_results_fla,
+                                bmean_pf_results,
+                                bmean_pf_results_fla,
                                 bmean_pf_results_rha,
                                 
-                                bmax_pf_results, bmax_pf_results_fla,
+                                bmax_pf_results,
+                                bmax_pf_results_fla,
                                 bmax_pf_results_rha,
                                 
                                 bot_pf_results,
+                                bdbfla_pf_results,
                                 
-                                bdb_pf_results ))
+                                bdb_pf_results))
 
 #save for data mining script 
 results <- results %>% select(ID, everything())
@@ -969,10 +994,10 @@ dtree=treeio::full_join(as.treedata(cdata$phy),cdata$data,by="label")
 btree=treeio::full_join(as.treedata(bdata$phy),bdata$data,by="label")
 
 #save  trees for each virus family
-dtree_cov=treeio::full_join(as.treedata(cdata_cov$phy),cdata_cov$data,by="label")
+dtree_cov=treeio::full_join(as.treedata(cdata_cov$phy),cdata_cov$data,by="label") ## doesnt matter
 dtree_fla=treeio::full_join(as.treedata(cdata_fla$phy),cdata_fla$data,by="label")
-dtree_rha=treeio::full_join(as.treedata(cdata_rha$phy),cdata_rha$data,by="label")
-dtree_tog=treeio::full_join(as.treedata(cdata_tog$phy),cdata_tog$data,by="label")
+dtree_rha=treeio::full_join(as.treedata(cdata_rha$phy),cdata_rha$data,by="label") ## doesnt matter
+dtree_tog=treeio::full_join(as.treedata(cdata_tog$phy),cdata_tog$data,by="label") 
 dtree_par=treeio::full_join(as.treedata(cdata_par$phy),cdata_par$data,by="label")
 
 
@@ -982,7 +1007,7 @@ dtree_par=treeio::full_join(as.treedata(cdata_par$phy),cdata_par$data,by="label"
 set.seed(1)
 samp_pf=gpf(Data=cdata$data,tree=cdata$phy,
              frmla.phylo=virusesWithCFR_all.viruses~phylo,
-             family=poisson,algorithm='phylo',nfactors=15,min.group.size=10)
+             family=poisson,algorithm='phylo',nfactors=10,min.group.size=10)
 HolmProcedure(samp_pf) #13 ##9
 
 set.seed(1)
@@ -1009,7 +1034,7 @@ set.seed(1)
 sampfla_pf=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
                  frmla.phylo=virusesWithCFR_flaviviridae~phylo,
                  family=poisson,algorithm='phylo',nfactors=3,min.group.size=10)
-HolmProcedure(sampfla_pf) #1 ##0
+HolmProcedure(sampfla_pf) #1 ##0 ##LOST
 
 set.seed(1)
 citesfla_pf=gpf(Data=cdata_fla$data,tree=cdata_fla$phy,
@@ -1041,7 +1066,7 @@ set.seed(1)
 citestog_pf=gpf(Data=cdata_tog$data,tree=cdata_tog$phy,
                    frmla.phylo=sqrt(cites)~phylo,
                    family=gaussian,algorithm='phylo',nfactors=4,min.group.size=10)
-HolmProcedure(citestog_pf) #3 ##0
+HolmProcedure(citestog_pf) #3 ##0 ##LOST
 
 ## 6 paramyxoviridae mammals: virus # + citation count
 set.seed(1)
@@ -1054,7 +1079,7 @@ set.seed(1)
 citespar_pf=gpf(Data=cdata_par$data,tree=cdata_par$phy,
                frmla.phylo=sqrt(cites)~phylo,
                family=gaussian,algorithm='phylo',nfactors=2,min.group.size=10)
-HolmProcedure(citespar_pf) #1
+HolmProcedure(citespar_pf) #1 ##0 ## LOST
 
 ## [6] Sampling effort + bats
 ##
@@ -1090,7 +1115,7 @@ set.seed(1)
 bsampfla_pf=gpf(Data=bdata_fla$data,tree=bdata_fla$phy,
                  frmla.phylo=virusesWithCFR_flaviviridae~phylo,
                  family=poisson,algorithm='phylo',nfactors=2,min.group.size=10)
-HolmProcedure(bsampfla_pf) #1
+HolmProcedure(bsampfla_pf) #1 ##0
 
 set.seed(1)
 bcitesfla_pf=gpf(Data=bdata_fla$data,tree=bdata_fla$phy,
@@ -1109,7 +1134,7 @@ set.seed(1)
 bcitesrha_pf=gpf(Data=bdata_rha$data,tree=bdata_rha$phy,
                 frmla.phylo=sqrt(cites)~phylo,
                 family=poisson,algorithm='phylo',nfactors=2,min.group.size=10)
-HolmProcedure(bcitesrha_pf) #1
+HolmProcedure(bcitesrha_pf) #1 ##1
 
 ## 5 togaviridae, virus # count
 set.seed(1)
@@ -1156,7 +1181,7 @@ bsamp_pf_results=pfsum(bsamp_pf)$results
 #bsampfla_pf_results=pfsum(bsampfla_pf)$results
 
 ## bats citation #s
-#bcitesrha_pf_results=pfsum(bcitesrha_pf)$results
+bcitesrha_pf_results=pfsum(bcitesrha_pf)$results
 
 
 ## [6] summarize sampling effort results
@@ -1164,7 +1189,7 @@ bsamp_pf_results=pfsum(bsamp_pf)$results
 {
   samp_pf_results$ID<- "samp"
   #sampfla_pf_results$ID<- "samp_fla"
-  #samptog_pf_results$ID<- "samp_tog"
+  samptog_pf_results$ID<- "samp_tog"
   
   cites_pf_results$ID<- "cites"
   citesfla_pf_results$ID<- "cites_fla"
@@ -1179,8 +1204,11 @@ bsamp_pf_results=pfsum(bsamp_pf)$results
 }
 
 #bind everything together
-results_samp<- do.call("rbind", list(samp_pf_results, cites_pf_results,
-                                     citesfla_pf_results, citesrha_pf_results,
+results_samp<- do.call("rbind", list(samp_pf_results, 
+                                     samptog_pf_results,
+                                     cites_pf_results,
+                                     citesfla_pf_results, 
+                                     citesrha_pf_results,
                                      bsamp_pf_results,
                                      bcitesrha_pf_results))
 
@@ -1192,7 +1220,7 @@ results_samp$other=round(results_samp$other,2)
 ## setwd
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(results_samp, "04_sampling effort_pf.csv")
-#write.csv(results_samp, "04_sampling effort_pf_20250520.csv")
+#write.csv(results_samp, "04_sampling effort_pf_20250522.csv")
 
 
 ####Plotting
@@ -1234,23 +1262,25 @@ pplus=plus+1
 
 #fix labels for the plot below (draw attention to the bat subclades)
 {
-cmean_pf_results$factor[1]="atop(1:~subclade~of~italic(Emballonuroidea), and~italic(Vespertilionoidea))"
+#cmean_pf_results$factor[1]="atop(1:~subclade~of~italic(Emballonuroidea), and~italic(Vespertilionoidea))"
  cmean_pf_results$factor[1]="1*'*'"
  cmean_pf_results$factor[3]="3*'*'"
  #cmean_pf_results_cov$factor[1]="1*'*'"
  cmean_pf_results_fla$factor[2]="2*'*'"
- cmean_pf_results_fla$factor[4]="4*'*'"
+ cmean_pf_results_fla$factor[3]="3*'*'"
+ cmean_pf_results_tog$factor[1]="3*'*'"
  
-
- cmax_pf_results$factor[4]="4*'*'"
+ #cmax_pf_results$factor[4]="4*'*'"
  #cmax_pf_results_cov$factor[1]="1*'*'"
  cmax_pf_results_fla$factor[2]="2*'*'"
+ cmax_pf_results_fla$factor[3]="3*'*'"
  
- cot_pf_results$factor[2]="2*'*'"
+ cot_pf_results$factor[3]="3*'*'"
  #cot_pf_results_fla$factor[2]="2*'*'"
  
  db_pf_results$factor[1]<- "1*'*'"
  #dbcov_pf_results$factor[1]<- "1*'*'"
+ dbfla_pf_results$factor[1]<- "1*'*'"
  dbfla_pf_results$factor[2]<- "2*'*'"
  #dbrha_pf_results$factor[3]<- "3*'*'"
 
@@ -1309,53 +1339,53 @@ plot(gg_cmean)
 
 ##2 CFR max: mammals_all viruses
 {
-#base of the plot
-gg=ggtree(dtree,size=0.2,layout="circular")
-
-## save raw data
-tdata=gg$data
-
-## tips only
-tdata=tdata[which(tdata$isTip==T),]
-
-## set x max 
-xmax=max(tdata$x)+18 #tinker with this for each plot
-
-## make data frame for total samples
-samp=data.frame(x=tdata$x,
-                y=tdata$y,
-                yend=tdata$y,
-                xend=scales::rescale(tdata$maxCFR_all.viruses,c(max(tdata$x),xmax)),
-                species=tdata$Species)
-
-#plot tree with segments
-gg = gg+
-  geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-  #labs(x = "all viruses")+
-  ggtitle("MaxCFR")+ 
-  theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
-  theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
-plot(gg)
-
-
-## Now add clades and numbers
-for(i in 1:nrow(cmax_pf_results))
-  
-  gg=gg+
-    geom_hilight(node=cmax_pf_results$node[i],
-                 alpha=0.5,
-                 fill=ifelse(cmax_pf_results$clade[i]>
-                               cmax_pf_results$other[i],pcols[2],pcols[1]))+
-    geom_cladelabel(node=cmax_pf_results$node[i],
-                    label=cmax_pf_results$factor[i],
-                    offset=pplus*10,
-                    hjust=0.75,
-                    offset.text=pplus*10,
-                    parse=T,
-                    fontsize=3,
-                    angle=10)
-gg_cmax=gg
-plot(gg_cmax)
+# #base of the plot
+# gg=ggtree(dtree,size=0.2,layout="circular")
+# 
+# ## save raw data
+# tdata=gg$data
+# 
+# ## tips only
+# tdata=tdata[which(tdata$isTip==T),]
+# 
+# ## set x max 
+# xmax=max(tdata$x)+18 #tinker with this for each plot
+# 
+# ## make data frame for total samples
+# samp=data.frame(x=tdata$x,
+#                 y=tdata$y,
+#                 yend=tdata$y,
+#                 xend=scales::rescale(tdata$maxCFR_all.viruses,c(max(tdata$x),xmax)),
+#                 species=tdata$Species)
+# 
+# #plot tree with segments
+# gg = gg+
+#   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+#   #labs(x = "all viruses")+
+#   ggtitle("MaxCFR")+ 
+#   theme(axis.title.y = element_text(size = 15, margin = margin(r = -20)))+
+#   theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
+# plot(gg)
+# 
+# 
+# ## Now add clades and numbers
+# for(i in 1:nrow(cmax_pf_results))
+#   
+#   gg=gg+
+#     geom_hilight(node=cmax_pf_results$node[i],
+#                  alpha=0.5,
+#                  fill=ifelse(cmax_pf_results$clade[i]>
+#                                cmax_pf_results$other[i],pcols[2],pcols[1]))+
+#     geom_cladelabel(node=cmax_pf_results$node[i],
+#                     label=cmax_pf_results$factor[i],
+#                     offset=pplus*10,
+#                     hjust=0.75,
+#                     offset.text=pplus*10,
+#                     parse=T,
+#                     fontsize=3,
+#                     angle=10)
+# gg_cmax=gg
+# plot(gg_cmax)
 }
 
 ##3 OT: mammals_all viruses
@@ -1411,7 +1441,7 @@ plot(gg_cmax)
 }
 
 ##4 CFR mean: mammals_coronaviridae
-# {
+ {
 #   #base of the plot
 #   gg=ggtree(dtree_cov,size=0.2,layout="circular")
 #   
@@ -1460,10 +1490,10 @@ plot(gg_cmax)
 #   }
 #   gg_cmean_cov=gg
 #   plot(gg_cmean_cov)
-# }
+}
 
 ##5 CFR max: mammals_coronaviridae
-# {
+{
 #   #base of the plot
 #   gg=ggtree(dtree_cov,size=0.2,layout="circular")
 #   
@@ -1512,7 +1542,7 @@ plot(gg_cmax)
 #   }
 #   gg_cmax_cov=gg
 #   plot(gg_cmax_cov)
-# }
+}
 
 ##6 CFR mean: mammals_flaviviridae
 {
@@ -1722,7 +1752,7 @@ plot(gg_db)
 }
 
 ## 10 DB: mammals_coronaviridae
-# {
+{
 #   #base of the plot
 #   gg=ggtree(dtree_cov,size=0.2,layout="circular")
 #   
@@ -1771,7 +1801,7 @@ plot(gg_db)
 #   }
 #   gg_db_cov=gg
 #   plot(gg_db_cov)
-# }
+}
 
 ## 11 DB: mammals_flaviviridae
 {
@@ -1827,57 +1857,161 @@ plot(gg_db)
 
 ## 12 DB: mammals_rhabdoviridae
 {
-  #base of the plot
-  gg=ggtree(dtree_rha,size=0.2,layout="circular")
-  
-  ## save raw data
-  tdata=gg$data
-  
-  ## tips only
-  tdata=tdata[which(tdata$isTip==T),]
-  
-  ## set x max 
-  xmax=max(tdata$x)+18 #tinker with this for each plot
-  
-  ## make data frame for total samples
-  samp=data.frame(x=tdata$x,
-                  y=tdata$y,
-                  yend=tdata$y,
-                  xend=scales::rescale(tdata$meanDB_rhabdoviridae,c(max(tdata$x),xmax)),
-                  species=tdata$Species)
-  
-  #plot tree with segments
-  gg = gg+
-    geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    #labs(x = expression(italic(Rhabdoviridae)))+
-    ggtitle("mean death burden")+ 
-    theme(axis.title.y = element_text(size = 15, margin = margin(r = -15)))+
-    theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
-  #plot(gg)
-  
-  
-  ## Now add clades and numbers
-  for(i in 1:nrow(dbrha_pf_results)){ 
-    
-    gg=gg+
-      geom_hilight(node=dbrha_pf_results$node[i],
-                   alpha=0.5,
-                   fill=ifelse(dbrha_pf_results$clade[i]>
-                                 dbrha_pf_results$other[i],pcols[2],pcols[1]))+
-      geom_cladelabel(node=dbrha_pf_results$node[i],
-                      label=dbrha_pf_results$factor[i],
-                      offset=pplus*10,
-                      hjust=0.75,
-                      offset.text=pplus*10,
-                      parse=T,
-                      fontsize=3,
-                      angle=10)
-  }
-  gg_db_rha=gg
-  plot(gg_db_rha)
+  # #base of the plot
+  # gg=ggtree(dtree_rha,size=0.2,layout="circular")
+  # 
+  # ## save raw data
+  # tdata=gg$data
+  # 
+  # ## tips only
+  # tdata=tdata[which(tdata$isTip==T),]
+  # 
+  # ## set x max 
+  # xmax=max(tdata$x)+18 #tinker with this for each plot
+  # 
+  # ## make data frame for total samples
+  # samp=data.frame(x=tdata$x,
+  #                 y=tdata$y,
+  #                 yend=tdata$y,
+  #                 xend=scales::rescale(tdata$meanDB_rhabdoviridae,c(max(tdata$x),xmax)),
+  #                 species=tdata$Species)
+  # 
+  # #plot tree with segments
+  # gg = gg+
+  #   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+  #   #labs(x = expression(italic(Rhabdoviridae)))+
+  #   ggtitle("mean death burden")+ 
+  #   theme(axis.title.y = element_text(size = 15, margin = margin(r = -15)))+
+  #   theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
+  # #plot(gg)
+  # 
+  # 
+  # ## Now add clades and numbers
+  # for(i in 1:nrow(dbrha_pf_results)){ 
+  #   
+  #   gg=gg+
+  #     geom_hilight(node=dbrha_pf_results$node[i],
+  #                  alpha=0.5,
+  #                  fill=ifelse(dbrha_pf_results$clade[i]>
+  #                                dbrha_pf_results$other[i],pcols[2],pcols[1]))+
+  #     geom_cladelabel(node=dbrha_pf_results$node[i],
+  #                     label=dbrha_pf_results$factor[i],
+  #                     offset=pplus*10,
+  #                     hjust=0.75,
+  #                     offset.text=pplus*10,
+  #                     parse=T,
+  #                     fontsize=3,
+  #                     angle=10)
+  # }
+  # gg_db_rha=gg
+  # plot(gg_db_rha)
 }
 
 ## 13 DB: mammals_togaviridae
+{
+  # #base of the plot
+  # gg=ggtree(dtree_tog,size=0.2,layout="circular")
+  # 
+  # ## save raw data
+  # tdata=gg$data
+  # 
+  # ## tips only
+  # tdata=tdata[which(tdata$isTip==T),]
+  # 
+  # ## set x max 
+  # xmax=max(tdata$x)+18 #tinker with this for each plot
+  # 
+  # ## make data frame for total samples
+  # samp=data.frame(x=tdata$x,
+  #                 y=tdata$y,
+  #                 yend=tdata$y,
+  #                 xend=scales::rescale(tdata$meanDB_togaviridae,c(max(tdata$x),xmax)),
+  #                 species=tdata$Species)
+  # 
+  # #plot tree with segments
+  # gg = gg+
+  #   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+  #   #labs(x = expression(italic(Flaviviridae)))+
+  #   #ggtitle("MeanCFR")+ 
+  #   theme(axis.title.y = element_text(size = 15, margin = margin(r = -15)))+
+  #   theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
+  # #plot(gg)
+  # 
+  # 
+  # ## Now add clades and numbers
+  # for(i in 1:nrow(dbtog_pf_results)){ 
+  #   
+  #   gg=gg+
+  #     geom_hilight(node=dbtog_pf_results$node[i],
+  #                  alpha=0.5,
+  #                  fill=ifelse(dbtog_pf_results$clade[i]>
+  #                                dbtog_pf_results$other[i],pcols[2],pcols[1]))+
+  #     geom_cladelabel(node=dbtog_pf_results$node[i],
+  #                     label=dbtog_pf_results$factor[i],
+  #                     offset=pplus*10,
+  #                     hjust=0.75,
+  #                     offset.text=pplus*10,
+  #                     parse=T,
+  #                     fontsize=3,
+  #                     angle=10)
+  # }
+  # gg_db_tog=gg
+  # plot(gg_db_tog)
+}
+
+## 14 meanCFR: mammals_rhabdoviridae
+{
+  # #base of the plot
+  # gg=ggtree(dtree_rha,size=0.2,layout="circular")
+  # 
+  # ## save raw data
+  # tdata=gg$data
+  # 
+  # ## tips only
+  # tdata=tdata[which(tdata$isTip==T),]
+  # 
+  # ## set x max 
+  # xmax=max(tdata$x)+18 #tinker with this for each plot
+  # 
+  # ## make data frame for total samples
+  # samp=data.frame(x=tdata$x,
+  #                 y=tdata$y,
+  #                 yend=tdata$y,
+  #                 xend=scales::rescale(tdata$meanCFR_rhabdoviridae,c(max(tdata$x),xmax)),
+  #                 species=tdata$Species)
+  # 
+  # #plot tree with segments
+  # gg = gg+
+  #   geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
+  #   labs(x = expression(italic(Rhabdoviridae)))+
+  #   ggtitle("mean CFR")+ 
+  #   theme(axis.title.y = element_text(size = 15, margin = margin(r = -15)))+
+  #   theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
+  # #plot(gg)
+  # 
+  # 
+  # ## Now add clades and numbers
+  # for(i in 1:nrow(cmean_pf_results_rha)){ 
+  #   
+  #   gg=gg+
+  #     geom_hilight(node=cmean_pf_results_rha$node[i],
+  #                  alpha=0.5,
+  #                  fill=ifelse(cmean_pf_results_rha$clade[i]>
+  #                                cmean_pf_results_rha$other[i],pcols[2],pcols[1]))+
+  #     geom_cladelabel(node=cmean_pf_results_rha$node[i],
+  #                     label=cmean_pf_results_rha$factor[i],
+  #                     offset=pplus*10,
+  #                     hjust=0.75,
+  #                     offset.text=pplus*10,
+  #                     parse=T,
+  #                     fontsize=3,
+  #                     angle=10)
+  # }
+  # gg_cmean_rha=gg
+  # plot(gg_cmean_rha)
+}
+
+##15 CFR mean: mammals_togaviridae
 {
   #base of the plot
   gg=ggtree(dtree_tog,size=0.2,layout="circular")
@@ -1895,13 +2029,13 @@ plot(gg_db)
   samp=data.frame(x=tdata$x,
                   y=tdata$y,
                   yend=tdata$y,
-                  xend=scales::rescale(tdata$meanDB_togaviridae,c(max(tdata$x),xmax)),
+                  xend=scales::rescale(tdata$meanCFR_togaviridae,c(max(tdata$x),xmax)),
                   species=tdata$Species)
   
   #plot tree with segments
   gg = gg+
     geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    #labs(x = expression(italic(Flaviviridae)))+
+    labs(x = expression(italic(Togaviridae)))+
     #ggtitle("MeanCFR")+ 
     theme(axis.title.y = element_text(size = 15, margin = margin(r = -15)))+
     theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
@@ -1909,15 +2043,15 @@ plot(gg_db)
   
   
   ## Now add clades and numbers
-  for(i in 1:nrow(dbtog_pf_results)){ 
+  for(i in 1:nrow(cmean_pf_results_tog)){ 
     
     gg=gg+
-      geom_hilight(node=dbtog_pf_results$node[i],
+      geom_hilight(node=cmean_pf_results_tog$node[i],
                    alpha=0.5,
-                   fill=ifelse(dbtog_pf_results$clade[i]>
-                                 dbtog_pf_results$other[i],pcols[2],pcols[1]))+
-      geom_cladelabel(node=dbtog_pf_results$node[i],
-                      label=dbtog_pf_results$factor[i],
+                   fill=ifelse(cmean_pf_results_tog$clade[i]>
+                                 cmean_pf_results_tog$other[i],pcols[2],pcols[1]))+
+      geom_cladelabel(node=cmean_pf_results_tog$node[i],
+                      label=cmean_pf_results_tog$factor[i],
                       offset=pplus*10,
                       hjust=0.75,
                       offset.text=pplus*10,
@@ -1925,67 +2059,15 @@ plot(gg_db)
                       fontsize=3,
                       angle=10)
   }
-  gg_db_tog=gg
-  plot(gg_db_tog)
-}
-
-## 14 meanCFR: mammals_rhabdoviridae
-{
-  #base of the plot
-  gg=ggtree(dtree_rha,size=0.2,layout="circular")
-  
-  ## save raw data
-  tdata=gg$data
-  
-  ## tips only
-  tdata=tdata[which(tdata$isTip==T),]
-  
-  ## set x max 
-  xmax=max(tdata$x)+18 #tinker with this for each plot
-  
-  ## make data frame for total samples
-  samp=data.frame(x=tdata$x,
-                  y=tdata$y,
-                  yend=tdata$y,
-                  xend=scales::rescale(tdata$meanCFR_rhabdoviridae,c(max(tdata$x),xmax)),
-                  species=tdata$Species)
-  
-  #plot tree with segments
-  gg = gg+
-    geom_segment(data=samp,aes(x=x,y=y,xend=xend,yend=yend), linewidth=0.25,alpha=0.5)+
-    labs(x = expression(italic(Rhabdoviridae)))+
-    ggtitle("mean CFR")+ 
-    theme(axis.title.y = element_text(size = 15, margin = margin(r = -15)))+
-    theme(plot.title = element_text(hjust = 0.5, size=15, margin = margin(b = -15)))
-  #plot(gg)
-  
-  
-  ## Now add clades and numbers
-  for(i in 1:nrow(cmean_pf_results_rha)){ 
-    
-    gg=gg+
-      geom_hilight(node=cmean_pf_results_rha$node[i],
-                   alpha=0.5,
-                   fill=ifelse(cmean_pf_results_rha$clade[i]>
-                                 cmean_pf_results_rha$other[i],pcols[2],pcols[1]))+
-      geom_cladelabel(node=cmean_pf_results_rha$node[i],
-                      label=cmean_pf_results_rha$factor[i],
-                      offset=pplus*10,
-                      hjust=0.75,
-                      offset.text=pplus*10,
-                      parse=T,
-                      fontsize=3,
-                      angle=10)
-  }
-  gg_cmean_rha=gg
-  plot(gg_cmean_rha)
+  gg_cmean_tog=gg
+  plot(gg_cmean_tog)
 }
 
 #combine plots
-plot<- ggpubr::ggarrange(gg_cmean, gg_db, 
-                plot_spacer()+theme_void(),
-                gg_cmean_fla, gg_db_fla,
-                labels = c("A","B","C","D","E"),
+plot<- ggpubr::ggarrange(gg_cmean, gg_db, gg_cot,
+                gg_cmean_tog, plot_spacer()+ theme_void(), plot_spacer()+ theme_void(),
+                gg_cmean_fla, gg_db_fla, plot_spacer()+ theme_void(),
+                labels = c("A","B","C","D"," "," ","F", "G"," "),
                 align='hv',
                 font.label = list(size = 12),
                 hjust=-20,
@@ -1994,25 +2076,26 @@ plot<- ggpubr::ggarrange(gg_cmean, gg_db,
                 heights=c(1,1,1),
                 ncol = 3, nrow = 3,
                 common.legend=TRUE)
+
 plot(plot) 
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-#ggsave("fig2.jpg",  plot, device = "jpeg", width = 8, height = 8, units = "in")
+#ggsave("fig2_20250520.jpg",  plot, device = "jpeg", width = 8, height = 8, units = "in")
 
-## rhabdoviridae
-rhabdo<- ggpubr::ggarrange(gg_cmean_rha, gg_db_rha,
-                         labels = c("A","B"),
-                         align='hv',
-                         font.label = list(size = 12),
-                         hjust=-2,
-                         vjust=15,
-                         #widths=c(1,1),
-                         #heights=c(1,1),
-                         #ncol = 3, nrow = 1,
-                         common.legend=TRUE)
-plot(rhabdo) 
-
-#save
-setwd("~/Desktop/GitHub/phylofatality/figs")
-ggsave("rhabdo.jpg",  rhabdo, device = "jpeg", width = 8, height = 8, units = "in")
+# ## rhabdoviridae
+# rhabdo<- ggpubr::ggarrange(gg_cmean_rha, gg_db_rha,
+#                          labels = c("A","B"),
+#                          align='hv',
+#                          font.label = list(size = 12),
+#                          hjust=-2,
+#                          vjust=15,
+#                          #widths=c(1,1),
+#                          #heights=c(1,1),
+#                          #ncol = 3, nrow = 1,
+#                          common.legend=TRUE)
+# plot(rhabdo) 
+# 
+# #save
+# setwd("~/Desktop/GitHub/phylofatality/figs")
+# ggsave("rhabdo.jpg",  rhabdo, device = "jpeg", width = 8, height = 8, units = "in")

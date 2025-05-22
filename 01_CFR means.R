@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu, carolinecummings@ou.edu 
-## last update 5/19/2025
+## last update 5/22/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -389,7 +389,7 @@ fla<- vir %>% filter(Virus=="yellow fever virus" & HostOrder=="chiroptera") %>% 
 
 fla$num <- 1
 
-aggregate(num ~ HostFamily, data = fla, sum) %>% print()
+#aggregate(num ~ HostFamily, data = fla, sum) %>% print()
 
 ## for each host species, fraction of all viruses that can infect humans
 tmp$vir=1

@@ -18,7 +18,7 @@ library(fasterize)
 library(ggpubr)
 library(maps)
 library(raster)
-library(rgdal) ##
+#library(rgdal) ##
 library(sp)
 library(sf)
 library(terra)
@@ -86,7 +86,7 @@ bivariate.map<-function(rasterx, rastery, colormatrix=col.matrix, nquantiles=10)
 #3 Create raster #1: geographic ranges of bats (CoV risky clade)
 #first, load in risky species name data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-clade <- read_csv("05_pf_riskyspecies.csv")
+clade <- read.csv("05_pf_riskyspecies.csv")
 
 #subset data to All viruses-MeanCFR and CoV-MeanCFR, etc.
 all<-clade %>% 
