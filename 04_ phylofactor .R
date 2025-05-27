@@ -1015,6 +1015,9 @@ cites_pf=gpf(Data=cdata$data,tree=cdata$phy,
             frmla.phylo=sqrt(cites)~phylo,
             family=gaussian,algorithm='phylo',nfactors=10,min.group.size=10)
 HolmProcedure(cites_pf) #9 ##2
+hist(cdata$data$cites)
+hist(sqrt(cdata$data$cites))
+hist(log1p(cdata$data$cites))
 
 ## 2. coronaviridae mammals: virus # + citation count
 set.seed(1)
