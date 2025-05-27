@@ -275,4 +275,4 @@ comp_data<- rbind(vdata,vdataOLD)
 
 ## save
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-write.csv(comp_data, "compare_virions.csv")
+write.csv(comp_data, "01.1_compare_virions.csv")
