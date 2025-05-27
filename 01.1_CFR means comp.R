@@ -275,4 +275,10 @@ comp_data<- rbind(vdata,vdataOLD)
 
 ## save
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-write.csv(comp_data, "01.1_compare_virions.csv")
+#write.csv(comp_data, "01.1_compare_virions.csv")
+
+## peruse things
+tab<- table(gone$Virus)  %>% as.data.frame() 
+tab <- tab %>% arrange(desc(Freq))
+tab<-  table(gone$pair)  %>% as.data.frame() %>% arrange(desc(Freq))
+tab<-  table(gone$comp)  %>% as.data.frame() %>% arrange(desc(Freq))
