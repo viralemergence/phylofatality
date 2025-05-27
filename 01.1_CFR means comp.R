@@ -282,3 +282,14 @@ tab<- table(gone$Virus)  %>% as.data.frame()
 tab <- tab %>% arrange(desc(Freq))
 tab<-  table(gone$pair)  %>% as.data.frame() %>% arrange(desc(Freq))
 tab<-  table(gone$comp)  %>% as.data.frame() %>% arrange(desc(Freq))
+
+## 
+gone%>% 
+  dplyr::group_by(VirusFamily) %>% 
+  dplyr::summarize(nvirus = n_distinct(pair))
+
+gone %>%
+  dplyr::group_by(Database) %>%
+  dplyr::summarize(nvirus=n_distinct(Virus))
+
+table(gone$VirusFamily, gone$Database)
