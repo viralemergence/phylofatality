@@ -1,7 +1,7 @@
 ## phylofatality
 ## 06_bivariate map
 ## danbeck@ou.edu, carolinecummings@ou.edu, Colin Carlson
-## last update 3/30/2025
+## last update 5/28/2025
 
 #troubleshooting:
 #https://rfunctions.blogspot.com/2015/03/bivariate-maps-bivariatemap-function.html 
@@ -414,4 +414,6 @@ alldb<- terra:: plot(bivmap_all_db, frame.plot = TRUE, axes = F, box = T,
                      add = F, legend = F, col = as.vector(col.matrix), asp = 1)
 fladb<- terra:: plot(bivmap_fla_db, frame.plot = TRUE, axes = F, box = T, 
                      add = F, legend = F, col = as.vector(col.matrix), asp = 1)
+
+## tinker
 
