@@ -1,7 +1,7 @@
 ## phylofatality
 ## 07_high risk places
 ## carolinecummings@ou.edu
-## last update 5/28/2025
+## last update 5/29/2025
 
 #troubleshooting:
 #https://rfunctions.blogspot.com/2015/03/bivariate-maps-bivariatemap-function.html 
@@ -52,9 +52,7 @@ library(XML)
   #color matrix
   col.matrix<-colmat(nquantiles=10, upperleft="goldenrod1", upperright="deeppink4",
                      bottomleft="#e8e8e8", bottomright="deepskyblue2", 
-                     ylab = "anthropogenic footprint", xlab = "bat host richness")
-  
-}
+                     ylab = "anthropogenic footprint", xlab = "bat host richness")}
 
 #2 Generate the bivariate map 
 {
@@ -250,44 +248,22 @@ r <- disaggregate((r)*0,2)
 iucn_cov<- iucn[iucn$binomial %in% cov$species,] 
 map_cov <- fasterize(iucn_cov, r, fun="sum") 
 
-# This adds zeros for the continental area so they aren't invisible
-fix <- function(x) {sum(x,r,na.rm=TRUE)+r} 
-map_cov<- fix(map_cov) 
-
 #clean up environment
-rm(names,miss,r,clade,cov,iucn,fix)
-
-#4 Generate heatmap of CoV clade visualization
-{
-  #library(rasterVis)
-  #library(RColorBrewer)
-  
-  #mycolors <- colorRampPalette(rev(brewer.pal(10,"Spectral")))(21)
-  #mycolors[1] <- "#C0C0C0"
-  
-  #rasterVis::levelplot(map,  
-  #                     col.regions = mycolors,
-  #                     #at = seq(0, 15, 1),
-  #                     alpha = 0.5, 
-  #                     scales=list(alternating=FALSE),
-  #                     par.strip.text=list(cex=0),
-  #                     xlab = NULL, ylab = NULL,
-  #                     maxpixels = 5e6)
-}
+rm(names,miss,r,clade,cov,iucn)
 
 #5 Create Raster #2: Load in human footprint data and human population density data
 #footprint data downloaded from here: https://sedac.ciesin.columbia.edu/data/set/wildareas-v3-2009-human-footprint 
 setwd("~/Desktop/GitHub/footprint/footprint/")
 footprint <-raster('~/Desktop/GitHub/footprint/footprint/wildareas-v3-2009-human-footprint.tif')
 
-#Make sure the projections are the same
+#Make sure the projections are the same (i.e., maps overlap correctly)
 #Terra package is faster, so first convert both map and footprint RasterLayer --> SpatRaster using rast()
 footprint <- rast(footprint)
 map_cov <- rast(map_cov) 
 footprint <- project(footprint, map_cov)
+terramapcov<- map_cov
 
 #then convert back to RasterLayer using raster()
-## spat raster is yellow terra raster is purple
 footprint <- raster(footprint) 
 map_cov <- raster(map_cov) 
 
@@ -306,10 +282,9 @@ footprint[footprint>50] <- NA  ## plot(footprint)
   print(crs(map_cov))
 }
 
-##test out layers
+## test out layers
 footprint <- aggregate(footprint, fact=10, fun=mean)
 map_cov <- aggregate(map_cov, fact=10, fun=mean)
-
 
 #can check raster layers individually
 # my.colors = colorRampPalette(c("#be64ac","lightblue", "yellow","orangered", "red"))
@@ -320,24 +295,69 @@ map_cov <- aggregate(map_cov, fact=10, fun=mean)
 ## bivar map
 bivmap_cov_foot<-bivariate.map(map_cov, footprint, colormatrix=col.matrix, nquantiles=10)
 
-cov_foot<- terra:: plot(bivmap_cov_foot, frame.plot = TRUE, axes = F, box = T, 
+cov_foot<-terra:: plot(bivmap_cov_foot, frame.plot = TRUE, axes = F, box = T, 
                         add = F, legend = F, col = as.vector(col.matrix), asp = 1)
 
 ## tinker
 # Get matrix blocks of interest
 col.matrix
 new.mat<- col.matrix
-new.mat[1:8,]<- "#FFFFFF"
-new.mat[,1:8] <- "#FFFFFF"
+new.mat[1:8,]<- NA
+new.mat[,1:8] <- NA
 
-aaa<- terra:: plot(bivmap_cov_foot, frame.plot = TRUE, axes = F, box = T, 
+highriskplaces<- terra:: plot(bivmap_cov_foot, frame.plot = TRUE, axes = F, box = T, 
                         add = F, legend = F, col = as.vector(new.mat), asp = 1)
 
 ## add country borders
 library(rnaturalearth)
 library(rnaturalearthdata)
 
+## load in country borders
 countries <- ne_countries(scale = "medium", returnclass = "sf")
-plot(st_geometry(countries), add = TRUE, col = NA, border = "black", lwd = 0.5)
 
-## pull countries that have that color
+## make sure the projection matches our map's projection
+crscov<- crs(terramapcov)
+countries <- st_transform(countries, crs = crscov)
+
+# confirm they are the same
+st_crs(countries) == st_crs(map_cov)
+
+# now plot
+plot(st_geometry(countries), add = TRUE, col = NA, border = "black", lwd = 0.5)
+## save as PDF
+
+# Convert each raster cell to a point, and assign it a value
+point <- as.data.frame(rasterToPoints(bivmap_cov_foot))
+colnames(point) <- c("x", "y", "value")
+
+# Filter only colored (non-NA) cells
+color_vector <- as.vector(new.mat)
+color_lookup <- data.frame(value = seq_along(color_vector),hex = color_vector)
+color_lookup <- color_lookup[!is.na(color_lookup$hex), ]
+head(color_lookup)
+
+point <- point %>% filter(value==97 |value==98 |value==98 |value==108 |value==109 |value==110
+                          |value==119
+                          |value==120
+                          |value==121)
+
+# Convert to spatial points
+point.sf <- st_as_sf(point, coords = c("x", "y"), crs = crs(countries))
+
+# Ensure country polygons are in same CRS
+countries.sf <- st_as_sf(countries)
+countries.sf <- st_transform(countries.sf, crs = st_crs(point.sf))
+
+# Spatial join: find which country each point falls in
+joined <- st_join(point.sf, countries.sf, join = st_intersects)
+
+# Now `joined` contains country names for each raster cell with color
+# Example: extract country names
+places <- table(joined$name_long) %>% as.data.frame()
+
+print(places)
+
+## country counts organized
+places <- places %>% arrange(desc(Freq))
+
+
