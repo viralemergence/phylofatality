@@ -1,7 +1,7 @@
 ## phylofatality
 ## 05_data mining (species extraction from risky clades)
 ## danbeck@ou.edu, carolinecummings2018@gmail.com, Cole Brookson
-## last update 5/20/2025
+## last update 6/10/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -17,7 +17,7 @@ library(tidyverse)
 ## load in clade virulence data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #data=read.csv("04_pf_allclades.csv")
-data=read.csv("04_pf_allclades_20250520.csv")
+data=read.csv("04_pf_allclades_20250609.csv")
 
 ## load in host taxonomy
 setwd("~/Desktop/GitHub/phylofatality/phylo")
@@ -84,6 +84,7 @@ joined_gen <- dplyr::full_join(
 which_taxa_for_fam <- joined_gen %>% 
   dplyr::filter_at(vars(virus, host, var, taxa, tips), 
                    all_vars(is.na(.)))
+
 taxa_fam <- taxa %>% 
   dplyr::filter(fam %in% which_taxa_for_fam$fam)
 
@@ -119,11 +120,10 @@ species$clade.y=NULL
 species=species %>% dplyr::select(species, virus, host, var, factor, tips, node,
                            clade, other, taxa)
 #sanity check and save
-species %>% n_distinct() #23206 ##18167
+species %>% n_distinct() ## 19,359
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(species,"05_pf_riskyspecies.csv")
-#write.csv(species,"05_pf_riskyspecies_20250520.csv")
-
+write.csv(species,"05_pf_riskyspecies_20250609.csv")
 
 ## pull out the risky bat clades to see what they look like
 ord <- taxa %>% select(Species_Name, ord)
@@ -131,7 +131,6 @@ ord$species <- ord$Species_Name
 ord$Species_Name=NULL
 
 bats<- merge(ord,raw)
-
 
 bats <- bats %>% filter(ord=="CHIROPTERA")
 bats$ID<- paste0(bats$virus,"_",bats$host,"_",bats$var,"_",bats$factor)

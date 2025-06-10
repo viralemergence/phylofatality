@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 02_summary statistics
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update: 5/20/2025
+## last update: 6/9/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -44,7 +44,7 @@ taxa$species=sapply(strsplit(taxa$tip,'_'),function(x) paste(x[1],x[2],sep=' '))
 vdata$species=capitalize(vdata$Host)
 
 ## match
-miss=setdiff(vdata$species,taxa$species) #86
+miss=setdiff(vdata$species,taxa$species) # 103
 
 ## flag
 vdata$flag=ifelse(vdata$species%in%miss,1,0)
@@ -73,7 +73,7 @@ vdata$flag=ifelse(is.na(vdata$species),1,0)
 vdata$species=ifelse(vdata$flag==1,capitalize(vdata$Host),vdata$species)
 
 ## recheck
-miss=setdiff(vdata$species,taxa$species) #57
+miss=setdiff(vdata$species,taxa$species) # 69
 
 ## fix genus modifications
 vdata$species=gsub("Neoeptesicus|Cnephaeus","Eptesicus",vdata$species)
@@ -100,10 +100,12 @@ vdata$species=revalue(vdata$species,
                         "Cricetulus griseus"="Cricetulus barabensis",
                         "Dicotyles tajacu"="Pecari tajacu",
                         "Epomophorus pusillus"="Micropteropus pusillus",
+                        "Giraffa giraffa"="Giraffa camelopardalis",
                         "Glossophaga mutica"="Glossophaga soricina",
                         "Heteromys salvini"="Liomys salvini",
                         "Kerivoula furva"="Kerivoula titania",
                         "Lophostoma silvicola"="Lophostoma silvicolum",
+                        "Lyroderma lyra"="Megaderma lyra",
                         "Microtus obscurus"="Microtus arvalis",
                         "Microtus rossiaemeridionalis"="Microtus arvalis",
                         "Molossus nigricans"="Molossus rufus",
@@ -112,45 +114,44 @@ vdata$species=revalue(vdata$species,
                         "Murina feae"="Murina aurata",
                         "Neogale frenata"="Mustela frenata",
                         "Neogale vison"="Neovison vison",
+                        "Nothocricetulus migratorius"="Cricetulus migratorius",
                         "Oligoryzomys costaricensis"="Oligoryzomys fulvescens",
+                        "Otaria byronia"="Otaria bryonia",
                         "Pekania pennanti"="Martes pennanti",
                         "Piliocolobus tholloni"="Procolobus badius",
+                        "Pteropus medius"="Pteropus giganteus",
                         "Rhinolophus monoceros"="Rhinolophus pusillus",
                         "Stenocranius gregalis"="Microtus gregalis",
                         "Urva edwardsii"="Herpestes edwardsii"))
-
 ## rematch
 miss=setdiff(vdata$species,taxa$species) #0
 
 ## remove missing species
 vdata=vdata[!vdata$species%in%miss,] 
 
-## remove missing species
-vdata=vdata[!vdata$species%in%miss,]
-
 #summmary stats
-n_distinct(vdata$species) #983 unique ##NEW: 802
+n_distinct(vdata$species) ## 889
 bats<- vdata %>% filter(HostOrder=="chiroptera") 
-n_distinct(bats$species) #220 unique bats ##: NEW 190
-n_distinct(vdata$Virus) #115 ##NEW: 110
-n_distinct(vdata$VirusFamily) #22 ##NEW: 25
+n_distinct(bats$species) ## 202
+n_distinct(vdata$Virus) ## 112
+n_distinct(vdata$VirusFamily) # 23
 
 #how many mammals in each virus family
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #98 ## new: 60
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #381 ## new: 233
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #298 ## new:297
-vdata%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #169 ## new: 150
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #46 ## new: 20
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() # 60
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() # 344
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() # 301
+vdata%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() # 150
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() # 43
 vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="poxviridae") %>% n_distinct() ## 122
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="arenaviridae") %>% n_distinct() ## 87
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="arenaviridae") %>% n_distinct() ## 100
 
 
 #how many bats in each virus family
-bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #35 ## new: 23
-bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #75 ## new: 49
-bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #130 ## new: 130
-bats%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #36 ## new: 35
-bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #35 ## new: 18
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() ## 23
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() # 64
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() # 130
+bats%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() # 35
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() # 31
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="poxviridae") %>% n_distinct() ## 0
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="arenaviridae") %>% n_distinct() ## 10
 
@@ -166,10 +167,10 @@ cfr %<>% mutate(Virus = str_to_lower(Virus))
 
 ## check name matching
 setdiff(cfr$Virus,vir$Virus)
-## check name matching
-miss <- setdiff(cfr$Virus,vir$Virus) %>% as.data.frame() #68
 
-## left is old (CFR) and right is new (match virion)
+## check name matching
+miss <- setdiff(cfr$Virus,vir$Virus) %>% as.data.frame() # 108
+
 rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "kasokero orthonairovirus"="orthonairovirus kasokeroense",
          "tacaribe mammarenavirus"="mammarenavirus tacaribeense",
@@ -193,6 +194,7 @@ rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "indiana vesiculovirus"="vesiculovirus indiana",
          "alagoas vesiculovirus"="vesiculovirus alagoas",
          "new jersey vesiculovirus"="vesiculovirus newjersey",
+         
          "andes orthohantavirus"="orthohantavirus andesense",
          "argentinian mammarenavirus"="mammarenavirus juninense",
          "australian bat lyssavirus"="lyssavirus australis",
@@ -213,7 +215,7 @@ rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "hendra henipavirus"="henipavirus hendraense",
          "irkut lyssavirus"="lyssavirus irkut",
          "kokobera virus"="orthoflavivirus kokoberaorum",
-         "laguna negra orthohantavirus"="orthohantavirus negraense",
+         "laguna negra orthohantavirus"="orthohantavirus mamorense",
          "louping ill virus"="orthoflavivirus loupingi",
          "lujo mammarenavirus"="mammarenavirus lujoense",
          "lymphocytic choriomeningitis mammarenavirus"="mammarenavirus choriomeningitidis",
@@ -234,17 +236,62 @@ rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "tick-borne encephalitis virus"="orthoflavivirus encephalitidis",
          "tula orthohantavirus"="orthohantavirus tulaense",
          "whitewater arroyo mammarenavirus"="mammarenavirus whitewaterense",
+         
          "ebolavirus"="orthoebolavirus zairense",
          "kyasanur forest disease virus"="orthoflavivirus kyasanurense",
          "shuni orthobunyavirus"="orthobunyavirus shuniense",
-         "choclo orthohantavirus"="orthohantavirus chocloense")
+         "choclo orthohantavirus"="orthohantavirus chocloense",
+         
+         "yaba monkey tumor virus"="yatapoxvirus yabapox",
+         "mucambo virus"="alphavirus mucambo",
+         "highlands j virus"="alphavirus highlandsj",
+         "equine rhinitis a virus"="aphthovirus burrowsi",
+         "everglades virus"="alphavirus everglades",
+         "madariaga virus"="alphavirus madariaga",
+         "palyam virus"="orbivirus palyamense",
+         "pixuna virus"="alphavirus pixuna",
+         "thottopalayam thottimvirus"="thottimvirus thottapalayamense",
+         "una virus"="alphavirus una",
+         "vesicular exanthema of swine virus"="vesivirus exanthema",
+         "great island virus"= "orbivirus magninsulae",
+         "avian orthoavulavirus 1"="orthoavulavirus javaense",
+         "influenza a virus"="alphainfluenzavirus influenzae",
+         "tonate virus"="alphavirus tonate",
+         "west nile virus"="orthoflavivirus nilense",
+         "bovine papular stomatitis virus"="parapoxvirus bovinestomatitis",
+         "camelpox virus"="orthopoxvirus camelpox",
+         "chikungunya virus"="alphavirus chikungunya",
+         "cowpox virus"="orthopoxvirus cowpox",
+         "dengue virus"="orthoflavivirus denguei",
+         "orthohantavirus negraense"="orthohantavirus mamorense",
+         "lassa mammarenavirus"="mammarenavirus lassaense",
+         "macacine alphaherpesvirus 1"="simplexvirus macacinealpha1",
+         "marburg marburgvirus"="orthomarburgvirus marburgense",
+         "monkeypox virus"="orthopoxvirus monkeypox",
+         "nipah henipavirus"="henipavirus nipahense",
+         "orf virus"="parapoxvirus orf",
+         "primate t-lymphotropic virus 1"="deltaretrovirus pritlym1",
+         "primate t-lymphotropic virus 2"="deltaretrovirus pritlym2",
+         "primate t-lymphotropic virus 3"="deltaretrovirus pritlym3",
+         "pseudocowpox virus"="parapoxvirus pseudocowpox",
+         "ross river virus"= "alphavirus rossriver",
+         "rotavirus a"="rotavirus alphagastroenteritidis",
+         "seoul orthohantavirus"="orthohantavirus seoulense",
+         "severe acute respiratory syndrome-related coronavirus"="betacoronavirus pandemicum",
+         "tanapox virus"="yatapoxvirus tanapox",
+         "yellow fever virus"="orthoflavivirus flavi",
+         "zika virus"="orthoflavivirus zikaense",
+         "changuinola virus"="orbivirus changuinolaense",
+         "nelson bay orthoreovirus"="orthoreovirus nelsonense")
 
 cfr %<>% mutate(Virus = recode(Virus, !!!rec))
 
 cfr$Virus[str_detect(cfr$Virus,'middle')] <- "middle east respiratory syndrome-related coronavirus"
 
 ## recheck
-setdiff(cfr$Virus,vir$Virus) #0!
+miss<- setdiff(cfr$Virus,vir$Virus) ## middle east respiratory syndrome-related coronavirus is the only missing (NA in VIRION)
+## remove missing species
+cfr=cfr[!cfr$Virus%in%miss,] 
 
 #cut out VB
 {
@@ -254,25 +301,25 @@ vdata=vdata[!vdata$Virus%in%miss,]
 
 #redo stats
 #summmary stats
-n_distinct(vdata$species) #784 unique
+n_distinct(vdata$species) #701
 bats<- vdata %>% filter(HostOrder=="chiroptera") 
-n_distinct(bats$species) #186 unique bats
-n_distinct(vdata$Virus) #73
-n_distinct(vdata$VirusFamily) #19
+n_distinct(bats$species) #171
+n_distinct(vdata$Virus) #71
+n_distinct(vdata$VirusFamily) #20
 
 #how many mammals in each virus family
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #98
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #79
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #255
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() # 06
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #75
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #262
 vdata%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #0
-vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #46
+vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #43
 
 #how many bats in each virus family
-bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #35
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() #23
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() #0
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() #127
 bats%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() #0
-bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #35
+bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() #31
 }
 
 #load in complete vdata from 01_CFR Mean and replace vdata
@@ -280,12 +327,12 @@ setwd("~/Desktop/GitHub/phylofatality/csv files")
 vdata<- read_csv("01_CFRBySpecies.csv")
 
 #mean
-mean(vdata$`meanCFR_all viruses`, na.rm=T) #0.2425732 ## new: 0.2667972
-mean(vdata$`maxCFR_all viruses`, na.rm=T) #0.3939759 ## new:  0.418274
-mean(vdata$`on.frac_all viruses`, na.rm=T) #0.3529295 ##new: 0.2271635
-mean(vdata$`meanDB_all viruses`, na.rm=T) ## 124,114.3 ## 112,771.7
-min(vdata$`meanDB_all viruses`, na.rm=T) ## 0
-max(vdata$`meanDB_all viruses`, na.rm=T)  ## new:2 58,1976
+mean(vdata$`meanCFR_all viruses`, na.rm=T) ## 0.26
+mean(vdata$`maxCFR_all viruses`, na.rm=T)  ## 0.42
+mean(vdata$`on.frac_all viruses`, na.rm=T) ## 0.31
+mean(vdata$`meanDB_all viruses`, na.rm=T) ## 107,866.2 
+min(vdata$`meanDB_all viruses`, na.rm=T)  ## 0
+max(vdata$`meanDB_all viruses`, na.rm=T) ## 2,581,976
 
 ## median death buden because of skew
 hist(vdata$`meanDB_all viruses`)
@@ -304,24 +351,24 @@ ss3<- length(vdata$`on.frac_all viruses`)
 ss4<- length(vdata$`meanDB_all viruses`)
 
 # se
-se1 <- sd1/sqrt(ss1) #0.010 
-se2 <- sd2/sqrt(ss2) #0.013
-se3 <- sd3/sqrt(ss3) #0.013
-se4 <- sd4/sqrt(ss4) #12,928.56 ... look into doing CI
+se1 <- sd1/sqrt(ss1) ## 0.01
+se2 <- sd2/sqrt(ss2) ## 0.01
+se3 <- sd3/sqrt(ss3)  ## 0.01
+se4 <- sd4/sqrt(ss4)  ## 11993.78
 
 #summary stats bats
 bdata=vdata[vdata$species%in%bats$species,]
 
 #mean
-mean(bdata$`meanCFR_all viruses`, na.rm=T) #0.600 ##new: 0.66
-mean(bdata$`maxCFR_all viruses`, na.rm=T) #0.806 ## new: 0.85
-mean(bdata$`on.frac_all viruses`, na.rm=T) #0.315 ## new: 0.18
-mean(bdata$`meanDB_all viruses`, na.rm=T) # 257,653.2 ## new: 312,725
+mean(bdata$`meanCFR_all viruses`, na.rm=T) ## 0.64
+mean(bdata$`maxCFR_all viruses`, na.rm=T) ## 0.84
+mean(bdata$`on.frac_all viruses`, na.rm=T) ## 0.27
+mean(bdata$`meanDB_all viruses`, na.rm=T) # 310,732.6
 min(bdata$`meanDB_all viruses`, na.rm=T) # 0
-max(bdata$`meanDB_all viruses`, na.rm=T) ## new: 2,581,976
+max(bdata$`meanDB_all viruses`, na.rm=T) ## 2,581,976
 
 ## median because of skew
-median(bdata$`meanDB_all viruses`, na.rm=T) # 91,642.75 ## new: 183,285
+median(bdata$`meanDB_all viruses`, na.rm=T) # 137,393.8
 
 #sd
 sd1 <- sd(bdata$`meanCFR_all viruses`, na.rm=T)
@@ -336,7 +383,7 @@ ss3<- length(bdata$`on.frac_all viruses`)
 ss4<- length(bdata$`meanDB_all viruses`)
 
 # se
-se1 <- sd1/sqrt(ss1) #0.027
-se2 <- sd2/sqrt(ss2) #0.024
-se3 <- sd3/sqrt(ss3) #0.028
-se4 <- sd4/sqrt(ss4) # 42,037.29
+se1 <- sd1/sqrt(ss1) #0.03
+se2 <- sd2/sqrt(ss2) #0.02
+se3 <- sd3/sqrt(ss3) #0.03
+se4 <- sd4/sqrt(ss4) # 50,298.55

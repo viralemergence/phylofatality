@@ -1,7 +1,7 @@
 ## phylofatality
 ## 07_high risk places
 ## carolinecummings@ou.edu
-## last update 5/29/2025
+## last update 6/10/2025
 
 #troubleshooting:
 #https://rfunctions.blogspot.com/2015/03/bivariate-maps-bivariatemap-function.html 
@@ -85,10 +85,23 @@ library(XML)
 #3 Create raster #1: geographic ranges of bats (CoV risky clade)
 #first, load in risky species name data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-clade <- read.csv("05_pf_riskyspecies.csv")
+clade <- read.csv("05_pf_riskyspecies_20250609.csv")
 
 #subset data 
-cov<-clade %>% filter(host=="mammal", var=="mean", virus=="cov", factor=="1")
+all_mean<-clade %>% 
+  filter(host=="mammal", var=="mean", virus=="all", factor=="1" | factor=="3")
+all_db<- clade %>%
+  filter(host=="mammal", var=="db", virus=="all", factor=="1")
+
+fla_mean<- clade %>% 
+  filter(host=="mammal", var=="mean", virus=="fla", factor=="3")
+fla_db<- clade %>%
+  filter(host=="mammal", var=="db", virus=="fla", factor=="2")
+fla_ot<- clade %>%
+  filter(host=="mammal", var=="ot", virus=="fla", factor=="2")
+
+tog_mean <- clade %>% 
+  filter(host=="mammal", var=="mean", virus=="tog", factor=="1")
 
 #load in IUCN geographic range data
 iucn <- st_read("~/Desktop/GitHub/footprint/IUCN/MAMMALS.shp")
@@ -99,10 +112,24 @@ iucn$binomial<- gsub(" ", "_", iucn$binomial)
 names<- unique(iucn$binomial) %>% as.data.frame()
 names$names<- names$.
 names$.=NULL
-names$names<- names[order(names$names),]
+names <- names %>% arrange(names)
+
+## combine all bat names and compare to iucn to make sure we have the most covered
+all_mean_species <- all_mean %>% dplyr::select(species) %>% unique()
+all_db_species <- all_db %>% dplyr::select(species) %>% unique()
+fla_db_species <- fla_db %>% dplyr::select(species) %>% unique()
+fla_mean_species <- fla_mean %>% dplyr::select(species) %>% unique()
+fla_ot_species <- fla_ot %>% dplyr::select(species) %>% unique()
+tog_mean_species <- tog_mean %>% dplyr::select(species) %>% unique()
+
+all.spec<- rbind(all_db_species,all_mean_species,
+                 fla_db_species,fla_mean_species,fla_ot_species,
+                 tog_mean_species)
+
+all.spec <- all.spec %>% arrange(species) %>% unique() ##1268
 
 #name reconciliation
-miss=setdiff(cov$species, names$names) #18
+miss=setdiff(all.spec$species, names$names) #105
 miss<- as.data.frame(miss)
 
 #revalue=c("old tip"= "new tip")
@@ -236,7 +263,7 @@ miss<- as.data.frame(miss)
   #Vampyressa_elisabethae - missing in the bats dataset
   #Vampyressa_sinchi - missing in the bats dataset
 }
-miss=setdiff(cov$species, iucn$binomial) #3 missing w no matches
+miss=setdiff(all.spec$species, iucn$binomial) ##48
 
 #create a blank raster and increase the resolution
 #data downloaded from here: https://geodata.ucdavis.edu/climate/worldclim/1_4/grid/cur/
@@ -244,12 +271,23 @@ setwd("~/Desktop/GitHub/footprint/alt_2-5m_bil")
 r <- raster("alt.bil")
 r <- disaggregate((r)*0,2)
 
-#subset geographic range data to CoV risky species and create a RasterLayer
-iucn_cov<- iucn[iucn$binomial %in% cov$species,] 
-map_cov <- fasterize(iucn_cov, r, fun="sum") 
+#subset geographic range data to risky species, etc. and create a RasterLayer
+iucn_allmean<- iucn[iucn$binomial %in% all_mean$species,]
+iucn_alldb<- iucn[iucn$binomial %in% all_db$species,] 
+iucn_flamean <- iucn[iucn$binomial %in% fla_mean$species,] 
+iucn_fladb <- iucn[iucn$binomial %in% fla_db$species,] 
+iucn_flaot<- iucn[iucn$binomial %in% fla_ot$species,] 
+iucn_togmean<- iucn[iucn$binomial %in% tog_mean$species,] 
+
+map_allmean <- fasterize(iucn_allmean, r, fun="sum")
+map_alldb<- fasterize(iucn_alldb, r, fun="sum")
+map_flamean<- fasterize(iucn_flamean, r, fun="sum")
+map_fladb<- fasterize(iucn_fladb, r, fun="sum")
+map_flaot<- fasterize(iucn_flaot, r, fun="sum")
+map_togmean<- fasterize(iucn_togmean, r, fun="sum")
 
 #clean up environment
-rm(names,miss,r,clade,cov,iucn)
+rm(names,miss,r,clade,iucn)
 
 #5 Create Raster #2: Load in human footprint data and human population density data
 #footprint data downloaded from here: https://sedac.ciesin.columbia.edu/data/set/wildareas-v3-2009-human-footprint 
@@ -259,13 +297,24 @@ footprint <-raster('~/Desktop/GitHub/footprint/footprint/wildareas-v3-2009-human
 #Make sure the projections are the same (i.e., maps overlap correctly)
 #Terra package is faster, so first convert both map and footprint RasterLayer --> SpatRaster using rast()
 footprint <- rast(footprint)
-map_cov <- rast(map_cov) 
-footprint <- project(footprint, map_cov)
-terramapcov<- map_cov
+map_allmean<- rast(map_allmean)
+map_alldb<- rast(map_alldb)
+map_flamean<- rast(map_flamean)
+map_fladb<- rast(map_fladb)
+map_flaot<- rast(map_flaot)
+map_togmean<- rast(map_togmean)
+
+footprint <- project(footprint, map_allmean)
+terramapallmean<- map_allmean ## save for later
 
 #then convert back to RasterLayer using raster()
-footprint <- raster(footprint) 
-map_cov <- raster(map_cov) 
+footprint <- raster(footprint)
+map_allmean<- raster(map_allmean)
+map_alldb<- raster(map_alldb)
+map_flamean<- raster(map_flamean)
+map_fladb<- raster(map_fladb)
+map_flaot<- raster(map_flaot)
+map_togmean<- raster(map_togmean)
 
 #get rid of outliers and ensure everything is aligned
 footprint[footprint>50] <- NA  ## plot(footprint)
@@ -273,30 +322,32 @@ footprint[footprint>50] <- NA  ## plot(footprint)
 #check extent, resolution, and projections of rasters (need to be identical)
 {
   print(extent(footprint))
-  print(extent(map_cov))
+  print(extent(map_allmean))
   
   print(res(footprint))
-  print(res(map_cov))
+  print(res(map_allmean))
   
   print(crs(footprint))
-  print(crs(map_cov))
+  print(crs(map_allmean))
 }
 
 ## test out layers
 footprint <- aggregate(footprint, fact=10, fun=mean)
-map_cov <- aggregate(map_cov, fact=10, fun=mean)
-
-#can check raster layers individually
-# my.colors = colorRampPalette(c("#be64ac","lightblue", "yellow","orangered", "red"))
-# plot(map_cov,frame.plot=F,axes=F,box=F,add=F,legend.width=1,legend.shrink=1,col=my.colors(255)) 
-# plot(footprint,frame.plot=F,axes=F,box=F,add=F,legend.width=1,legend.shrink=1,col=my.colors(255)) 
+map_allmean <- aggregate(map_allmean, fact=10, fun=mean)
+map_alldb <- aggregate(map_alldb, fact=10, fun=mean)
+map_flamean <- aggregate(map_flamean, fact=10, fun=mean)
+map_fladb <- aggregate(map_fladb, fact=10, fun=mean)
+map_flaot <- aggregate(map_flaot, fact=10, fun=mean)
+map_togmean <- aggregate(map_togmean, fact=10, fun=mean)
 
 #6 Map the bivariate map
 ## bivar map
-bivmap_cov_foot<-bivariate.map(map_cov, footprint, colormatrix=col.matrix, nquantiles=10)
-
-cov_foot<-terra:: plot(bivmap_cov_foot, frame.plot = TRUE, axes = F, box = T, 
-                        add = F, legend = F, col = as.vector(col.matrix), asp = 1)
+bivmap_allmean<-bivariate.map(map_allmean, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_alldb<-bivariate.map(map_alldb, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_flamean<-bivariate.map(map_flamean, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_fladb<-bivariate.map(map_fladb, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_flaot<-bivariate.map(map_flaot, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_togmean<-bivariate.map(map_togmean, footprint, colormatrix=col.matrix, nquantiles=10)
 
 ## tinker
 # Get matrix blocks of interest
@@ -304,9 +355,6 @@ col.matrix
 new.mat<- col.matrix
 new.mat[1:8,]<- NA
 new.mat[,1:8] <- NA
-
-highriskplaces<- terra:: plot(bivmap_cov_foot, frame.plot = TRUE, axes = F, box = T, 
-                        add = F, legend = F, col = as.vector(new.mat), asp = 1)
 
 ## add country borders
 library(rnaturalearth)
@@ -316,48 +364,109 @@ library(rnaturalearthdata)
 countries <- ne_countries(scale = "medium", returnclass = "sf")
 
 ## make sure the projection matches our map's projection
-crscov<- crs(terramapcov)
-countries <- st_transform(countries, crs = crscov)
+crsallmean<- crs(terramapallmean)
+countries <- st_transform(countries, crs = crsallmean)
 
 # confirm they are the same
-st_crs(countries) == st_crs(map_cov)
+st_crs(countries) == st_crs(map_allmean)
 
 # now plot
+hrp_allmean<- terra:: plot(bivmap_allmean, frame.plot = TRUE, axes = F, box = T, 
+                           add = F, legend = F, col = as.vector(new.mat), asp = 1)
 plot(st_geometry(countries), add = TRUE, col = NA, border = "black", lwd = 0.5)
+
+hrp_alldb<- terra:: plot(bivmap_alldb, frame.plot = TRUE, axes = F, box = T, 
+                         add = F, legend = F, col = as.vector(new.mat), asp = 1)
+plot(st_geometry(countries), add = TRUE, col = NA, border = "black", lwd = 0.5)
+
+hrp_flamean<- terra:: plot(bivmap_flamean, frame.plot = TRUE, axes = F, box = T, 
+                       add = F, legend = F, col = as.vector(new.mat), asp = 1)
+plot(st_geometry(countries), add = TRUE, col = NA, border = "black", lwd = 0.5)
+
+hrp_fladb<- terra:: plot(bivmap_fladb, frame.plot = TRUE, axes = F, box = T, 
+                     add = F, legend = F, col = as.vector(new.mat), asp = 1)
+plot(st_geometry(countries), add = TRUE, col = NA, border = "black", lwd = 0.5)
+
+hrp_flaot<- terra:: plot(bivmap_flaot, frame.plot = TRUE, axes = F, box = T, 
+                     add = F, legend = F, col = as.vector(new.mat), asp = 1)
+plot(st_geometry(countries), add = TRUE, col = NA, border = "black", lwd = 0.5)
+
+hrp_togmean<- terra:: plot(bivmap_togmean, frame.plot = TRUE, axes = F, box = T, 
+                       add = F, legend = F, col = as.vector(new.mat), asp = 1)
+plot(st_geometry(countries), add = TRUE, col = NA, border = "black", lwd = 0.5)
+
+
+## add country borders over it
+#plot(st_geometry(countries), add = TRUE, col = NA, border = "black", lwd = 0.5)
 ## save as PDF
 
-# Convert each raster cell to a point, and assign it a value
-point <- as.data.frame(rasterToPoints(bivmap_cov_foot))
+## make a list of all the bivmaps you want to loop through
+all.risk.maps <- list(
+  allmean = bivmap_allmean,
+  alldb = bivmap_alldb,
+  flamean = bivmap_flamean,
+  fladb = bivmap_fladb,
+  flaot = bivmap_flaot,
+  togmean = bivmap_togmean)
+
+# save empty list where results will go
+results <- list()
+
+for (name in names(all.risk.maps)) {
+  x <- all.risk.maps[[name]]
+  
+# Convert each raster cell to a point, and assign it a value (riskiness)
+point <- as.data.frame(rasterToPoints(x))
+
+# so for every coordinate (x,y) there is an assigned "risk" value
 colnames(point) <- c("x", "y", "value")
 
 # Filter only colored (non-NA) cells
+#save the colors we care about in a vector called "color vector"
 color_vector <- as.vector(new.mat)
-color_lookup <- data.frame(value = seq_along(color_vector),hex = color_vector)
-color_lookup <- color_lookup[!is.na(color_lookup$hex), ]
-head(color_lookup)
 
-point <- point %>% filter(value==97 |value==98 |value==98 |value==108 |value==109 |value==110
-                          |value==119
-                          |value==120
-                          |value==121)
+#now in the full matrix, we give ever matrix hex color a value, and most of the 
+## matrix hex colors are NA, since we got rid of them above
+color_lookup <- data.frame(value = seq_along(color_vector), hex = color_vector)
+color_lookup <- color_lookup[!is.na(color_lookup$hex), ]
+print(color_lookup)
+
+## now we know the only colors we care about correspond to these "values"
+point <- point %>% filter(value==97 |value==98 |value==98 
+                          |value==108 |value==109 |value==110
+                          |value==119 |value==120 |value==121)
 
 # Convert to spatial points
+## now we take those points in the dataframe and transform them back to a spatial object
+## and we specify the crs we use
 point.sf <- st_as_sf(point, coords = c("x", "y"), crs = crs(countries))
 
-# Ensure country polygons are in same CRS
+# turn countries into spatial object, and make sure its CRS is the same as the points.sf CRS
 countries.sf <- st_as_sf(countries)
 countries.sf <- st_transform(countries.sf, crs = st_crs(point.sf))
 
-# Spatial join: find which country each point falls in
+## locate which country each point falls in
+## kinda like the bivariate map situation above
 joined <- st_join(point.sf, countries.sf, join = st_intersects)
 
-# Now `joined` contains country names for each raster cell with color
-# Example: extract country names
+# Now joined contains country names for each raster cell with color that we care about
 places <- table(joined$name_long) %>% as.data.frame()
 
 print(places)
 
 ## country counts organized
 places <- places %>% arrange(desc(Freq))
+names(places) <- c("country","freq")
 
+## save
+results[[name]] <- places
+
+
+}
+
+final <- bind_rows(results, .id = "source")
+
+## save
+setwd('~/Desktop/GitHub/phylofatality/csv files')
+write.csv(final, "07_high risk places.csv")
 

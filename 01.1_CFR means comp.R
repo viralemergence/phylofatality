@@ -20,12 +20,12 @@ library(fastDummies)
 
 ## [1] load in VIRIONS
 ## load new virion
-## download "full dataset" https://github.com/viralemergence/virion 
+## download: https://github.com/viralemergence/virion/tree/gh-pages 
 setwd("~/Desktop/GitHub/")
 vir=vroom("virion.csv.gz")
 vir %<>% filter(HostClass == 'mammalia')
 
-## old virion
+# ## old virion
 setwd("~/Desktop/GitHub/virion/Virion")
 virOLD=vroom("virion.csv.gz")
 virOLD %<>% filter(HostClass == 'mammalia')
@@ -41,10 +41,6 @@ cfr1$cat="loose"
 cfr2$cat="stringent"
 cfr=bind_rows(cfr1, cfr2)
 rm(cfr1,cfr2)
-
-## save to use in 02_summary stats script
-setwd("~/Desktop/GitHub/phylofatality/csv files")
-#write_csv(cfr, "01_cfr.csv")
 
 ## rename based on CFR average
 ## human.trans is on scale 1-4 from 0 ---> endemic
@@ -62,9 +58,8 @@ raw<- cfr
 
 ## [3] name matching for VIRIONS
 ## check name matching
-miss <- setdiff(cfr$Virus,vir$Virus) %>% as.data.frame() #68
+miss <- setdiff(cfr$Virus,vir$Virus) %>% as.data.frame() # 108
 
-## left is old (CFR) and right is new (match virion)
 rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "kasokero orthonairovirus"="orthonairovirus kasokeroense",
          "tacaribe mammarenavirus"="mammarenavirus tacaribeense",
@@ -88,6 +83,7 @@ rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "indiana vesiculovirus"="vesiculovirus indiana",
          "alagoas vesiculovirus"="vesiculovirus alagoas",
          "new jersey vesiculovirus"="vesiculovirus newjersey",
+         
          "andes orthohantavirus"="orthohantavirus andesense",
          "argentinian mammarenavirus"="mammarenavirus juninense",
          "australian bat lyssavirus"="lyssavirus australis",
@@ -108,7 +104,7 @@ rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "hendra henipavirus"="henipavirus hendraense",
          "irkut lyssavirus"="lyssavirus irkut",
          "kokobera virus"="orthoflavivirus kokoberaorum",
-         "laguna negra orthohantavirus"="orthohantavirus negraense",
+         "laguna negra orthohantavirus"="orthohantavirus mamorense",
          "louping ill virus"="orthoflavivirus loupingi",
          "lujo mammarenavirus"="mammarenavirus lujoense",
          "lymphocytic choriomeningitis mammarenavirus"="mammarenavirus choriomeningitidis",
@@ -129,18 +125,61 @@ rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "tick-borne encephalitis virus"="orthoflavivirus encephalitidis",
          "tula orthohantavirus"="orthohantavirus tulaense",
          "whitewater arroyo mammarenavirus"="mammarenavirus whitewaterense",
+         
          "ebolavirus"="orthoebolavirus zairense",
          "kyasanur forest disease virus"="orthoflavivirus kyasanurense",
          "shuni orthobunyavirus"="orthobunyavirus shuniense",
-         "choclo orthohantavirus"="orthohantavirus chocloense"
-)
+         "choclo orthohantavirus"="orthohantavirus chocloense",
+         
+         "yaba monkey tumor virus"="yatapoxvirus yabapox",
+         "mucambo virus"="alphavirus mucambo",
+         "highlands j virus"="alphavirus highlandsj",
+         "equine rhinitis a virus"="aphthovirus burrowsi",
+         "everglades virus"="alphavirus everglades",
+         "madariaga virus"="alphavirus madariaga",
+         "palyam virus"="orbivirus palyamense",
+         "pixuna virus"="alphavirus pixuna",
+         "thottopalayam thottimvirus"="thottimvirus thottapalayamense",
+         "una virus"="alphavirus una",
+         "vesicular exanthema of swine virus"="vesivirus exanthema",
+         "great island virus"= "orbivirus magninsulae",
+         "avian orthoavulavirus 1"="orthoavulavirus javaense",
+         "influenza a virus"="alphainfluenzavirus influenzae",
+         "tonate virus"="alphavirus tonate",
+         "west nile virus"="orthoflavivirus nilense",
+         "bovine papular stomatitis virus"="parapoxvirus bovinestomatitis",
+         "camelpox virus"="orthopoxvirus camelpox",
+         "chikungunya virus"="alphavirus chikungunya",
+         "cowpox virus"="orthopoxvirus cowpox",
+         "dengue virus"="orthoflavivirus denguei",
+         "orthohantavirus negraense"="orthohantavirus mamorense",
+         "lassa mammarenavirus"="mammarenavirus lassaense",
+         "macacine alphaherpesvirus 1"="simplexvirus macacinealpha1",
+         "marburg marburgvirus"="orthomarburgvirus marburgense",
+         "monkeypox virus"="orthopoxvirus monkeypox",
+         # "middle east respiratory syndrome-related coronavirus"
+         "nipah henipavirus"="henipavirus nipahense",
+         "orf virus"="parapoxvirus orf",
+         "primate t-lymphotropic virus 1"="deltaretrovirus pritlym1",
+         "primate t-lymphotropic virus 2"="deltaretrovirus pritlym2",
+         "primate t-lymphotropic virus 3"="deltaretrovirus pritlym3",
+         "pseudocowpox virus"="parapoxvirus pseudocowpox",
+         "ross river virus"= "alphavirus rossriver",
+         "rotavirus a"="rotavirus alphagastroenteritidis",
+         "seoul orthohantavirus"="orthohantavirus seoulense",
+         "severe acute respiratory syndrome-related coronavirus"="betacoronavirus pandemicum",
+         "tanapox virus"="yatapoxvirus tanapox",
+         "yellow fever virus"="orthoflavivirus flavi",
+         "zika virus"="orthoflavivirus zikaense",
+         "changuinola virus"="orbivirus changuinolaense",
+         "nelson bay orthoreovirus"="orthoreovirus nelsonense")
 
 cfr %<>% mutate(Virus = recode(Virus, !!!rec))
 
 cfr$Virus[str_detect(cfr$Virus,'middle')] <- "middle east respiratory syndrome-related coronavirus"
 
 ## recheck
-setdiff(cfr$Virus,vir$Virus) #0!
+setdiff(cfr$Virus,vir$Virus) ## middle east respiratory syndrome-related coronavirus is the only missing (NA in VIRION)
 
 ## as data frame
 cfr=data.frame(cfr)
@@ -165,7 +204,7 @@ cfr$htrans=ifelse(cfr$onward==1,0,1)
 
 ## trim virion to NCBI resolved
 vdata=vir[(vir$HostNCBIResolved==T & vir$VirusNCBIResolved==T),]
-table(cfr$Virus %in% vir$Virus) # 119
+table(cfr$Virus %in% vir$Virus) # 117
 
 ## remove humans
 vdata=vdata[!vdata$Host=="homo sapiens",]
@@ -175,13 +214,6 @@ vdata=vdata[vdata$Virus%in%cfr$Virus,]
 
 ## remove missing hosts
 vdata=vdata[!is.na(vdata$Host),]
-
-#check (should be zero)
-vdata %>% filter(Host=="bos taurus", Virus=="pestivirus bovis", VirusGenus=="flavivirus") %>% print() # good to go
-
-#save for 02_summary statistics script
-setwd("~/Desktop/GitHub/phylofatality/csv files")
-#write_csv(vdata, "01_vdata.csv")
 
 ## redo for old VIRION
 ## check name matching
@@ -221,7 +253,7 @@ cfr$htrans=ifelse(cfr$onward==1,0,1)
 
 ## trim virion to NCBI resolved
 vdataOLD=virOLD[(virOLD$HostNCBIResolved==T & virOLD$VirusNCBIResolved==T),]
-table(cfr$Virus %in% virOLD$Virus)
+table(cfr$Virus %in% virOLD$Virus) ## 118
 
 ## remove humans
 vdataOLD=vdataOLD[!vdataOLD$Host=="homo sapiens",]
@@ -250,8 +282,8 @@ vdata$comp<- paste0(vdata$Host,"_",vdata$Virus,"_",vdata$Database)
 vdataOLD$comp<- paste0(vdataOLD$Host,"_",vdataOLD$Virus,"_",vdataOLD$Database)
 
 # compare
-miss<- setdiff(vdata$pair,vdataOLD$pair) # >1400 added
-miss<- setdiff(vdataOLD$pair,vdata$pair) # >2100 gone
+miss<- setdiff(vdata$pair,vdataOLD$pair) # >2300 added
+miss<- setdiff(vdataOLD$pair,vdata$pair) # >2600 gone
 miss<- setdiff(vdataOLD$comp,vdata$comp)
 
 gone=vdataOLD[vdataOLD$comp%in%miss,]
@@ -261,8 +293,8 @@ gone <- gone %>% select(comp, everything())
 cov<- gone %>% filter(VirusFamily=="coronaviridae")
 
 unique(cov$Database)
-table(cov$Database) ## genbank and globi satand out
-table(gone$Database) ## eid2, genbank, and globi
+table(cov$Database) ## genbank and globi stand out
+table(gone$Database) ## eid2 and genbank
 
 ## merge to make comparisons later as needed
 vdata$update<-"Y"

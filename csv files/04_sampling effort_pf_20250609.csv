@@ -1,0 +1,26 @@
+"","ID","factor","taxa","tips","node","clade","other"
+"1","samp",1,"NATALIDAE, MOLOSSIDAE, VESPERTILIONIDAE, NYCTERIDAE, EMBALLONURIDAE",102,1154,1.7,2.97
+"2","samp",2,"EQUIDAE, TAPIRIDAE, RHINOCEROTIDAE, CAMELIDAE, TAYASSUIDAE, SUIDAE, HIPPOPOTAMIDAE, PHYSETERIDAE, PHOCOENIDAE, MONODONTIDAE, DELPHINIDAE, ESCHRICHTIIDAE, BALAENOPTERIDAE, BALAENIDAE, TRAGULIDAE, GIRAFFIDAE, ANTILOCAPRIDAE, CERVIDAE, BOVIDAE",128,908,3.92,2.79
+"3","samp",3,"HIPPOPOTAMIDAE, PHYSETERIDAE, PHOCOENIDAE, MONODONTIDAE, DELPHINIDAE, ESCHRICHTIIDAE, BALAENOPTERIDAE, BALAENIDAE, TRAGULIDAE, GIRAFFIDAE, ANTILOCAPRIDAE, CERVIDAE, BOVIDAE",107,929,3.24,7.38
+"4","samp",4,"HYLOBATIDAE, HOMINIDAE, CERCOPITHECIDAE",67,1409,4.22,2.63
+"5","samp",5,"Bos, Bison, Bubalus, Syncerus",11,970,6.91,2.82
+"6","samp",6,"Ovis, Hemitragus, Capra, Budorcas",11,1012,5.64,2.46
+"7","samp",7,"CERVIDAE",20,948,4.2,1.92
+"8","samp",8,"CANIDAE",22,1074,4.36,2.56
+"9","samp",9,"Rattus",11,1550,5.18,2.51
+"10","samp",10,"Artibeus, Dermanura, Vampyrodes, Platyrrhinus, Uroderma, Sturnira",16,1273,4.56,2.45
+"11","samp_fla",1,"MORMOOPIDAE, PHYLLOSTOMIDAE",20,481,3.05,1.58
+"12","samp_tog",1,"CANIDAE, PHOCIDAE, MEPHITIDAE, PROCYONIDAE, URSIDAE, EQUIDAE, CAMELIDAE, TAYASSUIDAE, SUIDAE, CERVIDAE, BOVIDAE",20,155,2.4,1.29
+"13","cites",1,"Bos, Bison, Bubalus, Syncerus",11,970,184.12,23.76
+"14","cites",2,"CUNICULIDAE, DASYPROCTIDAE, CAVIIDAE, ERETHIZONTIDAE, CHINCHILLIDAE, ECHIMYIDAE, MYOCASTORIDAE",15,1512,159.05,21.41
+"15","cites",3,"Rattus",11,1550,130.95,19.99
+"16","cites",4,"Mus, Hylomyscus, Praomys, Mastomys, Stenocephalemys",15,1570,100.59,18.55
+"17","cites",5,"Ovis, Hemitragus, Capra, Budorcas, Oreamnos, Rupicapra, Ammotragus",15,1011,94.75,17.16
+"18","cites",6,"Macaca, Lophocebus, Papio, Theropithecus, Mandrillus, Cercocebus, Cercopithecus, Erythrocebus, Chlorocebus, Miopithecus, Allenopithecus",50,1426,58.28,14.49
+"19","cites",7,"FELIDAE",20,1054,81.64,12.71
+"20","cites",8,"Lycaon, Chrysocyon, Canis, Pseudalopex, Speothos, Cerdocyon",11,1085,73.32,11.81
+"21","cites",9,"OCHOTONIDAE, LEPORIDAE",11,1722,63.47,11.03
+"22","cites_fla",1,"Rattus, Mus, Praomys, Mastomys, Apodemus, Aethomys, Thallomys, Arvicanthis, Dasymys, Golunda, Millardia, Vandeleuria",18,616,165.2,30.33
+"23","cites_fla",2,"Tragelaphus, Bos, Bison, Bubalus, Syncerus",13,392,155.74,25.12
+"24","bsamp",1,"NATALIDAE, MOLOSSIDAE, VESPERTILIONIDAE, NYCTERIDAE, EMBALLONURIDAE",102,205,1.7,3.06
+"25","bcites_rha",1,"MORMOOPIDAE, PHYLLOSTOMIDAE, MOLOSSIDAE, VESPERTILIONIDAE, NYCTERIDAE, EMBALLONURIDAE",114,132,4.83,7.17

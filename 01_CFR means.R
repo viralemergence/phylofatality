@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu, carolinecummings@ou.edu 
-## last update 5/22/2025
+## last update 6/9/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -53,7 +53,8 @@ cfr$db[is.na(cfr$db)] <- 0
 cfr$db<- ifelse(cfr$Virus=="rotavirus a", NA, cfr$db )
 
 ## check name matching
-miss <- setdiff(cfr$Virus,vir$Virus) %>% as.data.frame() #68
+miss <- setdiff(cfr$Virus,vir$Virus) %>% as.data.frame() #108
+vnames<- vir %>% select(Virus, VirusOriginal) %>% unique()
 
 ## left is old (CFR) and right is new (match virion)
 rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
@@ -79,6 +80,7 @@ rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "indiana vesiculovirus"="vesiculovirus indiana",
          "alagoas vesiculovirus"="vesiculovirus alagoas",
          "new jersey vesiculovirus"="vesiculovirus newjersey",
+         
          "andes orthohantavirus"="orthohantavirus andesense",
          "argentinian mammarenavirus"="mammarenavirus juninense",
          "australian bat lyssavirus"="lyssavirus australis",
@@ -99,7 +101,7 @@ rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "hendra henipavirus"="henipavirus hendraense",
          "irkut lyssavirus"="lyssavirus irkut",
          "kokobera virus"="orthoflavivirus kokoberaorum",
-         "laguna negra orthohantavirus"="orthohantavirus negraense",
+         "laguna negra orthohantavirus"="orthohantavirus mamorense",
          "louping ill virus"="orthoflavivirus loupingi",
          "lujo mammarenavirus"="mammarenavirus lujoense",
          "lymphocytic choriomeningitis mammarenavirus"="mammarenavirus choriomeningitidis",
@@ -120,18 +122,61 @@ rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "tick-borne encephalitis virus"="orthoflavivirus encephalitidis",
          "tula orthohantavirus"="orthohantavirus tulaense",
          "whitewater arroyo mammarenavirus"="mammarenavirus whitewaterense",
+        
          "ebolavirus"="orthoebolavirus zairense",
          "kyasanur forest disease virus"="orthoflavivirus kyasanurense",
          "shuni orthobunyavirus"="orthobunyavirus shuniense",
-         "choclo orthohantavirus"="orthohantavirus chocloense"
-         )
+         "choclo orthohantavirus"="orthohantavirus chocloense",
+         
+         "yaba monkey tumor virus"="yatapoxvirus yabapox",
+         "mucambo virus"="alphavirus mucambo",
+         "highlands j virus"="alphavirus highlandsj",
+         "equine rhinitis a virus"="aphthovirus burrowsi",
+         "everglades virus"="alphavirus everglades",
+         "madariaga virus"="alphavirus madariaga",
+         "palyam virus"="orbivirus palyamense",
+         "pixuna virus"="alphavirus pixuna",
+         "thottopalayam thottimvirus"="thottimvirus thottapalayamense",
+         "una virus"="alphavirus una",
+         "vesicular exanthema of swine virus"="vesivirus exanthema",
+         "great island virus"= "orbivirus magninsulae",
+         "avian orthoavulavirus 1"="orthoavulavirus javaense",
+         "influenza a virus"="alphainfluenzavirus influenzae",
+         "tonate virus"="alphavirus tonate",
+         "west nile virus"="orthoflavivirus nilense",
+         "bovine papular stomatitis virus"="parapoxvirus bovinestomatitis",
+         "camelpox virus"="orthopoxvirus camelpox",
+         "chikungunya virus"="alphavirus chikungunya",
+         "cowpox virus"="orthopoxvirus cowpox",
+         "dengue virus"="orthoflavivirus denguei",
+         "orthohantavirus negraense"="orthohantavirus mamorense",
+         "lassa mammarenavirus"="mammarenavirus lassaense",
+         "macacine alphaherpesvirus 1"="simplexvirus macacinealpha1",
+         "marburg marburgvirus"="orthomarburgvirus marburgense",
+         "monkeypox virus"="orthopoxvirus monkeypox",
+         "nipah henipavirus"="henipavirus nipahense",
+         "orf virus"="parapoxvirus orf",
+         "primate t-lymphotropic virus 1"="deltaretrovirus pritlym1",
+         "primate t-lymphotropic virus 2"="deltaretrovirus pritlym2",
+         "primate t-lymphotropic virus 3"="deltaretrovirus pritlym3",
+         "pseudocowpox virus"="parapoxvirus pseudocowpox",
+         "ross river virus"= "alphavirus rossriver",
+         "rotavirus a"="rotavirus alphagastroenteritidis",
+         "seoul orthohantavirus"="orthohantavirus seoulense",
+         "severe acute respiratory syndrome-related coronavirus"="betacoronavirus pandemicum",
+         "tanapox virus"="yatapoxvirus tanapox",
+         "yellow fever virus"="orthoflavivirus flavi",
+         "zika virus"="orthoflavivirus zikaense",
+         "changuinola virus"="orbivirus changuinolaense",
+         "nelson bay orthoreovirus"="orthoreovirus nelsonense")
 
 cfr %<>% mutate(Virus = recode(Virus, !!!rec))
 
 cfr$Virus[str_detect(cfr$Virus,'middle')] <- "middle east respiratory syndrome-related coronavirus"
 
 ## recheck
-setdiff(cfr$Virus,vir$Virus) #0!
+miss<- setdiff(cfr$Virus,vir$Virus) ## middle east respiratory syndrome-related coronavirus is the only missing (NA in VIRION)
+cfr=cfr[!cfr$Virus%in%miss,] 
 
 ## as data frame
 cfr=data.frame(cfr)
@@ -156,7 +201,7 @@ cfr$htrans=ifelse(cfr$onward==1,0,1)
 
 ## trim virion to NCBI resolved
 vdata=vir[(vir$HostNCBIResolved==T & vir$VirusNCBIResolved==T),]
-table(cfr$Virus %in% vir$Virus) # 119
+table(cfr$Virus %in% vir$Virus) # 117
 
 ## remove humans
 vdata=vdata[!vdata$Host=="homo sapiens",]
@@ -167,8 +212,10 @@ vdata=vdata[vdata$Virus%in%cfr$Virus,]
 ## remove missing hosts
 vdata=vdata[!is.na(vdata$Host),]
 
-#check (should be zero)
-vdata %>% filter(Host=="bos taurus", Virus=="pestivirus bovis", VirusGenus=="flavivirus") %>% print() # good to go
+## look at viruses one more time
+vnames<- vdata %>% select(Virus, Database) %>% unique() ## 418
+vnames$flag <- ifelse(vnames$Database=="PREDICT", 1,0) ## none
+vdata$flag <-ifelse(vdata$Database=="PREDICT", 1,0) ## none 
 
 #save for 02_summary statistics script
 setwd("~/Desktop/GitHub/phylofatality/csv files")
@@ -187,7 +234,7 @@ rm(dums)
 
 ## unique ID
 vdata$pair=paste(vdata$Host,vdata$Virus)
-n_distinct(vdata$pair) #2,915 unique host-virus associations ## NEW: 2185
+n_distinct(vdata$pair) #2,635 unique host-virus associations
 
 ## aggregate detection and filter
 vdata=aggregate(cbind(DetectionMethod_Antibodies,
@@ -204,56 +251,56 @@ vdata[c("DetectionMethod_Antibodies",
                "DetectionMethod_Not.specified",
                "DetectionMethod_PCR.Sequencing")]>0,1,0)
 
-## how many unique host-virus associations are PCR or isolation? #1459 #NEW: 1329 
+## how many unique host-virus associations are PCR or isolation?  ## 1580 
 vdata$evidence=ifelse(vdata$DetectionMethod_PCR.Sequencing==1 | vdata$DetectionMethod_Isolation.Observation==1,1,0)
 table(vdata$evidence) 
 table(vdata$VirusFamily,vdata$evidence)
 
 #how many unique host-virus associations for each detection type?
 vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1,1,0)
-table(vdata$evidence) #797 isolation #NEW: 736 
+table(vdata$evidence) #798 isolation
 vdata$evidence=ifelse(vdata$DetectionMethod_PCR.Sequencing==1,1,0)
-table(vdata$evidence) #1103 pcr #NEW: 991 
+table(vdata$evidence) #1221
 vdata$evidence=ifelse(vdata$DetectionMethod_Antibodies==1,1,0)
-table(vdata$evidence) #1323 antibodies #NEW: 1088 
+table(vdata$evidence) #1320
 vdata$evidence=ifelse(vdata$DetectionMethod_Not.specified==1,1,0)
-table(vdata$evidence) #2544 none ##NEW: 181?
+table(vdata$evidence) #216
 
 #more specifically, which are lacking strong evidence?
 vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
                         vdata$DetectionMethod_PCR.Sequencing==1 |
                         vdata$DetectionMethod_Antibodies==1,1,0)
 table(vdata$evidence) 
-#408 are completely unspecified #NEW: 20
-#2507 are detected by at least 1 detection method #NEW: 2166
+# 26 are completely unspecified
+#2609 are detected by at least 1 detection method
 
 vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
                         vdata$DetectionMethod_PCR.Sequencing==1 |
                         vdata$DetectionMethod_Not.specified==1,1,0)
 table(vdata$evidence) 
-#159 are only detected by antibodies ##NEW: 820 are anotbodies only?? 37.5%??
-#159/2915 = 5.5%
+#1004 are only detected by antibodies
+#1004/2635 = 38%
 
 #which are only viral isolation or only PCR or both?
 vdata$evidence=ifelse(vdata$DetectionMethod_Not.specified==1 | 
                         vdata$DetectionMethod_PCR.Sequencing==1 |
                         vdata$DetectionMethod_Antibodies==1,1,0)
 table(vdata$evidence) 
-#30 are only viral isolation ##NEW: 260
+# 277 are only viral isolation
 
 vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
                         vdata$DetectionMethod_Not.specified==1 |
                         vdata$DetectionMethod_Antibodies==1,1,0)
 table(vdata$evidence) 
-#160 are only pcr ##NEW: 472
+#630 are only pcr
 
 vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
                         vdata$DetectionMethod_PCR.Sequencing==1,1,0)
 table(vdata$evidence)
 
-# 1459 are detected by viral isolation and/or pcr ##NEW 1329
-# 441 are viral isolation AND pcr ## NEW 398
-# 1459/2915 > 50% ## NEW: 1329/2186 61%
+# 1580 are detected by viral isolation and/or pcr
+# 439 are viral isolation AND pcr
+# 1580/2635 = 60%
 
 ## load in host taxonomy
 setwd("~/Desktop/GitHub/phylofatality/phylo")
@@ -267,7 +314,7 @@ taxa$species=sapply(strsplit(taxa$tip,'_'),function(x) paste(x[1],x[2],sep=' '))
 vdata$species=capitalize(vdata$Host)
 
 ## match
-miss=setdiff(vdata$species,taxa$species) #86
+miss=setdiff(vdata$species,taxa$species) # 103
 
 ## flag
 vdata$flag=ifelse(vdata$species%in%miss,1,0)
@@ -296,7 +343,7 @@ vdata$flag=ifelse(is.na(vdata$species),1,0)
 vdata$species=ifelse(vdata$flag==1,capitalize(vdata$Host),vdata$species)
 
 ## recheck
-miss=setdiff(vdata$species,taxa$species) #57
+miss=setdiff(vdata$species,taxa$species) # 69
 
 ## fix genus modifications
 vdata$species=gsub("Neoeptesicus|Cnephaeus","Eptesicus",vdata$species)
@@ -307,7 +354,7 @@ vdata=vdata[!vdata$drop==1,]
 vdata$drop=NULL
 
 ## recheck
-miss=setdiff(vdata$species,taxa$species) %>% as.data.frame()
+miss=setdiff(vdata$species,taxa$species) %>% as.data.frame() ## 35
 
 ## manual fix
 vdata$species=revalue(vdata$species,
@@ -323,10 +370,12 @@ vdata$species=revalue(vdata$species,
                        "Cricetulus griseus"="Cricetulus barabensis",
                        "Dicotyles tajacu"="Pecari tajacu",
                        "Epomophorus pusillus"="Micropteropus pusillus",
+                       "Giraffa giraffa"="Giraffa camelopardalis",
                        "Glossophaga mutica"="Glossophaga soricina",
                        "Heteromys salvini"="Liomys salvini",
                        "Kerivoula furva"="Kerivoula titania",
                        "Lophostoma silvicola"="Lophostoma silvicolum",
+                       "Lyroderma lyra"="Megaderma lyra",
                        "Microtus obscurus"="Microtus arvalis",
                        "Microtus rossiaemeridionalis"="Microtus arvalis",
                        "Molossus nigricans"="Molossus rufus",
@@ -335,9 +384,12 @@ vdata$species=revalue(vdata$species,
                        "Murina feae"="Murina aurata",
                        "Neogale frenata"="Mustela frenata",
                        "Neogale vison"="Neovison vison",
+                       "Nothocricetulus migratorius"="Cricetulus migratorius",
                        "Oligoryzomys costaricensis"="Oligoryzomys fulvescens",
+                       "Otaria byronia"="Otaria bryonia",
                        "Pekania pennanti"="Martes pennanti",
                        "Piliocolobus tholloni"="Procolobus badius",
+                       "Pteropus medius"="Pteropus giganteus",
                        "Rhinolophus monoceros"="Rhinolophus pusillus",
                        "Stenocranius gregalis"="Microtus gregalis",
                        "Urva edwardsii"="Herpestes edwardsii"))
@@ -350,7 +402,7 @@ vdata=vdata[!vdata$species%in%miss,]
 rm(miss,rec)
 
 ## save data
-vraw=vdata #2912 unique host-virus obs ##NEW: 2086
+vraw=vdata #2514
 
 # merge and look at db data
 tmp=merge(cfr,vdata,by="Virus")
@@ -372,22 +424,21 @@ fla$species=NULL
 
 fla2 <- vir %>% filter(HostFamily=="vespertilionidae") %>% select(Host, HostFamily)
 fla2 <- merge(fla, fla2, by="Host") %>% unique()
-nrow(fla2) #25 ##NEW: 13
-sum(fla2$Virus=="japanese encephalitis virus") #10  ##NEW: 0
-sum(fla2$Virus=="west nile virus") #6 ## NEW: 0
+nrow(fla2) ### 17
+sum(fla2$Virus=="japanese encephalitis virus") #0
+sum(fla2$Virus=="west nile virus") #0
 
 fla3<- vir %>% filter(Virus=="japanese encephalitis virus" & HostFamily=="vespertilionidae") %>% unique() %>% select(Host, Virus, DetectionMethod, everything())
-nrow(fla3) #52 ##NEW: 0
-sum(fla3$DetectionMethod=="Antibodies") #12 ##NEW: 0
+nrow(fla3) #0
+sum(fla3$DetectionMethod=="Antibodies") # 0
 fla3$combo<- paste0(fla3$DetectionMethod, "_", fla3$Host)
 fla4<- unique(fla3$combo) %>% as.data.frame()
-nrow(fla4) #27, and 7 out of 27 are antibodies; 4/ 27 are PCR ##NEW: 0
+nrow(fla4) ## 0
 
 fla <- vir %>% filter(Virus=="japanese encephalitis virus" & HostFamily=="vespertilionidae")
 fla<- vir %>% filter(Virus=="japanese encephalitis virus" & HostOrder=="chiroptera") %>% select(Host, Virus, HostFamily) %>% unique()
 fla<- vir %>% filter(Virus=="yellow fever virus" & HostOrder=="chiroptera") %>% select(Host, Virus, HostFamily) %>% unique()
-
-fla$num <- 1
+rm(fla, fla2,fla3,fla4)
 
 #aggregate(num ~ HostFamily, data = fla, sum) %>% print()
 
@@ -485,7 +536,7 @@ vlist=lapply(vfam_hosts$VirusFamily,vfam_out)
 vset=vlist %>% purrr::reduce(full_join,by="species")
 
 ## merge
-vdata=merge(vdata,vset,by="species",all=T) #983 obs (unique species)
+vdata=merge(vdata,vset,by="species",all=T) #889
 
 ## pubmed citations
 library(easyPubMed)

@@ -1,7 +1,7 @@
 ## phylofatality
 ## 06_bivariate map
 ## danbeck@ou.edu, carolinecummings@ou.edu, Colin Carlson
-## last update 5/28/2025
+## last update 6/10/2025
 
 #troubleshooting:
 #https://rfunctions.blogspot.com/2015/03/bivariate-maps-bivariatemap-function.html 
@@ -86,24 +86,23 @@ bivariate.map<-function(rasterx, rastery, colormatrix=col.matrix, nquantiles=10)
 #3 Create raster #1: geographic ranges of bats (CoV risky clade)
 #first, load in risky species name data
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-clade <- read.csv("05_pf_riskyspecies.csv")
+clade <- read.csv("05_pf_riskyspecies_20250609.csv")
 
-#subset data to All viruses-MeanCFR and CoV-MeanCFR, etc.
-all<-clade %>% 
+#subset data 
+all_mean<-clade %>% 
   filter(host=="mammal", var=="mean", virus=="all", factor=="1" | factor=="3")
-cov<-clade %>% filter(host=="mammal", var=="mean", virus=="cov", factor=="1")
-fla<- clade %>% 
-  filter(host=="mammal", var=="mean", virus=="fla", factor=="2" | factor=="4")
-
-## others
-ot_all<- clade %>%
-  filter(host=="mammal", var=="ot", virus=="all", factor=="2")
-ot_fla<- clade %>%
-  filter(host=="mammal", var=="ot", virus=="fla", factor=="2")
-db_all<- clade %>%
+all_db<- clade %>%
   filter(host=="mammal", var=="db", virus=="all", factor=="1")
-db_fla<- clade %>%
+
+fla_mean<- clade %>% 
+  filter(host=="mammal", var=="mean", virus=="fla", factor=="3")
+fla_db<- clade %>%
   filter(host=="mammal", var=="db", virus=="fla", factor=="2")
+fla_ot<- clade %>%
+  filter(host=="mammal", var=="ot", virus=="fla", factor=="2")
+
+tog_mean <- clade %>% 
+  filter(host=="mammal", var=="mean", virus=="tog", factor=="1")
 
 #load in IUCN geographic range data
 iucn <- st_read("~/Desktop/GitHub/footprint/IUCN/MAMMALS.shp")
@@ -114,13 +113,28 @@ iucn$binomial<- gsub(" ", "_", iucn$binomial)
 names<- unique(iucn$binomial) %>% as.data.frame()
 names$names<- names$.
 names$.=NULL
-names$names<- names[order(names$names),]
+names<- names %>% arrange(names)
+
+## combine all bat names and compare to iucn to make sure we have the most covered
+all_db_species <- all_db %>% dplyr::select(species) %>% unique()
+all_mean_species <- all_mean %>% dplyr::select(species) %>% unique()
+fla_db_species <- fla_db %>% dplyr::select(species) %>% unique()
+fla_mean_species <- fla_mean %>% dplyr::select(species) %>% unique()
+fla_ot_species <- fla_ot %>% dplyr::select(species) %>% unique()
+tog_mean_species <- tog_mean %>% dplyr::select(species) %>% unique()
+
+all.spec<- rbind(all_db_species,all_mean_species,
+                 fla_db_species,fla_mean_species,fla_ot_species,
+                 tog_mean_species)
+
+all.spec <- all.spec %>% arrange(species) %>% unique() ##1268
 
 #name reconciliation
-miss=setdiff(all$species, names$names) #87 missing
-miss<- as.data.frame(miss)
+miss=setdiff(all.spec$species, names$names) #105 missing
+miss<- as.data.frame(miss) %>% arrange(miss)
 
 #revalue=c("old tip"= "new tip")
+## i'm changing IUCN names (usually do the other dataset, but for some reason (possibly a goof) that's not done here... Doesn't matter in the end)
 {
 iucn$binomial= plyr::revalue(iucn$binomial,
                  c("Austronomus_australis"="Tadarida_australis",
@@ -251,7 +265,9 @@ iucn$binomial= plyr::revalue(iucn$binomial,
 #Vampyressa_elisabethae - missing in the bats dataset
 #Vampyressa_sinchi - missing in the bats dataset
 }
-miss=setdiff(all$species, iucn$binomial) #45 missing
+miss=setdiff(all_mean$species, iucn$binomial) #45 missing
+miss<- as.data.frame(miss) %>% arrange(miss)
+rm(miss)
 
 #create a blank raster and increase the resolution
 #data downloaded from here: https://geodata.ucdavis.edu/climate/worldclim/1_4/grid/cur/
@@ -259,39 +275,32 @@ setwd("~/Desktop/GitHub/footprint/alt_2-5m_bil")
 r <- raster("alt.bil")
 r <- disaggregate((r)*0,2)
 
-#subset geographic range data to CoV risky species, etc. and create a RasterLayer
-iucn_all<- iucn[iucn$binomial %in% all$species,]
-iucn_cov<- iucn[iucn$binomial %in% cov$species,] 
-iucn_fla <- iucn[iucn$binomial %in% fla$species,] 
+#subset geographic range data to risky species, etc. and create a RasterLayer
+iucn_allmean<- iucn[iucn$binomial %in% all_mean$species,]
+iucn_alldb<- iucn[iucn$binomial %in% all_db$species,] 
+iucn_flamean <- iucn[iucn$binomial %in% fla_mean$species,] 
+iucn_fladb <- iucn[iucn$binomial %in% fla_db$species,] 
+iucn_flaot<- iucn[iucn$binomial %in% fla_ot$species,] 
+iucn_togmean<- iucn[iucn$binomial %in% tog_mean$species,] 
 
-map_all <- fasterize(iucn_all, r, fun="sum")
-map_cov <- fasterize(iucn_cov, r, fun="sum")
-map_fla <- fasterize(iucn_fla, r, fun="sum")
-
-## repeat for supplementary 
-iucn_OtAll <- iucn[iucn$binomial %in% ot_all$species,]
-iucn_OtFla <- iucn[iucn$binomial %in% ot_fla$species,]
-iucn_DbAll <- iucn[iucn$binomial %in% db_all$species,]
-iucn_DbFla <- iucn[iucn$binomial %in% db_fla$species,]
-
-map_OtAll <- fasterize(iucn_OtAll, r, fun="sum")
-map_OtFla <- fasterize(iucn_OtFla, r, fun="sum")
-map_DbAll <- fasterize(iucn_DbAll, r, fun="sum")
-map_DbFla<- fasterize(iucn_DbFla, r, fun="sum")
+map_allmean <- fasterize(iucn_allmean, r, fun="sum")
+map_alldb<- fasterize(iucn_alldb, r, fun="sum")
+map_flamean<- fasterize(iucn_flamean, r, fun="sum")
+map_fladb<- fasterize(iucn_fladb, r, fun="sum")
+map_flaot<- fasterize(iucn_flaot, r, fun="sum")
+map_togmean<- fasterize(iucn_togmean, r, fun="sum")
 
 # This adds zeros for the continental area so they aren't invisible
 fix <- function(x) {sum(x,r,na.rm=TRUE)+r} 
-map_all<- fix(map_all)
-map_cov<- fix(map_cov)
-map_fla<- fix(map_fla)
-
-map_OtAll<- fix(map_OtAll)
-map_OtFla<- fix(map_OtFla)
-map_DbAll<- fix(map_DbAll)
-map_DbFla<- fix(map_DbFla)
+map_allmean<- fix(map_allmean)
+map_alldb<- fix(map_alldb)
+map_flamean<- fix(map_flamean)
+map_fladb<- fix(map_fladb)
+map_flaot<- fix(map_flaot)
+map_togmean<- fix(map_togmean)
 
 #clean up environment
-rm(names, miss)
+rm(names)
 
 #4 Generate heatmap of CoV clade visualization
 {
@@ -319,28 +328,23 @@ footprint <-raster('~/Desktop/GitHub/footprint/footprint/wildareas-v3-2009-human
 #Make sure the projections are the same
 #Terra package is faster, so first convert both map and footprint RasterLayer --> SpatRaster
 footprint <- rast(footprint)
-map_all <- rast(map_all)
-map_cov <- rast(map_cov)
-map_fla <- rast(map_fla)
+map_allmean<- rast(map_allmean)
+map_alldb<- rast(map_alldb)
+map_flamean<- rast(map_flamean)
+map_fladb<- rast(map_fladb)
+map_flaot<- rast(map_flaot)
+map_togmean<- rast(map_togmean)
 
-map_OtAll<- rast(map_OtAll)
-map_OtFla<- rast(map_OtFla)
-map_DbAll<- rast(map_DbAll)
-map_DbFla<- rast(map_DbFla)
-
-footprint <- project(footprint, map_all)
-#footprint <- project(footprint, map_OtAll)
+footprint <- terra::project(footprint, map_allmean)
 
 #then convert back to RasterLayer
 footprint <- raster(footprint)
-map_all <- raster(map_all)
-map_cov <- raster(map_cov)
-map_fla <- raster(map_fla)
-
-map_OtAll<- raster(map_OtAll)
-map_OtFla<- raster(map_OtFla)
-map_DbAll<- raster(map_DbAll)
-map_DbFla<- raster(map_DbFla)
+map_allmean<- raster(map_allmean)
+map_alldb<- raster(map_alldb)
+map_flamean<- raster(map_flamean)
+map_fladb<- raster(map_fladb)
+map_flaot<- raster(map_flaot)
+map_togmean<- raster(map_togmean)
 
 #get rid of outliers and ensure everything is aligned
 footprint[footprint>50] <- NA
@@ -348,27 +352,23 @@ footprint[footprint>50] <- NA
 #check extent, resolution, and projections of rasters (need to be identical)
 {
 print(extent(footprint))
-print(extent(map_all))
-print(extent(map_cov))
+print(extent(map_allmean))
 
 print(res(footprint))
-print(res(map_all))
-print(res(map_cov))
+print(res(map_allmean))
 
 print(crs(footprint))
-print(crs(map_all))
+print(crs(map_allmean))
 }
 
-##test out layers
+## aggregate to make this work on my machine
 footprint <- aggregate(footprint, fact=10, fun=mean)
-map_all <- aggregate(map_all, fact=10, fun=mean)
-map_cov <- aggregate(map_cov, fact=10, fun=mean)
-map_fla <- aggregate(map_fla, fact=10, fun=mean)
-
-map_OtAll <- aggregate(map_OtAll, fact=10, fun=mean)
-map_OtFla <- aggregate(map_OtFla, fact=10, fun=mean)
-map_DbAll <- aggregate(map_DbAll, fact=10, fun=mean)
-map_DbFla <- aggregate(map_DbFla, fact=10, fun=mean)
+map_allmean <- aggregate(map_allmean, fact=10, fun=mean)
+map_alldb <- aggregate(map_alldb, fact=10, fun=mean)
+map_flamean <- aggregate(map_flamean, fact=10, fun=mean)
+map_fladb <- aggregate(map_fladb, fact=10, fun=mean)
+map_flaot <- aggregate(map_flaot, fact=10, fun=mean)
+map_togmean <- aggregate(map_togmean, fact=10, fun=mean)
 
 #can check raster layers individually
 #my.colors = colorRampPalette(c("#be64ac","lightblue", "yellow","orangered", "red"))
@@ -376,44 +376,25 @@ map_DbFla <- aggregate(map_DbFla, fact=10, fun=mean)
 
 #6 Map the bivariate map
 
-## convert back to raster if needed
-# map_all <- raster(map_all) 
-# footprint <- raster(footprint) 
-# map_OtAll<- raster(map_OtAll)
-# map_OtFla<- raster(map_OtFla)
-# map_DbAll<- raster(map_DbAll)
-# map_DbFla<- raster(map_DbFla)
-
 ## bivar map
-bivmap_all_foot<-bivariate.map(map_all, footprint, colormatrix=col.matrix, nquantiles=10)
-bivmap_cov_foot<-bivariate.map(map_cov, footprint, colormatrix=col.matrix, nquantiles=10)
-bivmap_fla_foot<-bivariate.map(map_fla, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_allmean<-bivariate.map(map_allmean, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_alldb<-bivariate.map(map_alldb, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_flamean<-bivariate.map(map_flamean, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_fladb<-bivariate.map(map_fladb, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_flaot<-bivariate.map(map_flaot, footprint, colormatrix=col.matrix, nquantiles=10)
+bivmap_togmean<-bivariate.map(map_togmean, footprint, colormatrix=col.matrix, nquantiles=10)
 
-all_foot<- terra:: plot(bivmap_all_foot, frame.plot = TRUE, axes = F, box = T, 
+allmean<- terra:: plot(bivmap_allmean, frame.plot = TRUE, axes = F, box = T, 
                         add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-
-cov_foot<- terra:: plot(bivmap_cov_foot, frame.plot = TRUE, axes = F, box = T, 
+alldb<- terra:: plot(bivmap_alldb, frame.plot = TRUE, axes = F, box = T, 
                         add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-
-fla_foot<- terra:: plot(bivmap_fla_foot, frame.plot = TRUE, axes = F, box = T, 
+flamean<- terra:: plot(bivmap_flamean, frame.plot = TRUE, axes = F, box = T, 
+                        add = F, legend = F, col = as.vector(col.matrix), asp = 1)
+fladb<- terra:: plot(bivmap_fladb, frame.plot = TRUE, axes = F, box = T, 
+                        add = F, legend = F, col = as.vector(col.matrix), asp = 1)
+flaot<- terra:: plot(bivmap_flaot, frame.plot = TRUE, axes = F, box = T, 
+                        add = F, legend = F, col = as.vector(col.matrix), asp = 1)
+togmean<- terra:: plot(bivmap_togmean, frame.plot = TRUE, axes = F, box = T, 
                         add = F, legend = F, col = as.vector(col.matrix), asp = 1)
 
 #export as PDF/JPG
-
-## supp material
-bivmap_all_ot<-bivariate.map(map_OtAll, footprint, colormatrix=col.matrix, nquantiles=10)
-bivmap_fla_ot<-bivariate.map(map_OtFla, footprint, colormatrix=col.matrix, nquantiles=10)
-bivmap_all_db<-bivariate.map(map_DbAll, footprint, colormatrix=col.matrix, nquantiles=10)
-bivmap_fla_db<-bivariate.map(map_DbFla, footprint, colormatrix=col.matrix, nquantiles=10)
-
-allot<- terra:: plot(bivmap_all_ot, frame.plot = TRUE, axes = F, box = T, 
-                        add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-flaot<- terra:: plot(bivmap_fla_ot, frame.plot = TRUE, axes = F, box = T, 
-                     add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-alldb<- terra:: plot(bivmap_all_db, frame.plot = TRUE, axes = F, box = T, 
-                     add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-fladb<- terra:: plot(bivmap_fla_db, frame.plot = TRUE, axes = F, box = T, 
-                     add = F, legend = F, col = as.vector(col.matrix), asp = 1)
-
-## tinker
-
