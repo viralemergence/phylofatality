@@ -302,6 +302,10 @@ table(vdata$evidence)
 # 439 are viral isolation AND pcr
 # 1580/2635 = 60%
 
+vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1,1,0)
+vdata$evidence=ifelse(vdata$DetectionMethod_PCR.Sequencing==1,1,0)
+table(vdata$evidence)
+
 ## load in host taxonomy
 setwd("~/Desktop/GitHub/phylofatality/phylo")
 taxa=read.csv('taxonomy_mamPhy_5911species.csv',header=T)

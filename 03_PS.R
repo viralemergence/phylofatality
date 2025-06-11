@@ -1,7 +1,7 @@
 ## phylofatality
 ## 03_PS
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 6/9/2025
+## last update 6/11/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -71,7 +71,7 @@ data_par <- data
 data_par <- dplyr::select(data_par, species, label, Species, contains("paramyxoviridae"))
 
 ##all mammals, all viruses, no onward transmission
-data$ntrans_all.viruses=data$virusesWithCFR_all.viruses-data$htrans_all.viruses
+data$ntrans_all.viruses=data$virusesWithOT_all.viruses-data$htrans_all.viruses
 ##all mammals, 5 viruses
 #coronaviridae
 data_cor$ntrans_cor=data_cor$virusesWithOT_coronaviridae-data_cor$htrans_coronaviridae
@@ -420,13 +420,13 @@ kdata_fla=data.frame(vfamily=rep("flaviviridae",8),
 kdata_fla$variable=factor(kdata$variable,levels=c("meanCFR","maxCFR","on.frac","meanDB"))
 
 ## rhabdoviridae
-klist=list(psk_me,psk_mx,psk_db,bpsk_me,bpsk_mx, bpsk_db)
+klist=list(psk_me_rha,psk_mx_rha,psk_db_rha,bpsk_me_rha,bpsk_mx_rha, bpsk_db_rha)
 kdata_rha=data.frame(vfamily=rep("rhabdoviridae",6),
                  dataset=c(rep("all mammals",3), rep("bats only", 3)),
                  variable=c(rep(c("meanCFR", "maxCFR","meanDB"), 2)),
                  K=sapply(klist,function(x) x$"K"),
                  P=sapply(klist,function(x) x$"P"))
-kdata$variable=factor(kdata$variable,levels=c("meanCFR","maxCFR","meanDB"))
+kdata_rha$variable=factor(kdata_rha$variable,levels=c("meanCFR","maxCFR","meanDB"))
 
 ## togaviridae
 klist=list(psk_me_tog,psk_mx_tog,psk_ot_tog,psk_db_tog,bpsk_me_tog,bpsk_mx_tog,bpsk_ot_tog,bpsk_db_tog)
@@ -444,13 +444,12 @@ kdata_par=data.frame(vfamily=rep("paramyxoviridae",8),
                      variable=c(rep(c("meanCFR", "maxCFR", "on.frac","meanDB"), 2)),
                      K=sapply(klist,function(x) x$"K"),
                      P=sapply(klist,function(x) x$"P"))
-kdata_par$variable=factor(kdata_tog$variable,levels=c("meanCFR","maxCFR","on.frac","meanDB"))
+kdata_par$variable=factor(kdata_par$variable,levels=c("meanCFR","maxCFR","on.frac","meanDB"))
 
 ## save
 bloombergk<- rbind(kdata, kdata_fla, kdata_rha, kdata_tog, kdata_par)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(bloombergk,"03_K data.csv")
-#write.csv(bloombergk,"03_K data_20250520.csv")
 write.csv(bloombergk,"03_K data_20250609.csv")
 
 
@@ -458,7 +457,6 @@ write.csv(bloombergk,"03_K data_20250609.csv")
 #don't forget to reload in packages
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #ps=read.csv("03_PS data.csv")
-#ps=read.csv("03_PS data_20250520.csv")
 ps=read.csv("03_PS data_20250609.csv")
 ps$X=NULL
 
@@ -507,9 +505,8 @@ plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
   labs(x = "Virus Family", y = expression(paste("Pagel's ", lambda)))+
   theme(axis.title.x = element_text(size = 16, margin = margin(t = 20)))+
   theme(axis.title.y = element_text(size = 16, margin = margin(r = 18)))+
-  scale_x_discrete(labels=c("all viruses",expression(italic(Coronaviridae)),
-                            expression(italic(Flaviviridae)),expression(italic(Paramyxoviridae)),
-                            expression(italic(Rhabdoviridae)),expression(italic(Togaviridae))))+
+  scale_x_discrete(labels=c("all viruses",expression(italic(Flaviviridae)),expression(italic(Rhabdoviridae)),
+                            expression(italic(Togaviridae)), expression(italic(Paramyxoviridae))))+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 plot(plot)
 

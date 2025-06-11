@@ -144,16 +144,18 @@ vdata%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>%
 vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() # 43
 vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="poxviridae") %>% n_distinct() ## 122
 vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="arenaviridae") %>% n_distinct() ## 100
+tab<- table(vdata$VirusFamily) %>% as.data.frame() %>% arrange(desc(Freq))
 
 
 #how many bats in each virus family
-bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() ## 23
+bats%>% dplyr::select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() ## 23
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="flaviviridae") %>% n_distinct() # 64
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="rhabdoviridae") %>% n_distinct() # 130
 bats%>% select(species, VirusFamily)%>%  filter(VirusFamily=="togaviridae") %>% n_distinct() # 35
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") %>% n_distinct() # 31
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="poxviridae") %>% n_distinct() ## 0
 bats%>% select(species, VirusFamily)%>% filter(VirusFamily=="arenaviridae") %>% n_distinct() ## 10
+tab<- table(bats$VirusFamily) %>% as.data.frame() %>% arrange(desc(Freq))
 
 #host-virus associations, what happens when we cut out vector-borne?
 
@@ -336,7 +338,7 @@ max(vdata$`meanDB_all viruses`, na.rm=T) ## 2,581,976
 
 ## median death buden because of skew
 hist(vdata$`meanDB_all viruses`)
-median(vdata$`meanDB_all viruses`, na.rm=T) ## 1,633 ## new: 800
+median(vdata$`meanDB_all viruses`, na.rm=T) ## 1,633
 
 #sd
 sd1 <- sd(vdata$`meanCFR_all viruses`, na.rm=T)
