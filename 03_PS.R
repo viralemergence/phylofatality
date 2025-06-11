@@ -505,8 +505,11 @@ plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
   labs(x = "Virus Family", y = expression(paste("Pagel's ", lambda)))+
   theme(axis.title.x = element_text(size = 16, margin = margin(t = 20)))+
   theme(axis.title.y = element_text(size = 16, margin = margin(r = 18)))+
-  scale_x_discrete(labels=c("all viruses",expression(italic(Flaviviridae)),expression(italic(Rhabdoviridae)),
-                            expression(italic(Togaviridae)), expression(italic(Paramyxoviridae))))+
+  scale_x_discrete(labels=c("all viruses",
+                            expression(italic(Flaviviridae)),
+                            expression(italic(Paramyxoviridae)),
+                            expression(italic(Rhabdoviridae)),
+                            expression(italic(Togaviridae))))+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 plot(plot)
 
