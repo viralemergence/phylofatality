@@ -135,9 +135,9 @@ mod_db=pgls(meanDB_all.viruses~1,data=cdata,lambda="ML")
 
 #all mammals, 5 viruses
 #coronaviridae
-#mod_me_cor=pgls(meanCFR_coronaviridae~1,data=cdata_cor,lambda="ML")
+#mod_me_cor=pgls(meanCFR_coronaviridae~1,data=cdata_cor,lambda="ML") ## see hist(cdata_cor$data$meanCFR_coronaviridae) ... no variation
 #mod_mx_cor=pgls(maxCFR_coronaviridae~1,data=cdata_cor,lambda="ML")
-#mod_ot_cor=pgls(on.frac_coronaviridae~1,data=cdata2_cor,lambda="ML")#see histogram
+#mod_ot_cor=pgls(on.frac_coronaviridae~1,data=cdata2_cor,lambda="ML")
 #mod_db_cor=pgls(meanDB_coronaviridae~1,data=cdata_cor,lambda="ML")
 
 #flaviviridae
@@ -375,16 +375,17 @@ pdata_tog=data.frame(vfamily=rep("togaviridae",8),
 pdata_tog$variable=factor(pdata_tog$variable,levels=c("meanCFR","maxCFR","on.frac","meanDB"))
 
 #paramyxoviridae
-mlist_par=list(mod_me_par,mod_mx_par,mod_ot_par,mod_db_par,bmod_me_par,bmod_mx_par,bmod_ot_par,bmod_db_par)
+mlist_par=list(mod_me_par, mod_mx_par, mod_ot_par, mod_db_par, bmod_me_par, bmod_mx_par, bmod_ot_par, bmod_db_par)
 pdata_par=data.frame(vfamily=rep("paramyxoviridae",8),
                      dataset=c(rep("all mammals",4),rep("bats only",4)),
                      variable=c(rep(c("meanCFR","maxCFR","on.frac","meanDB"),2)),
-                     lambda=sapply(mlist_tog,function(x) x$param["lambda"]),
-                     lambda_lower=sapply(mlist_tog,function(x) x$param.CI$lambda$ci.val[1]),
-                     lambda_lower_p=sapply(mlist_tog,function(x) x$param.CI$lambda$bounds.p[1]),
-                     lambda_upper=sapply(mlist_tog,function(x) x$param.CI$lambda$ci.val[2]),
-                     lambda_upper_p=sapply(mlist_tog,function(x) x$param.CI$lambda$bounds.val[1]))
+                     lambda=sapply(mlist_par,function(x) x$param["lambda"]),
+                     lambda_lower=sapply(mlist_par,function(x) x$param.CI$lambda$ci.val[1]),
+                     lambda_lower_p=sapply(mlist_par,function(x) x$param.CI$lambda$bounds.p[1]),
+                     lambda_upper=sapply(mlist_par,function(x) x$param.CI$lambda$ci.val[2]),
+                     lambda_upper_p=sapply(mlist_par,function(x) x$param.CI$lambda$bounds.val[1]))
 pdata_par$variable=factor(pdata_par$variable,levels=c("meanCFR","maxCFR","on.frac","meanDB"))
+
 
 #save
 pagel<- rbind(pdata, pdata_fla, pdata_rha, pdata_tog, pdata_par)
