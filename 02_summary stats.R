@@ -87,7 +87,7 @@ vdata$drop=NULL
 miss=setdiff(vdata$species,taxa$species) %>% as.data.frame()
 
 ## manual fix
-vdata$species=revalue(vdata$species,
+{vdata$species=revalue(vdata$species,
                       c("Alexandromys fortis"="Microtus fortis",
                         "Alexandromys maximowiczii"="Microtus maximowiczii",
                         "Alexandromys oeconomus"="Microtus oeconomus",
@@ -122,7 +122,8 @@ vdata$species=revalue(vdata$species,
                         "Pteropus medius"="Pteropus giganteus",
                         "Rhinolophus monoceros"="Rhinolophus pusillus",
                         "Stenocranius gregalis"="Microtus gregalis",
-                        "Urva edwardsii"="Herpestes edwardsii"))
+                        "Urva edwardsii"="Herpestes edwardsii"))}
+
 ## rematch
 miss=setdiff(vdata$species,taxa$species) #0
 
@@ -172,7 +173,7 @@ setdiff(cfr$Virus,vir$Virus)
 
 ## check name matching
 miss <- setdiff(cfr$Virus,vir$Virus) %>% as.data.frame() # 108
-
+{
 rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "kasokero orthonairovirus"="orthonairovirus kasokeroense",
          "tacaribe mammarenavirus"="mammarenavirus tacaribeense",
@@ -284,7 +285,7 @@ rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "yellow fever virus"="orthoflavivirus flavi",
          "zika virus"="orthoflavivirus zikaense",
          "changuinola virus"="orbivirus changuinolaense",
-         "nelson bay orthoreovirus"="orthoreovirus nelsonense")
+         "nelson bay orthoreovirus"="orthoreovirus nelsonense")}
 
 cfr %<>% mutate(Virus = recode(Virus, !!!rec))
 

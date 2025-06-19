@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 01_generate species-level CFR with reconciled mammal taxonomy
 ## danbeck@ou.edu, carolinecummings@ou.edu 
-## last update 6/9/2025
+## last update 6/13/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -57,7 +57,7 @@ miss <- setdiff(cfr$Virus,vir$Virus) %>% as.data.frame() #108
 vnames<- vir %>% select(Virus, VirusOriginal) %>% unique()
 
 ## left is old (CFR) and right is new (match virion)
-rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
+{rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "kasokero orthonairovirus"="orthonairovirus kasokeroense",
          "tacaribe mammarenavirus"="mammarenavirus tacaribeense",
          "rio bravo virus"="orthoflavivirus bravoense",
@@ -168,7 +168,7 @@ rec <- c("flexal mammarenavirus"="mammarenavirus flexalense",
          "yellow fever virus"="orthoflavivirus flavi",
          "zika virus"="orthoflavivirus zikaense",
          "changuinola virus"="orbivirus changuinolaense",
-         "nelson bay orthoreovirus"="orthoreovirus nelsonense")
+         "nelson bay orthoreovirus"="orthoreovirus nelsonense")}
 
 cfr %<>% mutate(Virus = recode(Virus, !!!rec))
 
@@ -361,7 +361,7 @@ vdata$drop=NULL
 miss=setdiff(vdata$species,taxa$species) %>% as.data.frame() ## 35
 
 ## manual fix
-vdata$species=revalue(vdata$species,
+{vdata$species=revalue(vdata$species,
                      c("Alexandromys fortis"="Microtus fortis",
                        "Alexandromys maximowiczii"="Microtus maximowiczii",
                        "Alexandromys oeconomus"="Microtus oeconomus",
@@ -396,7 +396,7 @@ vdata$species=revalue(vdata$species,
                        "Pteropus medius"="Pteropus giganteus",
                        "Rhinolophus monoceros"="Rhinolophus pusillus",
                        "Stenocranius gregalis"="Microtus gregalis",
-                       "Urva edwardsii"="Herpestes edwardsii"))
+                       "Urva edwardsii"="Herpestes edwardsii"))}
 
 ## rematch
 miss=setdiff(vdata$species,taxa$species) #0
@@ -412,13 +412,19 @@ vraw=vdata #2514
 tmp=merge(cfr,vdata,by="Virus")
 db <- tmp %>% select(species, Virus, db)
 db=merge(db,taxa, by="species")
-db <- db %>% select(species, Virus, db, ord,fam,gen) %>% arrange(desc(db))
+db <- db %>% select(species, Virus, db, ord,fam,gen, everything()) %>% arrange(desc(db))
+rhin<- db %>% filter(fam=="RHINOLOPHIDAE") # rabies lyssavirus is here
+rhin2<- vir %>% filter(HostFamily=="rhinolophidae" & Virus=="lyssavirus rabies")
+rhin3<- vir %>% filter(HostFamily=="rhinolophidae" & VirusGenus=="lyssavirus")
+
 db2=aggregate(db~fam,db,mean,na.rm=T) 
 rm(db,db2)
 
 ## look at covs
 cov <- tmp %>% select(species, Virus, CFR, VirusFamily)
 cov <- cov %>% filter(VirusFamily=="coronaviridae") %>% arrange(desc(CFR))
+cov2<- vir %>% filter(VirusFamily=="coronaviridae" & HostOrder=="chiroptera")
+cov2<- vir %>% filter(Virus=="betacoronavirus pandemicum")
 rm(cov)
 
 ## look at flavis
@@ -426,23 +432,25 @@ fla<- tmp %>% select(species, Virus, CFR, VirusFamily)  %>% filter(VirusFamily==
 fla$Host <- fla$species %>% str_to_lower()
 fla$species=NULL
 
-fla2 <- vir %>% filter(HostFamily=="vespertilionidae") %>% select(Host, HostFamily)
-fla2 <- merge(fla, fla2, by="Host") %>% unique()
-nrow(fla2) ### 17
-sum(fla2$Virus=="japanese encephalitis virus") #0
-sum(fla2$Virus=="west nile virus") #0
+fla2 <- vir %>% filter(VirusFamily=="flaviviridae"  & HostOrder=="chiroptera")
+table(fla2$DetectionMethod)
+fla2 <- fla2 %>% filter(DetectionMethod=="Isolation/Observation")
 
-fla3<- vir %>% filter(Virus=="japanese encephalitis virus" & HostFamily=="vespertilionidae") %>% unique() %>% select(Host, Virus, DetectionMethod, everything())
-nrow(fla3) #0
-sum(fla3$DetectionMethod=="Antibodies") # 0
+fla3<- vir %>% filter(Virus=="orthoflavivirus japonicum" & HostOrder=="chiroptera") %>% unique() %>% select(Host, Virus, DetectionMethod, everything())
+nrow(fla3) # 71
+sum(fla3$DetectionMethod=="Antibodies") # 33
 fla3$combo<- paste0(fla3$DetectionMethod, "_", fla3$Host)
 fla4<- unique(fla3$combo) %>% as.data.frame()
 nrow(fla4) ## 0
 
-fla <- vir %>% filter(Virus=="japanese encephalitis virus" & HostFamily=="vespertilionidae")
-fla<- vir %>% filter(Virus=="japanese encephalitis virus" & HostOrder=="chiroptera") %>% select(Host, Virus, HostFamily) %>% unique()
+fla <- vir %>% filter(Virus=="orthoflavivirus japonicum" & HostFamily=="vespertilionidae")
+fla<- vir %>% filter(Virus=="orthoflavivirus japonicum" & HostOrder=="chiroptera") %>% select(Host, Virus, HostFamily) %>% unique()
 fla<- vir %>% filter(Virus=="yellow fever virus" & HostOrder=="chiroptera") %>% select(Host, Virus, HostFamily) %>% unique()
 rm(fla, fla2,fla3,fla4)
+
+tog<- vir %>% filter(VirusFamily=="togaviridae" & HostOrder=="chiroptera")
+tog$DetectionMethod %>% table()
+aaa<- tog %>% filter(DetectionMethod=="Isolation/Observation")
 
 #aggregate(num ~ HostFamily, data = fla, sum) %>% print()
 

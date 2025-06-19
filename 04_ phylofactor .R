@@ -1,7 +1,7 @@
 ## phylofatality
 ## 04_phylofactor
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 6/9/2025
+## last update 6/13/2025
 
 ## clean environment & plots
 rm(list=ls()) 

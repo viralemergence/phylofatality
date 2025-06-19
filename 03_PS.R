@@ -476,8 +476,8 @@ raw<- ps
 
 #reorder 
 ps$variable <- factor(ps$variable, levels = c("mean CFR",
-                                              "mean death burden",
                                               "% with onward transmission",
+                                              "mean death burden",
                                               "maximum CFR"))
 
 ps <- ps %>% filter(variable != "maximum CFR")
