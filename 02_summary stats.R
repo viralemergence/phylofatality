@@ -1,7 +1,7 @@
 ## phylofatality 
 ## 02_summary statistics
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update: 6/9/2025
+## last update: 6/20/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -146,7 +146,6 @@ vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="paramyxoviridae") 
 vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="poxviridae") %>% n_distinct() ## 122
 vdata%>% select(species, VirusFamily)%>% filter(VirusFamily=="arenaviridae") %>% n_distinct() ## 100
 tab<- table(vdata$VirusFamily) %>% as.data.frame() %>% arrange(desc(Freq))
-
 
 #how many bats in each virus family
 bats%>% dplyr::select(species, VirusFamily)%>% filter(VirusFamily=="coronaviridae") %>% n_distinct() ## 23

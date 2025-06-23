@@ -11,79 +11,79 @@
 "10","allmean","Honduras",4
 "11","allmean","Suriname",4
 "12","allmean","Costa Rica",1
-"13","alldb","China",850
-"14","alldb","Thailand",160
-"15","alldb","Vietnam",103
-"16","alldb","Myanmar",87
-"17","alldb","Malaysia",61
-"18","alldb","Zimbabwe",48
-"19","alldb","Lao PDR",30
-"20","alldb","Mozambique",8
-"21","alldb","India",5
-"22","flamean","China",243
-"23","flamean","Thailand",232
-"24","flamean","Malaysia",182
-"25","flamean","Vietnam",115
-"26","flamean","Myanmar",90
-"27","flamean","Lao PDR",30
-"28","flamean","Indonesia",5
-"29","fladb","Colombia",409
-"30","fladb","Venezuela",243
-"31","fladb","Brazil",61
-"32","fladb","Panama",24
-"33","fladb","Peru",16
-"34","fladb","Ecuador",15
-"35","fladb","Bolivia",9
-"36","fladb","Guyana",7
-"37","fladb","Suriname",4
-"38","fladb","Honduras",3
-"39","fladb","Malaysia",2
-"40","fladb","Costa Rica",1
-"41","flaot","Colombia",409
-"42","flaot","Venezuela",243
-"43","flaot","Brazil",58
-"44","flaot","Panama",16
-"45","flaot","Peru",14
-"46","flaot","Ecuador",12
-"47","flaot","Bolivia",7
-"48","flaot","Guyana",6
-"49","flaot","Suriname",4
-"50","flaot","Costa Rica",1
-"51","togmean","Brazil",2388
-"52","togmean","Colombia",431
-"53","togmean","Venezuela",244
-"54","togmean","Mexico",204
-"55","togmean","Uganda",171
-"56","togmean","Malaysia",167
-"57","togmean","Kenya",134
-"58","togmean","Zambia",131
-"59","togmean","Democratic Republic of the Congo",120
-"60","togmean","Zimbabwe",108
-"61","togmean","Vietnam",107
-"62","togmean","Paraguay",97
-"63","togmean","Ecuador",90
-"64","togmean","Malawi",87
-"65","togmean","Thailand",59
-"66","togmean","Lao PDR",51
-"67","togmean","Bolivia",50
-"68","togmean","Honduras",32
-"69","togmean","Tanzania",32
-"70","togmean","Mozambique",28
-"71","togmean","Ghana",26
-"72","togmean","Guatemala",20
-"73","togmean","Indonesia",20
-"74","togmean","South Sudan",18
-"75","togmean","Myanmar",16
-"76","togmean","Panama",15
-"77","togmean","Cameroon",9
-"78","togmean","Peru",9
-"79","togmean","Guyana",7
-"80","togmean","Rwanda",7
-"81","togmean","Suriname",5
-"82","togmean","Brunei Darussalam",2
-"83","togmean","France",2
-"84","togmean","Guinea",2
-"85","togmean","South Africa",2
-"86","togmean","Togo",2
-"87","togmean","Argentina",1
-"88","togmean","India",1
+"13","flamean","China",243
+"14","flamean","Thailand",232
+"15","flamean","Malaysia",182
+"16","flamean","Vietnam",115
+"17","flamean","Myanmar",90
+"18","flamean","Lao PDR",30
+"19","flamean","Indonesia",5
+"20","togmean","Brazil",2388
+"21","togmean","Colombia",431
+"22","togmean","Venezuela",244
+"23","togmean","Mexico",204
+"24","togmean","Uganda",171
+"25","togmean","Malaysia",167
+"26","togmean","Kenya",134
+"27","togmean","Zambia",131
+"28","togmean","Democratic Republic of the Congo",120
+"29","togmean","Zimbabwe",108
+"30","togmean","Vietnam",107
+"31","togmean","Paraguay",97
+"32","togmean","Ecuador",90
+"33","togmean","Malawi",87
+"34","togmean","Thailand",59
+"35","togmean","Lao PDR",51
+"36","togmean","Bolivia",50
+"37","togmean","Honduras",32
+"38","togmean","Tanzania",32
+"39","togmean","Mozambique",28
+"40","togmean","Ghana",26
+"41","togmean","Guatemala",20
+"42","togmean","Indonesia",20
+"43","togmean","South Sudan",18
+"44","togmean","Myanmar",16
+"45","togmean","Panama",15
+"46","togmean","Cameroon",9
+"47","togmean","Peru",9
+"48","togmean","Guyana",7
+"49","togmean","Rwanda",7
+"50","togmean","Suriname",5
+"51","togmean","Brunei Darussalam",2
+"52","togmean","France",2
+"53","togmean","Guinea",2
+"54","togmean","South Africa",2
+"55","togmean","Togo",2
+"56","togmean","Argentina",1
+"57","togmean","India",1
+"58","flaot","Colombia",409
+"59","flaot","Venezuela",243
+"60","flaot","Brazil",58
+"61","flaot","Panama",16
+"62","flaot","Peru",14
+"63","flaot","Ecuador",12
+"64","flaot","Bolivia",7
+"65","flaot","Guyana",6
+"66","flaot","Suriname",4
+"67","flaot","Costa Rica",1
+"68","alldb","China",850
+"69","alldb","Thailand",160
+"70","alldb","Vietnam",103
+"71","alldb","Myanmar",87
+"72","alldb","Malaysia",61
+"73","alldb","Zimbabwe",48
+"74","alldb","Lao PDR",30
+"75","alldb","Mozambique",8
+"76","alldb","India",5
+"77","fladb","Colombia",409
+"78","fladb","Venezuela",243
+"79","fladb","Brazil",61
+"80","fladb","Panama",24
+"81","fladb","Peru",16
+"82","fladb","Ecuador",15
+"83","fladb","Bolivia",9
+"84","fladb","Guyana",7
+"85","fladb","Suriname",4
+"86","fladb","Honduras",3
+"87","fladb","Malaysia",2
+"88","fladb","Costa Rica",1

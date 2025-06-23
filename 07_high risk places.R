@@ -1,7 +1,7 @@
 ## phylofatality
 ## 07_high risk places
 ## carolinecummings@ou.edu
-## last update 6/10/2025
+## last update 6/20/2025
 
 #troubleshooting:
 #https://rfunctions.blogspot.com/2015/03/bivariate-maps-bivariatemap-function.html 
@@ -465,6 +465,16 @@ results[[name]] <- places
 }
 
 final <- bind_rows(results, .id = "source")
+
+
+final$source <- factor(final$source, levels=c("allmean",
+                                              "flamean",
+                                              "togmean",
+                                              "flaot",
+                                              "alldb",
+                                              "fladb" ))
+
+final <- final %>% arrange(source, desc(freq))
 
 ## save
 setwd('~/Desktop/GitHub/phylofatality/csv files')

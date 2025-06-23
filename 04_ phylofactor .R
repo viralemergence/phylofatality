@@ -1,7 +1,7 @@
 ## phylofatality
 ## 04_phylofactor
 ## danbeck@ou.edu carolinecummings@ou.edu
-## last update 6/13/2025
+## last update 6/19/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -2073,14 +2073,14 @@ plot(gg_db)
   plot(gg_ot_tog)
 }
 #combine plots
-plot<- ggpubr::ggarrange(gg_cmean, gg_db, gg_cot,
-                         gg_cmean_fla, gg_db_fla, gg_ot_fla,
-                         gg_cmean_tog, plot_spacer()+ theme_void(), gg_ot_tog,
-                labels = c("A","B","C","D","E","F","G", " ","H"),
+plot<- ggpubr::ggarrange(gg_cmean,gg_cot,gg_db,
+                         gg_cmean_fla,gg_ot_fla,gg_db_fla,
+                         gg_cmean_tog,gg_ot_tog,plot_spacer()+ theme_void(),
+                labels = c("A","B","C","D","E","F","G","H",""),
                 align='hv',
                 font.label = list(size = 12),
-                hjust=-20,
-                vjust=18,
+                hjust=-17,
+                vjust=20,
                 widths=c(1,1,1),
                 heights=c(1,1,1),
                 ncol = 3, nrow = 3,
@@ -2093,19 +2093,3 @@ plot(plot)
 setwd("~/Desktop/GitHub/phylofatality/figs")
 ggsave("fig2_20250609.jpg",  plot, device = "jpeg", width = 8, height = 8, units = "in")
 
-# # ## rhabdoviridae
-#  rhabdo<- ggpubr::ggarrange(gg_cmean_rha, gg_db_rha,
-#                           labels = c("A","B"),
-#                           align='hv',
-#                           font.label = list(size = 12),
-#                           hjust=-2,
-#                           vjust=15,
-#                           #widths=c(1,1),
-#                           #heights=c(1,1),
-#                           #ncol = 3, nrow = 1,
-#                           common.legend=TRUE)
-#  plot(rhabdo) 
-#  
-#  #save
-#  setwd("~/Desktop/GitHub/phylofatality/figs")
-#  ggsave("rhabdo.jpg",  rhabdo, device = "jpeg", width = 8, height = 8, units = "in")

@@ -414,8 +414,10 @@ db <- tmp %>% select(species, Virus, db)
 db=merge(db,taxa, by="species")
 db <- db %>% select(species, Virus, db, ord,fam,gen, everything()) %>% arrange(desc(db))
 rhin<- db %>% filter(fam=="RHINOLOPHIDAE") # rabies lyssavirus is here
-rhin2<- vir %>% filter(HostFamily=="rhinolophidae" & Virus=="lyssavirus rabies")
 rhin3<- vir %>% filter(HostFamily=="rhinolophidae" & VirusGenus=="lyssavirus")
+rhin3<- vir %>% filter(HostFamily=="rhinolophidae" & Virus=="orthohantavirus hantanense")
+rhin3<- vir %>% filter(HostFamily=="rhinolophidae" & VirusGenus=="betacoronavirus" & DetectionMethod=="Isolation/Observation")
+
 
 db2=aggregate(db~fam,db,mean,na.rm=T) 
 rm(db,db2)
@@ -423,9 +425,10 @@ rm(db,db2)
 ## look at covs
 cov <- tmp %>% select(species, Virus, CFR, VirusFamily)
 cov <- cov %>% filter(VirusFamily=="coronaviridae") %>% arrange(desc(CFR))
-cov2<- vir %>% filter(VirusFamily=="coronaviridae" & HostOrder=="chiroptera")
+cov2<- vir %>% filter(VirusFamily=="coronaviridae" & HostGenus=="rhinolophus")
 cov2<- vir %>% filter(Virus=="betacoronavirus pandemicum")
 rm(cov)
+
 
 ## look at flavis
 fla<- tmp %>% select(species, Virus, CFR, VirusFamily)  %>% filter(VirusFamily=="flaviviridae") %>% arrange(desc(CFR))

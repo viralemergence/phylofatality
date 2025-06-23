@@ -1,7 +1,7 @@
 ## phylofatality
 ## 03_PS
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 6/11/2025
+## last update 6/19/2025
 
 ## clean environment & plots
 rm(list=ls()) 
