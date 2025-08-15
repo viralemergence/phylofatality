@@ -451,11 +451,13 @@ fla<- vir %>% filter(Virus=="orthoflavivirus japonicum" & HostOrder=="chiroptera
 fla<- vir %>% filter(Virus=="yellow fever virus" & HostOrder=="chiroptera") %>% select(Host, Virus, HostFamily) %>% unique()
 rm(fla, fla2,fla3,fla4)
 
+## look at togs
 tog<- vir %>% filter(VirusFamily=="togaviridae" & HostOrder=="chiroptera")
 tog$DetectionMethod %>% table()
 aaa<- tog %>% filter(DetectionMethod=="Isolation/Observation")
 
-#aggregate(num ~ HostFamily, data = fla, sum) %>% print()
+## look at bats
+bats <- vir %>% filter(HostOrder=="chiroptera")
 
 ## for each host species, fraction of all viruses that can infect humans
 tmp$vir=1
