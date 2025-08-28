@@ -18,7 +18,7 @@ library(ggplot2)
 library(data.table)
 library(treeio)
 library(Hmisc)
-library(phylofactor)
+#library(phylofactor)
 library(parallel)
 library(emmeans)
 library(phytools)
@@ -391,7 +391,7 @@ pdata_par$variable=factor(pdata_par$variable,levels=c("meanCFR","maxCFR","on.fra
 pagel<- rbind(pdata, pdata_fla, pdata_rha, pdata_tog, pdata_par)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(pagel,"03_PS data.csv")
-write.csv(pagel,"03_PS data_20250609.csv")
+#write.csv(pagel,"03_PS data_20250609.csv")
 
 ## summarize bloomberg's K
 klist=list(psk_me,psk_mx,psk_ot,psk_db,bpsk_me,bpsk_mx,bpsk_ot, bpsk_db)
@@ -451,7 +451,7 @@ kdata_par$variable=factor(kdata_par$variable,levels=c("meanCFR","maxCFR","on.fra
 bloombergk<- rbind(kdata, kdata_fla, kdata_rha, kdata_tog, kdata_par)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(bloombergk,"03_K data.csv")
-write.csv(bloombergk,"03_K data_20250609.csv")
+#write.csv(bloombergk,"03_K data_20250609.csv")
 
 
 #plotting (can start here and reload in data)

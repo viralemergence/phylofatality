@@ -234,7 +234,7 @@ rm(dums)
 
 ## unique ID
 vdata$pair=paste(vdata$Host,vdata$Virus)
-n_distinct(vdata$pair) #2,635 unique host-virus associations
+n_distinct(vdata$pair) #2,637 unique host-virus associations
 
 ## aggregate detection and filter
 vdata=aggregate(cbind(DetectionMethod_Antibodies,
@@ -251,7 +251,7 @@ vdata[c("DetectionMethod_Antibodies",
                "DetectionMethod_Not.specified",
                "DetectionMethod_PCR.Sequencing")]>0,1,0)
 
-## how many unique host-virus associations are PCR or isolation?  ## 1580 
+## how many unique host-virus associations are PCR or isolation?  ## 1582 
 vdata$evidence=ifelse(vdata$DetectionMethod_PCR.Sequencing==1 | vdata$DetectionMethod_Isolation.Observation==1,1,0)
 table(vdata$evidence) 
 table(vdata$VirusFamily,vdata$evidence)
@@ -260,7 +260,7 @@ table(vdata$VirusFamily,vdata$evidence)
 vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1,1,0)
 table(vdata$evidence) #798 isolation
 vdata$evidence=ifelse(vdata$DetectionMethod_PCR.Sequencing==1,1,0)
-table(vdata$evidence) #1221
+table(vdata$evidence) #1223
 vdata$evidence=ifelse(vdata$DetectionMethod_Antibodies==1,1,0)
 table(vdata$evidence) #1320
 vdata$evidence=ifelse(vdata$DetectionMethod_Not.specified==1,1,0)
@@ -294,11 +294,11 @@ vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 |
 table(vdata$evidence) 
 #630 are only pcr
 
-vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 | 
+vdata$evidence=ifelse(vdata$DetectionMethod_Isolation.Observation==1 & 
                         vdata$DetectionMethod_PCR.Sequencing==1,1,0)
 table(vdata$evidence)
 
-# 1580 are detected by viral isolation and/or pcr
+# 1582 are detected by viral isolation and/or pcr
 # 439 are viral isolation AND pcr
 # 1580/2635 = 60%
 
