@@ -1,7 +1,7 @@
 ## phylofatality
 ## 03_PS
 ## danbeck@ou.edu, carolinecummings2018@gmail.com
-## last update 6/19/2025
+## last update 8/28/2025
 
 ## clean environment & plots
 rm(list=ls()) 
@@ -389,9 +389,11 @@ pdata_par$variable=factor(pdata_par$variable,levels=c("meanCFR","maxCFR","on.fra
 
 #save
 pagel<- rbind(pdata, pdata_fla, pdata_rha, pdata_tog, pdata_par)
+
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(pagel,"03_PS data.csv")
 #write.csv(pagel,"03_PS data_20250609.csv")
+write.csv(pagel,"03_PS data_20250828.csv")
 
 ## summarize bloomberg's K
 klist=list(psk_me,psk_mx,psk_ot,psk_db,bpsk_me,bpsk_mx,bpsk_ot, bpsk_db)
@@ -452,13 +454,13 @@ bloombergk<- rbind(kdata, kdata_fla, kdata_rha, kdata_tog, kdata_par)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(bloombergk,"03_K data.csv")
 #write.csv(bloombergk,"03_K data_20250609.csv")
-
+write.csv(bloombergk,"03_K data_20250828.csv")
 
 #plotting (can start here and reload in data)
 #don't forget to reload in packages
 setwd("~/Desktop/GitHub/phylofatality/csv files")
-#ps=read.csv("03_PS data.csv")
-ps=read.csv("03_PS data_20250609.csv")
+#ps=read.csv("03_PS data_20250609.csv")
+ps=read.csv("03_PS data_20250828.csv")
 ps$X=NULL
 
 #fix up variable names
@@ -512,8 +514,11 @@ plot <- ggplot(ps, aes(vfamily, lambda, color = vfamily)) +
                             expression(italic(Rhabdoviridae)),
                             expression(italic(Togaviridae))))+
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-plot(plot)
+#plot(plot)
 
 #save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-ggsave("fig1_20250609.jpg", plot, device = "jpeg", width = 7, height =10, units = "in")
+#png("fig1_20250828.png",width=7,height=10,units="in",res=600)
+#ggsave("fig1_20250609.jpg", plot, device = "jpeg", width = 7, height =10, units = "in")
+print(plot)
+#dev.off()
