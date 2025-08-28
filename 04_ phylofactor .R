@@ -966,8 +966,8 @@ results$other <- round(results$other ,2)
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(results,"04_pf_allclades.csv")
 #write.csv(results,"04_pf_allclades_20250520.csv")
-write.csv(results,"04_pf_allclades_20250609.csv")
-
+#write.csv(results,"04_pf_allclades_20250609.csv")
+write.csv(results,"04_pf_allclades_20250828.csv")
 
 ## save trees
 dtree=treeio::full_join(as.treedata(cdata$phy),cdata$data,by="label")
@@ -1193,7 +1193,9 @@ results_samp$other=round(results_samp$other,2)
 ## setwd
 setwd("~/Desktop/GitHub/phylofatality/csv files")
 #write.csv(results_samp, "04_sampling effort_pf.csv")
-write.csv(results_samp, "04_sampling effort_pf_20250609.csv")
+#write.csv(results_samp, "04_sampling effort_pf_20250609.csv")
+write.csv(results_samp, "04_sampling effort_pf_20250828.csv")
+
 
 ## which clades are risky?
 results_samp$risk<- ifelse(results_samp$clade>results_samp$other, "risky", "non-risky")
