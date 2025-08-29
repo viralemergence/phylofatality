@@ -21,7 +21,7 @@ library(fastDummies)
 ## [1] load in VIRIONS
 ## load new virion
 ## download: https://github.com/viralemergence/virion/tree/gh-pages 
-setwd("~/Desktop/GitHub/")
+setwd("~/Desktop/GitHub/phylofatality")
 vir=vroom("virion.csv.gz")
 vir %<>% filter(HostClass == 'mammalia')
 
@@ -325,3 +325,4 @@ gone %>%
   dplyr::summarize(nvirus=n_distinct(Virus))
 
 table(gone$VirusFamily, gone$Database)
+

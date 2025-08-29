@@ -20,7 +20,7 @@ library(fastDummies)
 
 ## load virion
 ## download "full dataset" https://github.com/viralemergence/virion 
-setwd("~/Desktop/GitHub/")
+setwd("~/Desktop/GitHub/phylofatality")
 vir=vroom("virion.csv.gz")
 vir %<>% filter(HostClass == 'mammalia')
 
