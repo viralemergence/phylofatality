@@ -165,8 +165,10 @@ plot2<- plot+ theme(axis.text.x = element_text(size=11, color="black", angle=0, 
 
 ## save
 setwd("~/Desktop/GitHub/phylofatality/figs")
-#ggsave("corrplot.jpg",  plot2, device = "jpeg", width = 8, height = 8, units = "in")
 #ggsave("corrplot_20250609.jpg",  plot2, device = "jpeg", width = 8, height = 8, units = "in")
+#png("corrplot_20250828.png",width=7,height=10,units="in",res=600)
+print(plot2)
+#dev.off()
 
 ##clean
 rm(plot, plot2, correlation, cmat)

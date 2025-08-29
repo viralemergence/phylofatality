@@ -389,3 +389,4 @@ se1 <- sd1/sqrt(ss1) #0.03
 se2 <- sd2/sqrt(ss2) #0.02
 se3 <- sd3/sqrt(ss3) #0.03
 se4 <- sd4/sqrt(ss4) # 50,298.55
+
